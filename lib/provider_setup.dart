@@ -26,6 +26,10 @@ List<SingleChildWidget> independentServices = [
     create: (_) =>
         FlagRepository(auth: _auth, firestore: _firestore, storage: _storage),
   ),
+  Provider(
+    create: (_) => MessageRepository(
+        auth: _auth, firestore: _firestore, storage: _storage),
+  ),
 ];
 
 List<SingleChildWidget> dependentServices = [

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,13 +23,13 @@ class MessageRepository implements MessageRepositoryAbs {
   final FirebaseAuth auth;
   final FirebaseStorage storage;
 
-  static String path = "livechat";
+  static String path = "comments";
   @override
   Stream<List<Message>> livechatMessages(String flagId) {
     return firestore
         .collection(path)
         .document('$flagId')
-        .collection('livechat')
+        .collection(path)
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((snapshot) {
@@ -41,19 +42,29 @@ class MessageRepository implements MessageRepositoryAbs {
 
   @override
   Future<bool> sendMessage(
-      UserApp currentUser, String flagId, Message newMessage) async {
-    var _data = newMessage.copyWith(
-      senderName: currentUser.displayName,
-      senderPhotoUrl: currentUser.photoUrl,
-      uid: currentUser.id,
+      String flagId, Message newMessage, File image) async {
+    final FirebaseUser firebaseUser = await auth.currentUser();
+    final _doc = firestore.collection(path).document();
+    Message _data = newMessage.copyWith(
+      senderName: firebaseUser.displayName,
+      senderPhotoUrl: firebaseUser.photoUrl,
+      uid: firebaseUser.uid,
     );
+    if (image != null) {
+      final StorageRepository storageRepository = StorageRepository(storage);
+      String downloadUrl =
+          await storageRepository.uploadFile(image, _doc.documentID, path);
+      _data = _data.copyWith(
+        photoUrl: downloadUrl,
+      );
+    }
 
     Map<String, dynamic> _message = _data.toJson();
-
+    _message['timestamp'] = FieldValue.serverTimestamp();
     return firestore
         .collection(path)
         .document('$flagId')
-        .collection('livechat')
+        .collection(path)
         .add(_message)
         .then((onValue) {
       return true;

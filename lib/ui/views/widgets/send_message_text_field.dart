@@ -19,23 +19,6 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
   bool isEmpty = true;
   String imagePath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
-  Future loadCameraScreen() async {
-    List<CameraDescription> cameras;
-    try {
-      cameras = await availableCameras();
-    } on CameraException catch (e) {
-      debugPrint('Error: ${e.code}\nError Message: ${e.description}');
-    }
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => CameraScreen(
-    //       cameras: cameras,
-    //       team: widget.team,
-    //     ),
-    //   ),
-    // );
-  }
 
   File _image;
 
@@ -90,6 +73,8 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             child: Container(
               child: TextField(
                 controller: _controller,
+                readOnly:
+                    Provider.of<MessageModel>(context).state == ViewState.Busy,
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -128,10 +113,13 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
 
   Widget _buildSendIcon(context) {
     return IconButton(
-      icon: Icon(Icons.send),
+      icon: Provider.of<MessageModel>(context).state == ViewState.Busy
+          ? CircularProgressIndicator()
+          : Icon(Icons.send),
       color: Theme.of(context).accentColor,
-      onPressed: () {
-        // Provider.of<MessageModel>(context, listen: false)
+      onPressed: () async {
+        await Provider.of<MessageModel>(context, listen: false).sendMessage(
+            widget.flag.id, Message(text: _controller.text.trim()), _image);
         _controller.clear();
         _hideKeyboard();
       },

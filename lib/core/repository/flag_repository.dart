@@ -27,7 +27,7 @@ class FlagRepository implements FlagRepositoryAbs {
     final _doc = firestore.collection(path).document();
     final StorageRepository storageRepository = StorageRepository(storage);
     String downloadUrl =
-        await storageRepository.uploadFile(image, _doc.documentID);
+        await storageRepository.uploadFile(image, _doc.documentID, path);
     WhiteFlag _data = newFlag.copyWith(
       senderName: firebaseUser.displayName,
       senderPhotoUrl: firebaseUser.photoUrl,

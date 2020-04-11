@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:banderablanca/core/core.dart';
+
 import '../abstract/abstract.dart';
 import '../models/models.dart';
 import 'base_model.dart';
@@ -7,15 +11,6 @@ class MessageModel extends BaseModel {
   List<Message> _messages = [];
   List<Message> get messages => _messages;
   UserApp _currentUser;
-
-  bool _isBusy = false;
-
-  bool get isBusy => _isBusy;
-
-  setBusy(isBusy) {
-    _isBusy = isBusy;
-    notifyListeners();
-  }
 
   set repository(repo) {
     _repository = repo;
@@ -29,6 +24,9 @@ class MessageModel extends BaseModel {
 
   UserApp get currentUser => _currentUser;
 
+  Stream<List<Message>> streamMessage(String flagId) =>
+      _repository.livechatMessages(flagId);
+
   fetchMessages(String flagId) async {
     _repository.livechatMessages(flagId).listen((livechatMessages) {
       _messages = livechatMessages;
@@ -36,13 +34,11 @@ class MessageModel extends BaseModel {
     });
   }
 
-  sendMessage(UserApp _user, String flagId, Message newMessage) async {
+  sendMessage(String flagId, Message newMessage, File image) async {
     if (!newMessage.text.trim().isNotEmpty) return;
-    setBusy(true);
-    // generate video thumbnail
-
-    await _repository.sendMessage(_user, flagId, newMessage);
-    setBusy(false);
+    setState(ViewState.Busy);
+    await _repository.sendMessage(flagId, newMessage, image);
+    setState(ViewState.Idle);
   }
 
   @override

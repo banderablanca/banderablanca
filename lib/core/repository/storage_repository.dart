@@ -16,12 +16,12 @@ class StorageRepository implements StorageRepositoryAbs {
   final FirebaseStorage storage;
 
   @override
-  Future<String> uploadFile(File file, String flagId) async {
+  Future<String> uploadFile(File file, String flagId, String path) async {
     final String uuid = Uuid().v1();
     // final File file = file;
     final StorageReference ref = storage
         .ref()
-        .child('livechat')
+        .child(path)
         .child('$flagId')
         .child('fs$uuid${extension(file.path)}');
     final StorageUploadTask uploadTask = ref.putFile(file);
@@ -32,12 +32,12 @@ class StorageRepository implements StorageRepositoryAbs {
 
   @override
   Future<String> uploadFileData(
-      String filePath, Uint8List fileData, String flagId) async {
+      String filePath, Uint8List fileData, String flagId, String path) async {
     final String uuid = Uuid().v1();
     // final File file = File(filePath);
     final StorageReference ref = storage
         .ref()
-        .child('livechat')
+        .child(path)
         .child('$flagId')
         .child('fs$uuid${extension(filePath)}');
     final StorageUploadTask uploadTask = ref.putData(fileData);
@@ -59,15 +59,5 @@ class StorageRepository implements StorageRepositoryAbs {
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return Future.value(downloadUrl);
-  }
-
-  Future<dynamic> getUserPhotoURL(String uid) async {
-    var url = await storage
-        .ref()
-        .child('users')
-        .child(uid)
-        .child('profile')
-        .getDownloadURL();
-    return url;
   }
 }

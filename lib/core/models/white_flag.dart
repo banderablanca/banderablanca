@@ -1,3 +1,4 @@
+import '../helpers/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
@@ -35,12 +36,4 @@ GeoPoint positionAsIs(LatLng pos) => GeoPoint(pos.latitude, pos.longitude);
 LatLng geoPointFromFirestore(GeoPoint pos) {
   // GeoPoint pos = f.data['position'];
   return LatLng(pos.latitude, pos.longitude);
-}
-
-DateTime dateTimeAsIs(DateTime dateTime) =>
-    dateTime; //<-- pass through no need for generated code to perform any formatting
-
-// https://stackoverflow.com/questions/56627888/how-to-print-firestore-timestamp-as-formatted-date-and-time-in-flutter
-DateTime dateTimeFromTimestamp(Timestamp timestamp) {
-  return DateTime.parse(timestamp.toDate().toString());
 }

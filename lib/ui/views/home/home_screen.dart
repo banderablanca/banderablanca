@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import '../views.dart';
 import '../widgets/widgets.dart';
 import 'card_item.dart';
+import 'comments_list.dart';
 import 'photo_view_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
+    _getLocation();
     ctrl.addListener(() {
       int next = ctrl.page.round();
 
@@ -40,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Provider.of<MarkerModel>(context, listen: false).initMarkers();
   }
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-12.0962816, -77.0219015),
     zoom: 14.4746,
   );
@@ -52,6 +55,26 @@ class _HomeScreenState extends State<HomeScreen> {
       zoom: 19.151926040649414);
 
   bool showFab = true;
+  Position _currentPosition;
+  Future<void> _getLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+      _kGooglePlex = CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 14.4746,
+      );
+    });
+
+    GoogleMapController mapController = await _controller.future;
+
+    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      zoom: 17.0,
+    )));
+  }
+
   void showFoatingActionButton(bool value) {
     setState(() {
       showFab = value;
@@ -83,58 +106,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.of(context).pop();
                             }),
                       ),
-                      Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: <Widget>[
-                            Text("${flag.description}"),
-                            SizedBox(
-                              height: 200,
-                              width: 200,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PhotoViewScreen(
-                                        photoUrl: flag.photoUrl,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: TransitionToImage(
-                                  image: AdvancedNetworkImage(
-                                    "${flag.photoUrl}",
-                                    loadedCallback: () {
-                                      print('It works!');
-                                    },
-                                    loadFailedCallback: () {
-                                      print('Oh, no!');
-                                    },
-                                    loadingProgress: (double progress, _) {
-                                      print('Now Loading: $progress');
-                                    },
-                                  ),
-                                  loadingWidgetBuilder:
-                                      (_, double progress, __) => Center(
-                                    child: LinearProgressIndicator(
-                                      value: progress,
-                                    ),
-                                  ),
-                                  fit: BoxFit.contain,
-                                  placeholder: const Icon(Icons.refresh),
-                                  width: 400.0,
-                                  height: 300.0,
-                                  enableRefresh: true,
-                                ),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text("${flag.address}"),
-                            ),
-                          ],
-                        ),
-                      ),
+                      CommentsList(flag: flag),
+                      // StreamBuilder(
+                      //   stream:
+                      //       Provider.of<MessageModel>(context, listen: false)
+                      //           .streamMessage(flag.id),
+                      //   builder: (BuildContext context,
+                      //       AsyncSnapshot<List<Message>> snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting)
+                      //       return LinearProgressIndicator();
+                      //     if (!snapshot.hasData) return Container();
+                      //     return Expanded(
+                      //       child: ListView.builder(
+                      //         shrinkWrap: true,
+                      //         itemCount: snapshot.data.length,
+                      //         itemBuilder: (BuildContext context, int index) {
+                      //           final Message message = snapshot.data[index];
+                      //           return ListTile(
+                      //             title: Text("${message.text}"),
+                      //           );
+                      //         },
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
                       SendMessageTextField(
                         flag: flag,
                       ),
