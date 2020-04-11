@@ -7,6 +7,7 @@ part 'message.g.dart';
 
 @freezed
 abstract class Message with _$Message {
+  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory Message({
     String id,
     String text,

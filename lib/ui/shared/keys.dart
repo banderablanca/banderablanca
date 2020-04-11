@@ -9,15 +9,6 @@ class AppKeys {
   static final snackbar = const Key('__snackbar__');
   static Key snackbarAction(String id) => Key('__snackbar_action_${id}__');
 
-  // matches
-  static final matchList = const Key('__matchesList__');
-  static final matchLoading = const Key('__MatchLoading__');
-  static final matchItem = (String id) => Key('MatchItem__$id');
-  // static final matchItemCheckbox =
-  //     (String id) => Key('MatchItem__${id}__Checkbox');
-  static final matchItemTask = (String id) => Key('MatchItem__${id}__Task');
-  static final matchItemNote = (String id) => Key('MatchItem__${id}__Note');
-
   // Tabs
   static final tabs = const Key('__tabs__');
   static final todoTab = const Key('__todoTab__');
@@ -63,15 +54,4 @@ class AppKeys {
   static final userNotificationLoading =
       const Key('__userNotificationLoading__');
   static final userNotificationList = const Key('__userNotificationList__');
-  //Ranking Screen
-  static final rankingList = const Key('__rankingList__');
-
-  //Ranking Users
-  static final rankingUsersLoading = const Key('__rankingUsersLoading__');
-
-  //Steps screen
-  static final quizLoading = const Key('__QuizLoading__');
-
-  //Match livechat
-  static final livechatList = const Key('__LivechatList__');
 }

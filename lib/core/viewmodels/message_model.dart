@@ -36,9 +36,6 @@ class MessageModel extends BaseModel {
     });
   }
 
-  // Stream<List<Message>> streamMessages(String teamId) =>
-  //     _repository.livechatMessages(teamId);
-
   sendMessage(UserApp _user, String flagId, Message newMessage) async {
     if (!newMessage.text.trim().isNotEmpty) return;
     setBusy(true);

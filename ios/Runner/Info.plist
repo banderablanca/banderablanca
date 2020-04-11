@@ -41,5 +41,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Se usa para marcar la localización exacta del lugar al momento de crear una bandera blanca.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Podrás recibir alerta de bandera blanca cerca a tu ubicación.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Pide ayuda o brinda ayuda con tu posición exacta.</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

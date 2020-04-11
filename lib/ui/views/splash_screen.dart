@@ -27,16 +27,11 @@ class RedirectionWidget extends StatelessWidget {
         if (model.state == ViewState.Busy) return _showLoadIndicator;
 
         if (model.currentUser != null) {
-          // if (!model.currentUser.complete) return _showLoadIndicator;
-
-          // if (!model.currentUser.isTeamConfigured) return StepsScreen();
-
           return child;
         } else {
           return LoginScreen();
         }
       },
-      // stream: auth.onAuthStateChanged,
     );
   }
 }

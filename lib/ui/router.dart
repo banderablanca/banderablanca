@@ -8,8 +8,8 @@ class Router {
     final home = HomeScreen();
 
     switch (settings.name) {
-      // case RoutePaths.Splash:
-      //   return MaterialPageRoute(builder: (_) => splash);
+      case RoutePaths.Splash:
+        return MaterialPageRoute(builder: (_) => splash);
       // case RoutePaths.RegisterScreen:
       //   return MaterialPageRoute(builder: (_) => RegisterScreen());
       case RoutePaths.Home:
@@ -23,10 +23,11 @@ class Router {
         final List<String> path = settings.name.split('/');
         if (path[0] != '') return null;
 
-        // TeamDetail screen
-        if (isPathNameWithRoute(settings, RoutePaths.TeamDetails)) {
+        // Detail screen
+        if (isPathNameWithRoute(settings, RoutePaths.FlagDetail)) {
           String _id = getIdByPath(settings);
-          return MaterialPageRoute(builder: (_) => FlagDetail(flagId: _id));
+          return MaterialPageRoute(
+              builder: (_) => FlagDetailScreen(flagId: _id));
         }
         return MaterialPageRoute(
             builder: (_) => Scaffold(

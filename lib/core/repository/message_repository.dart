@@ -24,10 +24,10 @@ class MessageRepository implements MessageRepositoryAbs {
 
   static String path = "livechat";
   @override
-  Stream<List<Message>> livechatMessages(String teamId) {
+  Stream<List<Message>> livechatMessages(String flagId) {
     return firestore
         .collection(path)
-        .document('$teamId')
+        .document('$flagId')
         .collection('livechat')
         .orderBy('timestamp', descending: true)
         .snapshots()
@@ -41,7 +41,7 @@ class MessageRepository implements MessageRepositoryAbs {
 
   @override
   Future<bool> sendMessage(
-      UserApp currentUser, String teamId, Message newMessage) async {
+      UserApp currentUser, String flagId, Message newMessage) async {
     var _data = newMessage.copyWith(
       senderName: currentUser.displayName,
       senderPhotoUrl: currentUser.photoUrl,
@@ -52,7 +52,7 @@ class MessageRepository implements MessageRepositoryAbs {
 
     return firestore
         .collection(path)
-        .document('$teamId')
+        .document('$flagId')
         .collection('livechat')
         .add(_message)
         .then((onValue) {

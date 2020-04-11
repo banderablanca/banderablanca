@@ -1,5 +1,6 @@
 # auto generate
 **/*.freezed.dart
+**/*.g.dart
 
 #environment
 android/app/google-services.json

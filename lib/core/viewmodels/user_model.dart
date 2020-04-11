@@ -25,7 +25,7 @@ class UserModel extends BaseModel {
   }
 
   set currentUser(user) {
-    if (_currentUser == null && _currentUser?.id != user?.id) {
+    if (_currentUser == null) {
       _currentUser = user;
       _handleSignIn();
       notifyListeners();

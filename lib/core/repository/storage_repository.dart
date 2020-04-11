@@ -16,13 +16,13 @@ class StorageRepository implements StorageRepositoryAbs {
   final FirebaseStorage storage;
 
   @override
-  Future<String> uploadFile(String filePath, String teamId) async {
+  Future<String> uploadFile(String filePath, String flagId) async {
     final String uuid = Uuid().v1();
     final File file = File(filePath);
     final StorageReference ref = storage
         .ref()
         .child('livechat')
-        .child('$teamId')
+        .child('$flagId')
         .child('fs$uuid${extension(filePath)}');
     final StorageUploadTask uploadTask = ref.putFile(file);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
@@ -32,13 +32,13 @@ class StorageRepository implements StorageRepositoryAbs {
 
   @override
   Future<String> uploadFileData(
-      String filePath, Uint8List fileData, String teamId) async {
+      String filePath, Uint8List fileData, String flagId) async {
     final String uuid = Uuid().v1();
     // final File file = File(filePath);
     final StorageReference ref = storage
         .ref()
         .child('livechat')
-        .child('$teamId')
+        .child('$flagId')
         .child('fs$uuid${extension(filePath)}');
     final StorageUploadTask uploadTask = ref.putData(fileData);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;

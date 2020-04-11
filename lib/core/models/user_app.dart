@@ -6,6 +6,7 @@ part 'user_app.g.dart';
 
 @freezed
 abstract class UserApp with _$UserApp {
+  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory UserApp({
     String id,
     String country,

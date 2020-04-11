@@ -32,16 +32,11 @@ class BanderaBlancaApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
-        supportedLocales: [
-          const Locale('en'),
-          const Locale('es'),
-          const Locale.fromSubtags(languageCode: 'es'),
-        ],
         // onGenerateTitle: (BuildContext context) =>
         //     AppLocalizations.of(context).appTitle,
         title: 'Bandera Blanca',
         theme: AppTheme.theme,
-        initialRoute: RoutePaths.Home,
+        initialRoute: RoutePaths.Splash,
         onGenerateRoute: Router.generateRoute,
         onUnknownRoute: Router.onUnknownRoute,
         // home: TestScreen(),

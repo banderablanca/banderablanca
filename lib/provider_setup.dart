@@ -22,6 +22,10 @@ List<SingleChildWidget> independentServices = [
       create: (_) => AuthenticationService(
           auth: _auth, firestore: _firestore, storage: _storage)),
   Provider(create: (_) => StorageRepository(_storage)),
+  Provider(
+    create: (_) =>
+        FlagRepository(auth: _auth, firestore: _firestore, storage: _storage),
+  ),
 ];
 
 List<SingleChildWidget> dependentServices = [
@@ -40,6 +44,10 @@ List<SingleChildWidget> dependentServices = [
     update: (_, repository, user, model) => model
       ..repository = repository
       ..currentUser = user,
+  ),
+  ChangeNotifierProxyProvider<FlagRepository, FlagModel>(
+    create: (_) => FlagModel(),
+    update: (_, repository, model) => model..repository = repository,
   ),
 ];
 
