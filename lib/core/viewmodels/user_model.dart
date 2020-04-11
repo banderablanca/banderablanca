@@ -122,7 +122,7 @@ class UserModel extends BaseModel {
   }
 
   updateName(String name) async {
-    setState(ViewState.UpdateProfile);
+    setState(ViewState.Busy);
     _currentUser = await _repository
         .updateUserProfile(currentUser.copyWith(displayName: name));
     setState(ViewState.Idle);
@@ -130,7 +130,7 @@ class UserModel extends BaseModel {
   }
 
   updatePhoto(String path, Uint8List data) async {
-    setState(ViewState.UpdateProfile);
+    setState(ViewState.Busy);
     final String photoUrl = await _repository.updatePhoto(path, data);
     _currentUser = _currentUser.copyWith(photoUrl: photoUrl);
     notifyListeners();
@@ -138,7 +138,7 @@ class UserModel extends BaseModel {
   }
 
   sendEmailVerification() async {
-    setState(ViewState.SendingEmailVerification);
+    setState(ViewState.Busy);
     await _repository.sendEmailVerification();
     setState(ViewState.Idle);
   }

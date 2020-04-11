@@ -1,10 +1,11 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:banderablanca/core/abstract/abstract.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../models/models.dart';
-import '../enums/tab.dart';
+import '../enums/viewstate.dart';
 
 import 'base_model.dart';
 
@@ -30,12 +31,14 @@ class FlagModel extends BaseModel {
 
   List<WhiteFlag> get flags => _flags;
 
-  createflag(WhiteFlag newFlag) async {
+  createflag(WhiteFlag newFlag, File image) async {
+    setState(ViewState.Busy);
     try {
-      _repository.createFlag(newFlag);
+      await _repository.createFlag(newFlag, image);
     } catch (e) {
       print(e);
     }
+    setState(ViewState.Idle);
   }
 
   // Stream<List<WhiteFlag>> get streamFlags => _repository.streamFlags();

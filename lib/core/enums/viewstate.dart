@@ -1,1 +1,1 @@
-enum ViewState { Idle, Busy, UpdateProfile, SendingEmailVerification }
+enum ViewState { Idle, Busy }

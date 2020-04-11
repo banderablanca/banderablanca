@@ -131,8 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => PlacePicker(
-          apiKey:
-              "AIzaSyC9UTOsK64cTOrumta7YXV17BelmIG9ul0", // Put YOUR OWN KEY here.
+          apiKey: ApiKeys.googleMapsApiKey, // Put YOUR OWN KEY here.
           onPlacePicked: (PickResult result) {
             // print(result);
             //

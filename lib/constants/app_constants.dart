@@ -6,6 +6,9 @@ class RoutePaths {
   static const String Home = '/home';
   // static const String CreateFlag = '/flag/create';
   static const String FlagDetail = '/flag';
+}
 
-
+class ApiKeys {
+  static const String googleMapsApiKey =
+      "AIzaSyC9UTOsK64cTOrumta7YXV17BelmIG9ul0";
 }

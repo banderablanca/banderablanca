@@ -1,5 +1,6 @@
 import 'package:banderablanca/core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CardItem extends StatelessWidget {
@@ -42,10 +43,26 @@ class CardItem extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   leading: CircleAvatar(
-                    child: Icon(FontAwesomeIcons.flag),
+                    backgroundImage: flag.photoUrl != null
+                        ? AdvancedNetworkImage(
+                            "${flag.photoUrl}",
+                            useDiskCache: true,
+                            cacheRule:
+                                CacheRule(maxAge: const Duration(days: 7)),
+                          )
+                        : null,
+                    child: flag.photoUrl == null
+                        ? Icon(FontAwesomeIcons.flag)
+                        : Container(),
                   ),
-                  title: Text('${flag?.title}'),
-                  subtitle: Text('${flag?.description}'),
+                  title: Text(
+                    '${flag?.address}',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    '${flag?.description}',
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 ButtonBar(
                   children: <Widget>[
