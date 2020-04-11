@@ -24,11 +24,11 @@ class Router {
         if (path[0] != '') return null;
 
         // Detail screen
-        if (isPathNameWithRoute(settings, RoutePaths.FlagDetail)) {
-          String _id = getIdByPath(settings);
-          return MaterialPageRoute(
-              builder: (_) => FlagDetailScreen(flagId: _id));
-        }
+        // if (isPathNameWithRoute(settings, RoutePaths.FlagDetail)) {
+        //   String _id = getIdByPath(settings);
+        //   return MaterialPageRoute(
+        //       builder: (_) => FlagDetailScreen(flagId: _id));
+        // }
         return MaterialPageRoute(
             builder: (_) => Scaffold(
                   body: Center(

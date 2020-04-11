@@ -5,7 +5,7 @@ class RoutePaths {
   static const String ForgotPassword = '/forgotpassword';
   static const String Home = '/home';
   // static const String CreateFlag = '/flag/create';
-  static const String FlagDetail = '/flag';
+  // static const String FlagDetail = '/flag';
 }
 
 class ApiKeys {

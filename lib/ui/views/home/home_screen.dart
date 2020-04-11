@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_networkimage/provider.dart';
+import 'package:flutter_advanced_networkimage/transition.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import '../views.dart';
 import '../widgets/widgets.dart';
 import 'card_item.dart';
+import 'photo_view_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -48,68 +51,181 @@ class _HomeScreenState extends State<HomeScreen> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+  bool showFab = true;
+  void showFoatingActionButton(bool value) {
+    setState(() {
+      showFab = value;
+    });
+  }
+
+  _showModalBottom(WhiteFlag flag) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+        ),
+        builder: (context) => Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: FractionallySizedBox(
+                heightFactor: 0.8,
+                child: Container(
+                  // color: Colors.grey[900],
+                  // height: 250,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      ListTile(
+                        title: Text("${flag.address}"),
+                        trailing: IconButton(
+                            icon: Icon(FontAwesomeIcons.chevronDown),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                      ),
+                      Expanded(
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: <Widget>[
+                            Text("${flag.description}"),
+                            SizedBox(
+                              height: 200,
+                              width: 200,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PhotoViewScreen(
+                                        photoUrl: flag.photoUrl,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: TransitionToImage(
+                                  image: AdvancedNetworkImage(
+                                    "${flag.photoUrl}",
+                                    loadedCallback: () {
+                                      print('It works!');
+                                    },
+                                    loadFailedCallback: () {
+                                      print('Oh, no!');
+                                    },
+                                    loadingProgress: (double progress, _) {
+                                      print('Now Loading: $progress');
+                                    },
+                                  ),
+                                  loadingWidgetBuilder:
+                                      (_, double progress, __) => Center(
+                                    child: LinearProgressIndicator(
+                                      value: progress,
+                                    ),
+                                  ),
+                                  fit: BoxFit.contain,
+                                  placeholder: const Icon(Icons.refresh),
+                                  width: 400.0,
+                                  height: 300.0,
+                                  enableRefresh: true,
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("${flag.address}"),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SendMessageTextField(
+                        flag: flag,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+        // DraggableScrollableSheet(
+        //   initialChildSize: 0.5,
+        //   maxChildSize: 1,
+        //   minChildSize: 0.50,
+        //   builder: (BuildContext context, ScrollController scrollController) {
+        //     return ;
+        //   },
+        // ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     // final List<WhiteFlag> flags = Provider.of<FlagModel>(context).flags;
     return Scaffold(
-      body: Stack(
-        children: [
-          // Selector<MarkerModel, Set<Marker>>(
-          //   selector: (_, MarkerModel model) => model.markers,
-          //   builder: (_, Set<Marker> markers, Widget child) {
-          //     return GoogleMap(
-          //       mapType: MapType.normal,
-          //       markers: markers,
-          //       initialCameraPosition: _kGooglePlex,
-          //       onMapCreated: (GoogleMapController controller) {
-          //         _controller.complete(controller);
-          //       },
-          //     );
-          //   },
-          // ),
-          GoogleMap(
-            mapType: MapType.normal,
-            markers: Provider.of<FlagModel>(context).markers(
-              onTap: (WhiteFlag selectedFlag) {
-                print(selectedFlag.address);
-              },
-            ),
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
-          Positioned(
-            bottom: 80,
-            left: 0,
-            right: 0,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              height: 170,
-              child: Selector<FlagModel, List<WhiteFlag>>(
-                selector: (_, model) => model.flags,
-                builder: (BuildContext context, List<WhiteFlag> flags,
-                    Widget child) {
-                  return PageView.builder(
-                    controller: ctrl,
-                    itemCount: flags.length,
-                    itemBuilder: (context, int currentIdx) {
-                      bool active = currentIdx == currentPage;
-                      return CardItem(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                              "${RoutePaths.FlagDetail}/${flags[currentIdx].id}");
-                        },
-                        flag: flags[currentIdx],
-                        active: active,
-                      );
+      body: Builder(
+        builder: (BuildContext context) {
+          return Stack(
+            children: [
+              Selector<FlagModel, Set<Marker>>(
+                selector: (_, FlagModel model) => model.markers(
+                  onTap: (WhiteFlag selectedFlag) {
+                    print("======> ${selectedFlag.address}");
+                    _showModalBottom(selectedFlag);
+                  },
+                ),
+                builder: (_, Set<Marker> markers, Widget child) {
+                  return GoogleMap(
+                    mapType: MapType.normal,
+                    markers: markers,
+                    initialCameraPosition: _kGooglePlex,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
                     },
                   );
                 },
               ),
-            ),
-          ),
-        ],
+              // GoogleMap(
+              //   mapType: MapType.normal,
+              //   markers: Provider.of<FlagModel>(context).markers(
+              //     onTap: (WhiteFlag selectedFlag) {
+              //       print(selectedFlag.address);
+              //       _showModalBottom(selectedFlag);
+              //     },
+              //   ),
+              //   initialCameraPosition: _kGooglePlex,
+              //   onMapCreated: (GoogleMapController controller) {
+              //     _controller.complete(controller);
+              //   },
+              // ),
+              // Positioned(
+              //   bottom: 80,
+              //   left: 0,
+              //   right: 0,
+              //   child: Container(
+              //     margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              //     height: 170,
+              //     child: Selector<FlagModel, List<WhiteFlag>>(
+              //       selector: (_, model) => model.flags,
+              //       builder: (BuildContext context, List<WhiteFlag> flags,
+              //           Widget child) {
+              //         return PageView.builder(
+              //           controller: ctrl,
+              //           itemCount: flags.length,
+              //           itemBuilder: (context, int currentIdx) {
+              //             bool active = currentIdx == currentPage;
+              //             return CardItem(
+              //               onTap: () {
+              //                 Navigator.of(context).pushNamed(
+              //                     "${RoutePaths.FlagDetail}/${flags[currentIdx].id}");
+              //               },
+              //               flag: flags[currentIdx],
+              //               active: active,
+              //             );
+              //           },
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
+            ],
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(

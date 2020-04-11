@@ -45,7 +45,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
   Future _getImage(ImageSource source) async {
-    var image = await ImagePicker.pickImage(source: source);
+    var image = await ImagePicker.pickImage(source: source, imageQuality: 80);
     if (image != null) {
       setState(() {
         _image = image;
