@@ -85,6 +85,20 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   _submit(BuildContext context) async {
     _hideKeyboard();
     // pickResult.geometry.location.
+    if (_mediaPath == null) {
+      Scaffold.of(context)
+          .showSnackBar(
+            (SnackBar(
+              content: Text('Es necesario adjuntar una foto o video.'),
+              // duration: Duration(milliseconds: 150),
+            )),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        Navigator.of(context).pop();
+      });
+      return;
+    }
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       final WhiteFlag newFlag = WhiteFlag(

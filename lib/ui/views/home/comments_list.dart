@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:banderablanca/core/core.dart';
+import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'video_player_screen.dart';
 
 class CommentsList extends StatefulWidget {
   const CommentsList({Key key, @required this.flag}) : super(key: key);
@@ -32,45 +37,40 @@ class _CommentsListState extends State<CommentsList> {
         child: Column(
           children: <Widget>[
             Text("${flag.description}"),
-            SizedBox(
-              height: 200,
-              width: 200,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => PhotoViewScreen(
-                        photoUrl: flag.photoUrl,
-                      ),
+            !flag.mediaContent.mimeType.startsWith('video/')
+                ? SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => PhotoViewScreen(
+                              photoUrl: flag.photoUrl,
+                            ),
+                          ),
+                        );
+                      },
+                      child: _previewImage(),
                     ),
-                  );
-                },
-                child: TransitionToImage(
-                  image: AdvancedNetworkImage(
-                    "${flag.photoUrl}",
-                    loadedCallback: () {
-                      print('It works!');
-                    },
-                    loadFailedCallback: () {
-                      print('Oh, no!');
-                    },
-                    loadingProgress: (double progress, _) {
-                      print('Now Loading: $progress');
-                    },
-                  ),
-                  loadingWidgetBuilder: (_, double progress, __) => Center(
-                    child: LinearProgressIndicator(
-                      value: progress,
+                  )
+                : SizedBox(
+                    height: 200,
+                    width: 200,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                VideoPlayerScreen(
+                              filePath: flag.mediaContent.downloadUrl,
+                            ),
+                          ),
+                        );
+                      },
+                      child: _previewImage(),
                     ),
                   ),
-                  fit: BoxFit.contain,
-                  placeholder: const Icon(Icons.refresh),
-                  width: 400.0,
-                  height: 300.0,
-                  enableRefresh: true,
-                ),
-              ),
-            ),
             Divider(),
             ListTile(
               title: Text("Comentarios"),
@@ -92,6 +92,36 @@ class _CommentsListState extends State<CommentsList> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _previewImage() {
+    return SizedBox(
+      height: 200,
+      child: TransitionToImage(
+        image: AdvancedNetworkImage(
+          "${flag.mediaContent?.downloadUrl}",
+          loadedCallback: () {
+            print('It works!');
+          },
+          loadFailedCallback: () {
+            print('Oh, no!');
+          },
+          loadingProgress: (double progress, _) {
+            // print('Now Loading: $progress');
+          },
+        ),
+        loadingWidgetBuilder: (_, double progress, __) => Center(
+          child: CircularProgressIndicator(
+            value: progress,
+          ),
+        ),
+        fit: BoxFit.contain,
+        placeholder: const Icon(Icons.refresh),
+        width: 400.0,
+        height: 300.0,
+        enableRefresh: true,
       ),
     );
   }

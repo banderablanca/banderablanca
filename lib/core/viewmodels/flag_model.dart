@@ -36,6 +36,7 @@ class FlagModel extends BaseModel {
     try {
       await _repository.createFlag(newFlag, mediaPath);
     } catch (e) {
+      print("+++++++++++++++++++++++++++++++++++++++++++++++++++");
       print(e);
     }
     setState(ViewState.Idle);

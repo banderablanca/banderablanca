@@ -4,12 +4,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import 'media_content.dart';
+
 part 'white_flag.freezed.dart';
 part 'white_flag.g.dart';
 
 @freezed
 abstract class WhiteFlag with _$WhiteFlag {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory WhiteFlag({
     String id,
     String address,
@@ -17,6 +19,7 @@ abstract class WhiteFlag with _$WhiteFlag {
     String title,
     String description,
     String photoUrl,
+    MediaContent mediaContent,
     String uid,
     String senderName,
     String displayName,

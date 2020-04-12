@@ -50,12 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     zoom: 14.4746,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(-12.0962816, -77.0219015),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
   bool showFab = true;
   Position _currentPosition;
   Future<void> _getLocation() async {
@@ -109,30 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                       ),
                       CommentsList(flag: flag),
-                      // StreamBuilder(
-                      //   stream:
-                      //       Provider.of<MessageModel>(context, listen: false)
-                      //           .streamMessage(flag.id),
-                      //   builder: (BuildContext context,
-                      //       AsyncSnapshot<List<Message>> snapshot) {
-                      //     if (snapshot.connectionState ==
-                      //         ConnectionState.waiting)
-                      //       return LinearProgressIndicator();
-                      //     if (!snapshot.hasData) return Container();
-                      //     return Expanded(
-                      //       child: ListView.builder(
-                      //         shrinkWrap: true,
-                      //         itemCount: snapshot.data.length,
-                      //         itemBuilder: (BuildContext context, int index) {
-                      //           final Message message = snapshot.data[index];
-                      //           return ListTile(
-                      //             title: Text("${message.text}"),
-                      //           );
-                      //         },
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
                       SendMessageTextField(
                         flag: flag,
                       ),
@@ -140,16 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            )
-        // DraggableScrollableSheet(
-        //   initialChildSize: 0.5,
-        //   maxChildSize: 1,
-        //   minChildSize: 0.50,
-        //   builder: (BuildContext context, ScrollController scrollController) {
-        //     return ;
-        //   },
-        // ),
-        );
+            ));
   }
 
   @override
@@ -163,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Selector<FlagModel, Set<Marker>>(
                 selector: (_, FlagModel model) => model.markers(
                   onTap: (WhiteFlag selectedFlag) {
-                    print("======> ${selectedFlag.address}");
                     _showModalBottom(selectedFlag);
                   },
                 ),
@@ -178,19 +138,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              // GoogleMap(
-              //   mapType: MapType.normal,
-              //   markers: Provider.of<FlagModel>(context).markers(
-              //     onTap: (WhiteFlag selectedFlag) {
-              //       print(selectedFlag.address);
-              //       _showModalBottom(selectedFlag);
-              //     },
-              //   ),
-              //   initialCameraPosition: _kGooglePlex,
-              //   onMapCreated: (GoogleMapController controller) {
-              //     _controller.complete(controller);
-              //   },
-              // ),
+              Positioned(
+                right: 0,
+                top: 50,
+                child: IconButton(
+                    icon: Icon(Icons.gps_fixed), onPressed: _goToTheLake),
+              ),
               // Positioned(
               //   bottom: 80,
               //   left: 0,
@@ -237,32 +190,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final kInitialPosition = LatLng(-33.8567844, 151.213108);
   Future<void> _goToTheLake() async {
-    // final GoogleMapController controller = await _controller.future;
-    // controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-    // Provider.of<MarkerModel>(context, listen: false).initMarkers();
-    // Navigator.of(context).pushNamed(RoutePaths.CreateFlag);
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => PlacePicker(
-    //       apiKey: ApiKeys.googleMapsApiKey, // Put YOUR OWN KEY here.
-    //       onPlacePicked: (PickResult result) {
-    //         // print(result);
-    //         //
-    //         // Navigator.of(context).pushNamed(RoutePaths.CreateFlag);
-    //         Navigator.of(context).pop();
-    //         Navigator.of(context).push(
-    //           MaterialPageRoute(builder: (BuildContext context) {
-    //             return CreateFlagScreen(pickResult: result);
-    //           }),
-    //         );
-    //       },
-
-    //       initialPosition: kInitialPosition,
-    //       useCurrentLocation: true,
-    //     ),
-    //   ),
-    // );
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            bearing: 192.8334901395799,
+            target:
+                LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            tilt: 59.440717697143555,
+            zoom: 19.151926040649414),
+      ),
+    );
   }
 
   Future _loadCameraScreen(BuildContext context) async {
