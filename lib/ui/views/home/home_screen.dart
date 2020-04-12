@@ -95,9 +95,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       ListTile(
-                        title: Text("${flag.address}"),
+                        title: Text(
+                          "${flag.address}",
+                          style: TextStyle(fontFamily: "Tajawal Bold"),
+                        ),
                         trailing: IconButton(
-                            icon: Icon(FontAwesomeIcons.chevronDown),
+                            icon: Icon(
+                              FontAwesomeIcons.chevronDown,
+                              color: Theme.of(context).primaryColor,
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             }),
@@ -180,9 +186,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 7,
         onPressed: () => _loadCameraScreen(context),
-        label: Text('Alzar una bandera'),
-        icon: Icon(FontAwesomeIcons.flag),
+        label: Text(
+          'Alzar una bandera',
+          style: TextStyle(fontFamily: "Avenir Black", fontSize: 16),
+        ),
+        icon: Padding(
+          padding: EdgeInsets.all(4),
+          child: Icon(
+            FontAwesomeIcons.fontAwesomeFlag,
+            size: 20,
+          ),
+        ),
       ),
       // bottomNavigationBar: BottomNavigation(),
     );

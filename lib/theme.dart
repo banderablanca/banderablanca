@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static get theme {
     return ThemeData(
-      primaryColor: Color(0xFF541A49),
-      primaryColorLight: Color(0xFF8C2378),
-      secondaryHeaderColor: Color(0xFF06F482),
-      accentColor: Color(0xFFd4005e),
+      primaryColor: Color(0xFF6870FB),
+      primaryColorLight: Color(0xFFD2DAFD),
+      // secondaryHeaderColor: Color(0xFF06F482),
+      accentColor: Color(0xFFFD5A8E),
+      fontFamily: "Tajawal",
       iconTheme: IconThemeData(
         color: Colors.grey[700],
       ),

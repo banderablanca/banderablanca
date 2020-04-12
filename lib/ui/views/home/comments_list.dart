@@ -35,12 +35,26 @@ class _CommentsListState extends State<CommentsList> {
       child: Selector<MessageModel, List<Message>>(
         selector: (_, MessageModel model) => model.messages,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("${flag.description}"),
+            Divider(),
+            ListTile(
+              dense: true,
+              title: Text(
+                "Ayudemos:",
+                style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontFamily: "Tajawal Bold"),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              child: Text("${flag.description}"),
+            ),
             !flag.mediaContent.mimeType.startsWith('video/')
-                ? SizedBox(
+                ? Container(
                     height: 200,
-                    width: 200,
+                    alignment: Alignment.center,
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(
@@ -54,9 +68,9 @@ class _CommentsListState extends State<CommentsList> {
                       child: _previewImage(),
                     ),
                   )
-                : SizedBox(
+                : Container(
+                    alignment: Alignment.center,
                     height: 200,
-                    width: 200,
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(
@@ -71,9 +85,18 @@ class _CommentsListState extends State<CommentsList> {
                       child: _previewImage(),
                     ),
                   ),
+            SizedBox(
+              height: 5,
+            ),
             Divider(),
             ListTile(
-              title: Text("Comentarios"),
+              dense: true,
+              title: Text(
+                "Comentarios:",
+                style: Theme.of(context).textTheme.subhead.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontFamily: "Tajawal Bold"),
+              ),
             ),
           ],
         ),
