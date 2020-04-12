@@ -49,5 +49,11 @@
 	<string>Pide ayuda o brinda ayuda con tu posición exacta.</string>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Se usa para seleccionar una foto de un hogar con bandera blanca</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Toma una foto de un hogar con bandera blanca</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>No necesitamos este permiso.</string>
 </dict>
 </plist>
