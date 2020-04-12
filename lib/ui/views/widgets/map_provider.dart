@@ -94,9 +94,14 @@ class _StaticMapState extends State<StaticMap> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: FadeInImage(
-      placeholder: NetworkImage(startUrl),
-      image: NetworkImage(nextUrl),
-    ));
+      alignment: Alignment.center,
+      constraints: BoxConstraints(maxHeight: 300),
+      child: FadeInImage(
+        placeholder: NetworkImage(startUrl),
+        image: NetworkImage(nextUrl),
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+      ),
+    );
   }
 }

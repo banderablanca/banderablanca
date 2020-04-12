@@ -65,7 +65,12 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             _buildAttachMediaGalleryIcon(),
           ],
           if (_image != null)
-            CircleAvatar(
+            Container(
+              decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                      color: Theme.of(context).primaryColor, width: 2)),
+
               // backgroundImage: Image.file(),
               child: Image.file(_image),
             ),
@@ -121,7 +126,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
             widget.flag.id,
             Message(text: _controller.text.trim()),
-            _image.path);
+            _image?.path);
         _controller.clear();
         _hideKeyboard();
       },
