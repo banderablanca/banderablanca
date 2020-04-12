@@ -6,7 +6,7 @@ class AppTheme {
       primaryColor: Color(0xFF6870FB),
       primaryColorLight: Color(0xFFD2DAFD),
       // secondaryHeaderColor: Color(0xFF06F482),
-      accentColor: Color(0xFFFD5A8E),
+      accentColor: Color(0xFFFF5D71),
       fontFamily: "Tajawal",
       iconTheme: IconThemeData(
         color: Colors.grey[700],

@@ -345,8 +345,17 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
         builder: (BuildContext context) {
           return FloatingActionButton.extended(
             onPressed: () => _submit(context),
-            label: Text('Guardar'),
-            icon: Icon(FontAwesomeIcons.flag),
+            label: Text(
+              'Guardar',
+              style: TextStyle(fontFamily: "Avenir Black", fontSize: 16),
+            ),
+            icon: Padding(
+              padding: EdgeInsets.all(4),
+              child: Icon(
+                FontAwesomeIcons.fontAwesomeFlag,
+                size: 20,
+              ),
+            ),
           );
         },
       ),
