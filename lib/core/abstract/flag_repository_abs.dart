@@ -5,5 +5,5 @@ import '../models/models.dart';
 
 abstract class FlagRepositoryAbs {
   Stream<List<WhiteFlag>> streamFlags();
-  Future<bool> createFlag(WhiteFlag newFlag, File image);
+  Future<bool> createFlag(WhiteFlag newFlag, String mediaPath);
 }

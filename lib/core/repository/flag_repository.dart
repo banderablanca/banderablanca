@@ -22,12 +22,12 @@ class FlagRepository implements FlagRepositoryAbs {
   static String path = "flags";
 
   @override
-  Future<bool> createFlag(WhiteFlag newFlag, File image) async {
+  Future<bool> createFlag(WhiteFlag newFlag, String mediaPath) async {
     final FirebaseUser firebaseUser = await auth.currentUser();
     final _doc = firestore.collection(path).document();
     final StorageRepository storageRepository = StorageRepository(storage);
     String downloadUrl =
-        await storageRepository.uploadFile(image, _doc.documentID, path);
+        await storageRepository.uploadFile(mediaPath, _doc.documentID, path);
     WhiteFlag _data = newFlag.copyWith(
       senderName: firebaseUser.displayName,
       senderPhotoUrl: firebaseUser.photoUrl,

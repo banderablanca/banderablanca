@@ -34,10 +34,10 @@ class MessageModel extends BaseModel {
     });
   }
 
-  sendMessage(String flagId, Message newMessage, File image) async {
+  sendMessage(String flagId, Message newMessage, String filePath) async {
     if (!newMessage.text.trim().isNotEmpty) return;
     setState(ViewState.Busy);
-    await _repository.sendMessage(flagId, newMessage, image);
+    await _repository.sendMessage(flagId, newMessage, filePath);
     setState(ViewState.Idle);
   }
 

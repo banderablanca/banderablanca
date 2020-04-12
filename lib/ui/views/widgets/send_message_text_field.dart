@@ -119,7 +119,9 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
       color: Theme.of(context).accentColor,
       onPressed: () async {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
-            widget.flag.id, Message(text: _controller.text.trim()), _image);
+            widget.flag.id,
+            Message(text: _controller.text.trim()),
+            _image.path);
         _controller.clear();
         _hideKeyboard();
       },

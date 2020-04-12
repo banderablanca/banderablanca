@@ -31,10 +31,10 @@ class FlagModel extends BaseModel {
 
   List<WhiteFlag> get flags => _flags;
 
-  createflag(WhiteFlag newFlag, File image) async {
+  createflag(WhiteFlag newFlag, String mediaPath) async {
     setState(ViewState.Busy);
     try {
-      await _repository.createFlag(newFlag, image);
+      await _repository.createFlag(newFlag, mediaPath);
     } catch (e) {
       print(e);
     }

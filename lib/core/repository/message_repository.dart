@@ -42,7 +42,7 @@ class MessageRepository implements MessageRepositoryAbs {
 
   @override
   Future<bool> sendMessage(
-      String flagId, Message newMessage, File image) async {
+      String flagId, Message newMessage, String filePath) async {
     final FirebaseUser firebaseUser = await auth.currentUser();
     final _doc = firestore.collection(path).document();
     Message _data = newMessage.copyWith(
@@ -50,10 +50,10 @@ class MessageRepository implements MessageRepositoryAbs {
       senderPhotoUrl: firebaseUser.photoUrl,
       uid: firebaseUser.uid,
     );
-    if (image != null) {
+    if (filePath != null) {
       final StorageRepository storageRepository = StorageRepository(storage);
       String downloadUrl =
-          await storageRepository.uploadFile(image, _doc.documentID, path);
+          await storageRepository.uploadFile(filePath, _doc.documentID, path);
       _data = _data.copyWith(
         photoUrl: downloadUrl,
       );

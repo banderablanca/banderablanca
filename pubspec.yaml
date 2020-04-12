@@ -32,6 +32,8 @@ dependencies:
   geolocator: ^5.3.1
   google_maps_place_picker: ^0.9.2
   flutter_advanced_networkimage: ^0.7.0
+  video_player: ^0.10.8+1
+  mime: ^0.9.6+3
 
 dev_dependencies:
   flutter_test:
@@ -43,18 +45,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:mime/mime.dart';
 
 String validateEmail(BuildContext context, String email) {
   if (email.isEmpty || !EmailValidator.validate(email)) {
@@ -25,3 +26,6 @@ int weekNumber(DateTime date) {
   int dayOfYear = int.parse(DateFormat("D").format(date));
   return ((dayOfYear - date.weekday + 10) / 7).floor();
 }
+
+bool isVideo(String mediaPath) =>
+    lookupMimeType(mediaPath).startsWith('video/');

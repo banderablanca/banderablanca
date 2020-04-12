@@ -1,20 +1,27 @@
 import 'dart:io';
 
 import 'package:banderablanca/constants/app_constants.dart';
+import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:banderablanca/ui/views/widgets/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 import '../../../core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreateFlagScreen extends StatefulWidget {
-  const CreateFlagScreen({Key key, @required this.pickResult})
-      : super(key: key);
+import '../views.dart';
 
-  final PickResult pickResult;
+class CreateFlagScreen extends StatefulWidget {
+  const CreateFlagScreen({Key key, this.mediaPath}) : super(key: key);
+  // const CreateFlagScreen({Key key, @required this.pickResult})
+  //     : super(key: key);
+
+  // final PickResult pickResult;
+  final String mediaPath;
+  // final bool isVideo;
 
   @override
   _CreateFlagScreenState createState() => _CreateFlagScreenState();
@@ -23,38 +30,44 @@ class CreateFlagScreen extends StatefulWidget {
 class _CreateFlagScreenState extends State<CreateFlagScreen> {
   final _formKey = GlobalKey<FormState>();
   double _inputHeight = 50;
-  final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _desctiprionController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _textEditingController.addListener(_checkInputHeight);
+    _desctiprionController.addListener(_checkInputHeight);
+    // if (widget.isVideo)
+    setState(() {
+      _mediaPath = widget.mediaPath;
+    });
   }
 
   @override
   void dispose() {
-    _textEditingController.dispose();
+    _desctiprionController?.dispose();
+    _addressController?.dispose();
     super.dispose();
   }
 
-  PickResult get pickResult => widget.pickResult;
+  PickResult pickResult;
   String title;
   String description;
   String address;
-  File _image;
+  String _mediaPath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
   Future _getImage(ImageSource source) async {
     var image = await ImagePicker.pickImage(source: source, imageQuality: 80);
     if (image != null) {
       setState(() {
-        _image = image;
+        _mediaPath = image.path;
       });
     }
   }
 
   void _checkInputHeight() async {
-    int count = _textEditingController.text.split('\n').length;
+    int count = _desctiprionController.text.split('\n').length;
 
     if (count == 0 && _inputHeight == 50.0) {
       return;
@@ -82,7 +95,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
             pickResult.geometry.location.lat, pickResult.geometry.location.lng),
       );
       await Provider.of<FlagModel>(context, listen: false)
-          .createflag(newFlag, _image);
+          .createflag(newFlag, _mediaPath);
       Scaffold.of(context)
           .showSnackBar(
             (SnackBar(
@@ -97,49 +110,54 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     }
   }
 
-  TextFormField _buildTextFormField({
-    String hintText = '',
-    String initValue,
-    bool readOnly = false,
-    Function(String) validator,
-    Function(String) onSaved,
-  }) {
-    return TextFormField(
-      initialValue: initValue,
-      readOnly: readOnly,
-      onSaved: onSaved,
-      validator: validator,
-      decoration: InputDecoration(hintText: hintText),
-    );
-  }
+  // void _optionModalBottomSheet(context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return Container(
+  //           child: Wrap(
+  //             children: <Widget>[
+  //               ListTile(
+  //                 leading: Icon(Icons.photo_camera),
+  //                 title: Text('Tomar foto'),
+  //                 onTap: () {
+  //                   Navigator.of(context).pop();
+  //                   _getImage(ImageSource.camera);
+  //                 },
+  //               ),
+  //               ListTile(
+  //                 leading: Icon(Icons.photo_album),
+  //                 title: Text('Elegir foto de álbum'),
+  //                 onTap: () {
+  //                   Navigator.of(context).pop();
+  //                   _getImage(ImageSource.gallery);
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
-  void _optionModalBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            child: Wrap(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.photo_camera),
-                  title: Text('Tomar foto'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _getImage(ImageSource.camera);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.photo_album),
-                  title: Text('Elegir foto de álbum'),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _getImage(ImageSource.gallery);
-                  },
-                ),
-              ],
-            ),
-          );
-        });
+  _getAddress(context) async {
+    PickResult result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => PlacePicker(
+            apiKey: ApiKeys.googleMapsApiKey,
+            onPlacePicked: (PickResult result) {
+              Navigator.of(context).pop(result);
+            },
+            initialPosition: LatLng(-33.8567844, 151.213108),
+            useCurrentLocation: true,
+          ),
+          fullscreenDialog: true,
+        ));
+
+    setState(() {
+      pickResult = result;
+      _addressController.text = result.formattedAddress;
+    });
   }
 
   @override
@@ -154,25 +172,30 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
               child: Stack(
                 children: <Widget>[
                   Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      StaticMap(
-                        googleMapsApiKey: ApiKeys.googleMapsApiKey,
-                        currentLocation: {
-                          "latitude": pickResult.geometry.location.lat,
-                          "longitude": pickResult.geometry.location.lng
-                        },
-                        markers: [
-                          {
+                      if (pickResult != null)
+                        StaticMap(
+                          googleMapsApiKey: ApiKeys.googleMapsApiKey,
+                          currentLocation: {
                             "latitude": pickResult.geometry.location.lat,
                             "longitude": pickResult.geometry.location.lng
-                          }
-                        ],
-                        zoom: 4,
-                      ),
-                      _buildTextFormField(
-                        initValue: pickResult.formattedAddress,
+                          },
+                          markers: [
+                            {
+                              "latitude": pickResult.geometry.location.lat,
+                              "longitude": pickResult.geometry.location.lng
+                            }
+                          ],
+                          zoom: 4,
+                        ),
+                      TextFormField(
+                        // initValue: pickResult?.formattedAddress,
+                        controller: _addressController,
                         readOnly: true,
-                        hintText: 'Dirección',
+                        onTap: () => _getAddress(context),
+                        decoration: InputDecoration(
+                            hintText: 'Ingresa la dirección exacta'),
                         onSaved: (String value) {
                           setState(() {
                             address = value;
@@ -185,36 +208,42 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                           return null;
                         },
                       ),
-                      TextFormField(
-                        controller: _textEditingController,
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                            hintText: 'Cómo te pueden ayudar las personas?'),
-                        onSaved: (String value) {
-                          setState(() {
-                            description = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      InkWell(
-                        onTap: () => _optionModalBottomSheet(context),
-                        child: Container(
-                          height: 150,
-                          child: _image != null
-                              ? Image.file(_image)
-                              : Center(
-                                  child: Text("Tab para agregar una foto"),
-                                ),
+                      SizedBox(
+                        height: _inputHeight,
+                        child: TextFormField(
+                          controller: _desctiprionController,
+                          textInputAction: TextInputAction.newline,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              hintText: 'Cómo te pueden ayudar las personas?'),
+                          onSaved: (String value) {
+                            setState(() {
+                              description = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
                         ),
                       ),
+                      isVideo(_mediaPath) ? _previewVideo() : _previewImage(),
+                      // InkWell(
+                      //   onTap: () => _optionModalBottomSheet(context),
+                      //   child: Container(
+                      //     height: 150,
+                      //     child:
+
+                      //      _image != null
+                      //         ? Image.file(_image)
+                      //         : Center(
+                      //             child: Text("Tab para agregar una foto"),
+                      //           ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   if (Provider.of<FlagModel>(context).state == ViewState.Busy)
@@ -235,6 +264,29 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
             icon: Icon(FontAwesomeIcons.flag),
           );
         },
+      ),
+    );
+  }
+
+  Widget _previewImage() {
+    return SizedBox(
+      height: 200,
+      child: Image.file(
+        File(_mediaPath),
+        fit: BoxFit.cover,
+        // height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
+    );
+  }
+
+  Widget _previewVideo() {
+    return Container(
+      height: 200,
+      child: VideoPlayerScreen(
+        // message: Message(mediaContent: MediaContent(thumbnailInfo: Thum)),//,filePath,
+        filePath: _mediaPath,
       ),
     );
   }

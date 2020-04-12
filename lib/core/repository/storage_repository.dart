@@ -16,15 +16,15 @@ class StorageRepository implements StorageRepositoryAbs {
   final FirebaseStorage storage;
 
   @override
-  Future<String> uploadFile(File file, String flagId, String path) async {
+  Future<String> uploadFile(String filePath, String flagId, String path) async {
     final String uuid = Uuid().v1();
     // final File file = file;
     final StorageReference ref = storage
         .ref()
         .child(path)
         .child('$flagId')
-        .child('fs$uuid${extension(file.path)}');
-    final StorageUploadTask uploadTask = ref.putFile(file);
+        .child('fs$uuid${extension(filePath)}');
+    final StorageUploadTask uploadTask = ref.putFile(File(filePath));
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return Future.value(downloadUrl);

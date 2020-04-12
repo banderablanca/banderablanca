@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
@@ -11,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import '../views.dart';
 import '../widgets/widgets.dart';
+import 'camera_screen.dart';
 import 'card_item.dart';
 import 'comments_list.dart';
 import 'photo_view_screen.dart';
@@ -225,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
+        onPressed: () => _loadCameraScreen(context),
         label: Text('Alzar una bandera'),
         icon: Icon(FontAwesomeIcons.flag),
       ),
@@ -239,25 +241,43 @@ class _HomeScreenState extends State<HomeScreen> {
     // controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
     // Provider.of<MarkerModel>(context, listen: false).initMarkers();
     // Navigator.of(context).pushNamed(RoutePaths.CreateFlag);
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => PlacePicker(
+    //       apiKey: ApiKeys.googleMapsApiKey, // Put YOUR OWN KEY here.
+    //       onPlacePicked: (PickResult result) {
+    //         // print(result);
+    //         //
+    //         // Navigator.of(context).pushNamed(RoutePaths.CreateFlag);
+    //         Navigator.of(context).pop();
+    //         Navigator.of(context).push(
+    //           MaterialPageRoute(builder: (BuildContext context) {
+    //             return CreateFlagScreen(pickResult: result);
+    //           }),
+    //         );
+    //       },
+
+    //       initialPosition: kInitialPosition,
+    //       useCurrentLocation: true,
+    //     ),
+    //   ),
+    // );
+  }
+
+  Future _loadCameraScreen(BuildContext context) async {
+    // _onImageButtonPressed(ImageSource.gallery);
+    List<CameraDescription> cameras;
+    try {
+      cameras = await availableCameras();
+    } on CameraException catch (e) {
+      debugPrint('Error: ${e.code}\nError Message: ${e.description}');
+    }
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PlacePicker(
-          apiKey: ApiKeys.googleMapsApiKey, // Put YOUR OWN KEY here.
-          onPlacePicked: (PickResult result) {
-            // print(result);
-            //
-            // Navigator.of(context).pushNamed(RoutePaths.CreateFlag);
-            Navigator.of(context).pop();
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (BuildContext context) {
-                return CreateFlagScreen(pickResult: result);
-              }),
-            );
-          },
-
-          initialPosition: kInitialPosition,
-          useCurrentLocation: true,
+        builder: (context) => CameraScreen(
+          cameras: cameras,
         ),
       ),
     );
