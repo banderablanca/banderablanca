@@ -37,6 +37,7 @@ dependencies:
   video_thumbnail: ^0.2.0
   image: ^2.1.12
   path_provider: ^1.6.5
+  flutter_svg: 0.17.4
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/marker.png
+    - assets/img/trama.svg
 
   fonts:
     - family: Avenir

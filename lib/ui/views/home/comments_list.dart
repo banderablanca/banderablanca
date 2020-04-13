@@ -67,24 +67,27 @@ class _CommentsListState extends State<CommentsList> {
                     fontFamily: "Tajawal Bold"),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      "${flag.description}",
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text(
+                        "${flag.description}",
+                      ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: _previewMedia,
-                  child: _previewImage(),
-                )
-              ],
+                  InkWell(
+                    onTap: _previewMedia,
+                    child: _previewImage(),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 5,
