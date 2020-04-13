@@ -50,7 +50,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
     // Usa el controlador para hacer un bucle en el vídeo
     _controller.setLooping(true);
-    _controller.play();
+    // _controller.play();
 
     super.initState();
   }

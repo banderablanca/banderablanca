@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
+import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
@@ -139,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     markers: markers,
                     initialCameraPosition: _kGooglePlex,
                     onMapCreated: (GoogleMapController controller) {
+                      controller.setMapStyle(Utils.mapStyles);
                       _controller.complete(controller);
                     },
                   );

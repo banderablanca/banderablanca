@@ -29,6 +29,26 @@ class _CommentsListState extends State<CommentsList> {
     super.initState();
   }
 
+  _previewMedia() {
+    if (!flag.mediaContent.mimeType.startsWith('video/')) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => PhotoViewScreen(
+            photoUrl: flag.photoUrl,
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => VideoPlayerScreen(
+            filePath: flag.mediaContent.downloadUrl,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -41,50 +61,27 @@ class _CommentsListState extends State<CommentsList> {
             ListTile(
               dense: true,
               title: Text(
-                "Ayudemos:",
+                "Bandera blanca",
                 style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Theme.of(context).primaryColor,
                     fontFamily: "Tajawal Bold"),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18),
-              child: Text("${flag.description}"),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  child: Text("${flag.description}"),
+                ),
+                InkWell(
+                  onTap: _previewMedia,
+                  child: _previewImage(),
+                )
+              ],
             ),
-            !flag.mediaContent.mimeType.startsWith('video/')
-                ? Container(
-                    height: 200,
-                    alignment: Alignment.center,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => PhotoViewScreen(
-                              photoUrl: flag.photoUrl,
-                            ),
-                          ),
-                        );
-                      },
-                      child: _previewImage(),
-                    ),
-                  )
-                : Container(
-                    alignment: Alignment.center,
-                    height: 200,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                VideoPlayerScreen(
-                              filePath: flag.mediaContent.downloadUrl,
-                            ),
-                          ),
-                        );
-                      },
-                      child: _previewImage(),
-                    ),
-                  ),
             SizedBox(
               height: 5,
             ),
@@ -92,7 +89,7 @@ class _CommentsListState extends State<CommentsList> {
             ListTile(
               dense: true,
               title: Text(
-                "Comentarios:",
+                "Comentarios",
                 style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Theme.of(context).primaryColor,
                     fontFamily: "Tajawal Bold"),
@@ -134,32 +131,60 @@ class _CommentsListState extends State<CommentsList> {
   }
 
   Widget _previewImage() {
-    return SizedBox(
-      height: 200,
-      child: TransitionToImage(
-        image: AdvancedNetworkImage(
-          "${flag.mediaContent?.downloadUrl}",
-          loadedCallback: () {
-            print('It works!');
-          },
-          loadFailedCallback: () {
-            print('Oh, no!');
-          },
-          loadingProgress: (double progress, _) {
-            // print('Now Loading: $progress');
-          },
-        ),
-        loadingWidgetBuilder: (_, double progress, __) => Center(
-          child: CircularProgressIndicator(
-            value: progress,
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: 100,
+          width: 100,
+          margin: EdgeInsets.all(14),
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+              border:
+                  Border.all(color: Theme.of(context).primaryColor, width: 2)),
+          child: TransitionToImage(
+            image: AdvancedNetworkImage(
+              "${flag.mediaContent?.downloadUrl}",
+              loadedCallback: () {
+                print('It works!');
+              },
+              loadFailedCallback: () {
+                print('Oh, no!');
+              },
+              loadingProgress: (double progress, _) {
+                // print('Now Loading: $progress');
+              },
+            ),
+            loadingWidgetBuilder: (_, double progress, __) => Center(
+              child: CircularProgressIndicator(
+                value: progress,
+              ),
+            ),
+            fit: BoxFit.cover,
+            width: double.infinity,
+            alignment: Alignment.center,
+            placeholder: const Icon(Icons.refresh),
+            enableRefresh: true,
           ),
         ),
-        fit: BoxFit.contain,
-        placeholder: const Icon(Icons.refresh),
-        width: 400.0,
-        height: 300.0,
-        enableRefresh: true,
-      ),
+        Positioned.fill(
+            child: Container(
+          color: Colors.white.withOpacity(0.3),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.zoom_in, color: Theme.of(context).accentColor),
+                SizedBox(width: 8),
+                Text(
+                  "Ver",
+                  style: Theme.of(context)
+                      .textTheme
+                      .title
+                      .copyWith(color: Theme.of(context).accentColor),
+                ),
+              ]),
+        )),
+      ],
     );
   }
 }

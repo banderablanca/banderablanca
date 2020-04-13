@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:banderablanca/core/abstract/abstract.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../models/models.dart';
@@ -11,10 +12,18 @@ import 'base_model.dart';
 
 class FlagModel extends BaseModel {
   FlagRepositoryAbs _repository;
+  BitmapDescriptor pinLocationIcon;
 
   set repository(FlagRepositoryAbs _repo) {
     _repository = _repo;
     _listenFlags();
+
+    _setCustomMapPin();
+  }
+
+  void _setCustomMapPin() async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/marker.png');
   }
 
   // Set<Marker> _markers = HashSet<Marker>();
@@ -25,6 +34,7 @@ class FlagModel extends BaseModel {
         (f) => Marker(
             markerId: MarkerId(f.id),
             position: f.position,
+            icon: pinLocationIcon,
             onTap: () => onTap(f)),
       )
       .toSet();

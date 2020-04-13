@@ -220,7 +220,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 16, vertical: 4),
                                   child: Text(
-                                    "Crea una ayuda",
+                                    "Registrar una bandera blanca",
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline
@@ -235,32 +235,32 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             SizedBox(
                               height: 8,
                             ),
+                            isVideo(_mediaPath)
+                                ? _previewVideo()
+                                : _previewImage(),
                             if (pickResult != null)
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                child: StaticMap(
-                                  googleMapsApiKey: ApiKeys.googleMapsApiKey,
-                                  currentLocation: {
+                              StaticMap(
+                                googleMapsApiKey: ApiKeys.googleMapsApiKey,
+                                height: 100,
+                                width: (MediaQuery.of(context).size.width - 30)
+                                    .floor(),
+                                currentLocation: {
+                                  "latitude": pickResult.geometry.location.lat,
+                                  "longitude": pickResult.geometry.location.lng
+                                },
+                                markers: [
+                                  {
                                     "latitude":
                                         pickResult.geometry.location.lat,
                                     "longitude":
                                         pickResult.geometry.location.lng
-                                  },
-                                  markers: [
-                                    {
-                                      "latitude":
-                                          pickResult.geometry.location.lat,
-                                      "longitude":
-                                          pickResult.geometry.location.lng
-                                    }
-                                  ],
-                                  zoom: 5,
-                                ),
+                                  }
+                                ],
+                                zoom: 5,
                               ),
-                            SizedBox(
-                              height: 4,
-                            ),
+                            // SizedBox(
+                            //   height: 4,
+                            // ),
                             Padding(
                               padding: EdgeInsets.all(16),
                               child: TextFormField(
@@ -283,6 +283,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                 },
                               ),
                             ),
+
                             Padding(
                               padding: EdgeInsets.all(16),
                               child: Container(
@@ -309,9 +310,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                 ),
                               ),
                             ),
-                            isVideo(_mediaPath)
-                                ? _previewVideo()
-                                : _previewImage(),
+
                             // InkWell(
                             //   onTap: () => _optionModalBottomSheet(context),
                             //   child: Container(
@@ -365,7 +364,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   // Widget _triangle() {}
   Widget _previewImage() {
     return Container(
-      height: 250,
+      height: 150,
       margin: EdgeInsets.all(14),
       padding: EdgeInsets.all(2),
       decoration: BoxDecoration(
@@ -373,7 +372,6 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
       child: Image.file(
         File(_mediaPath),
         fit: BoxFit.cover,
-        // height: double.infinity,
         width: double.infinity,
         alignment: Alignment.center,
       ),

@@ -63,8 +63,11 @@ Future<ThumbnailInfo> genThumbnail(String mediaPath) async {
     final tempDir = await getTemporaryDirectory();
     int rand = new Math.Random().nextInt(10000);
     // File('thumbnail.png')..writeAsBytesSync(IMG.encodePng(thumbnail));
-    File compressedImage = File('${tempDir.path}/img_$rand.png')
-      ..writeAsBytesSync(IMG.encodePng(thumbnail, level: 8));
+    File newFile = File('${tempDir.path}/img_$rand.png');
+
+    File compressedImage =
+        await newFile.writeAsBytes(IMG.encodePng(thumbnail, level: 8));
+    print("============================ ${compressedImage.path}");
 
     final _image = Image.file(compressedImage);
 

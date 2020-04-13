@@ -95,7 +95,7 @@ class _StaticMapState extends State<StaticMap> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      constraints: BoxConstraints(maxHeight: 300),
+      constraints: BoxConstraints(maxHeight: 100),
       child: FadeInImage(
         placeholder: NetworkImage(startUrl),
         image: NetworkImage(nextUrl),
