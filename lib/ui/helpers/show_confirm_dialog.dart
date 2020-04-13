@@ -10,11 +10,15 @@ Future<bool> showConfirmDialog(
   BuildContext context, {
   String title = "confirmar",
   String content = "",
+  String confirmText = "OK",
+  String cancelText = "CANCELAR",
 }) async {
   bool isConfirm = false;
   Widget body = ConfirmDialogBody(
     title: title,
     content: content,
+    confirmText: confirmText,
+    cancelText: cancelText,
   );
 
   if (Platform.isIOS)

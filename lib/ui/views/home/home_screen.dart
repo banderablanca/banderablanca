@@ -1,23 +1,16 @@
 import 'dart:async';
 
-import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
-import 'package:flutter_advanced_networkimage/transition.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
-import '../views.dart';
 import '../widgets/widgets.dart';
 import 'camera_screen.dart';
-import 'card_item.dart';
 import 'comments_list.dart';
-import 'photo_view_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -83,7 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isConfirm = await showConfirmDialog(context,
         title: "Reportar bandera falsa",
         content:
-            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.");
+            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.",
+        confirmText: "REPORTAR");
     if (isConfirm)
       Provider.of<FlagModel>(context, listen: false).reportFlag(flag);
   }

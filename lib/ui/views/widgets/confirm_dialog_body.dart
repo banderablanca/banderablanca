@@ -4,12 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDialogBody extends StatelessWidget {
-  const ConfirmDialogBody(
-      {Key key, @required this.title, @required this.content})
-      : super(key: key);
+  const ConfirmDialogBody({
+    Key key,
+    @required this.title,
+    @required this.content,
+    @required this.cancelText,
+    @required this.confirmText,
+  }) : super(key: key);
 
   final String title;
   final String content;
+  final String confirmText;
+  final String cancelText;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +26,11 @@ class ConfirmDialogBody extends StatelessWidget {
         content: Text('$content'),
         actions: <Widget>[
           CupertinoDialogAction(
-            child: const Text('REPORTAR'),
+            child: Text('$confirmText'),
             onPressed: () => Navigator.pop(context, true),
           ),
           CupertinoDialogAction(
-            child: const Text('CANCELAR'),
+            child: Text('$cancelText'),
             onPressed: () => Navigator.pop(context, false),
           ),
         ],
@@ -37,11 +43,11 @@ class ConfirmDialogBody extends StatelessWidget {
       actions: <Widget>[
         // usually buttons at the bottom of the dialog
         FlatButton(
-          child: Text("REPORTAR"),
+          child: Text("$confirmText"),
           onPressed: () => Navigator.pop(context, true),
         ),
         FlatButton(
-          child: Text("CANCELAR"),
+          child: Text("$cancelText"),
           onPressed: () => Navigator.pop(context, false),
         ),
       ],

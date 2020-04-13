@@ -79,6 +79,7 @@ class MessageRepository implements MessageRepositoryAbs {
 
     Map<String, dynamic> _message = _data.toJson();
     _message['timestamp'] = FieldValue.serverTimestamp();
+    _message['visibility'] = 'public';
     return firestore
         .collection(path)
         .document('$flagId')

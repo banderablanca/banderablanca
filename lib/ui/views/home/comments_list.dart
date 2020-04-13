@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:banderablanca/core/core.dart';
+import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'video_player_screen.dart';
 
@@ -48,6 +50,18 @@ class _CommentsListState extends State<CommentsList> {
     }
   }
 
+  _showConfirmDialog(WhiteFlag flag) async {
+    bool isConfirm = await showConfirmDialog(context,
+        title: "¿Deseas eliminar bandera?",
+        content:
+            "Si eliminas la Bandera Blanca, dejará de mostrarse en el mapa.",
+        confirmText: "ELIMINAR");
+    if (isConfirm) {
+      await Provider.of<FlagModel>(context, listen: false).deleteFlag(flag);
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -64,6 +78,19 @@ class _CommentsListState extends State<CommentsList> {
                 style: Theme.of(context).textTheme.subhead.copyWith(
                     color: Theme.of(context).primaryColor,
                     fontFamily: "Tajawal Bold"),
+              ),
+              trailing: IconButton(
+                icon: Provider.of<UserModel>(context).currentUser.id != flag.uid
+                    ? Container()
+                    : Provider.of<FlagModel>(context).state ==
+                            ViewState.DeletingFlag
+                        ? Container(
+                            width: 29,
+                            height: 30,
+                            child: CircularProgressIndicator(),
+                          )
+                        : Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: () => _showConfirmDialog(flag),
               ),
             ),
             Padding(

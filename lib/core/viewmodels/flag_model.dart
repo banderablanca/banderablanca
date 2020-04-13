@@ -66,4 +66,15 @@ class FlagModel extends BaseModel {
     }
     setState(ViewState.Idle);
   }
+
+  deleteFlag(WhiteFlag flag) async {
+    setState(ViewState.DeletingFlag);
+    try {
+      await _repository.deleteFlag(flag);
+    } catch (e) {
+      debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+      debugPrint(e);
+    }
+    setState(ViewState.Idle);
+  }
 }

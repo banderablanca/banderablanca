@@ -56,6 +56,7 @@ class FlagRepository implements FlagRepositoryAbs {
     Map<String, dynamic> _message = _data.toJson();
 
     _message['timestamp'] = FieldValue.serverTimestamp();
+    _message['visibility'] = 'public';
 
     return _doc.setData(_message).then((onValue) {
       return true;
@@ -68,6 +69,7 @@ class FlagRepository implements FlagRepositoryAbs {
   Stream<List<WhiteFlag>> streamFlags() {
     return firestore
         .collection(path)
+        .where('visibility', isEqualTo: 'public')
         .orderBy('timestamp', descending: true)
         .snapshots()
         .handleError((onError) {
@@ -97,5 +99,15 @@ class FlagRepository implements FlagRepositoryAbs {
       throw onError;
     });
     return Future.value(true);
+  }
+
+  @override
+  Future<bool> deleteFlag(WhiteFlag flag) {
+    var _doc = firestore.collection(path).document(flag.id);
+    return _doc.setData({"visibility": "delete"}, merge: true).then((onValue) {
+      return true;
+    }).catchError((onError) {
+      return false;
+    });
   }
 }
