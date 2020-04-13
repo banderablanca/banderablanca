@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:banderablanca/core/core.dart';
-import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'video_player_screen.dart';
 
@@ -68,25 +66,30 @@ class _CommentsListState extends State<CommentsList> {
                     fontFamily: "Tajawal Bold"),
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      "${flag.description}",
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Text(
+                        "${flag.description}",
+                      ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () => _previewMedia(flag.mediaContent?.downloadUrl),
-                  child: _previewImage(
-                      flag.mediaContent?.thumbnailInfo?.downloadUrl, 100, 100),
-                )
-              ],
+                  InkWell(
+                    onTap: () => _previewMedia(flag.mediaContent?.downloadUrl),
+                    child: _previewImage(
+                        flag.mediaContent?.thumbnailInfo?.downloadUrl,
+                        100,
+                        100),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 5,

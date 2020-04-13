@@ -241,7 +241,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             if (pickResult != null)
                               StaticMap(
                                 googleMapsApiKey: ApiKeys.googleMapsApiKey,
-                                height: 100,
+                                height: 150,
                                 width: (MediaQuery.of(context).size.width - 30)
                                     .floor(),
                                 currentLocation: {
@@ -258,9 +258,6 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                 ],
                                 zoom: 5,
                               ),
-                            // SizedBox(
-                            //   height: 4,
-                            // ),
                             Padding(
                               padding: EdgeInsets.all(16),
                               child: TextFormField(
@@ -295,7 +292,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                   maxLines: null,
                                   decoration: InputDecoration(
                                       hintText:
-                                          'Cómo te pueden ayudar las personas?'),
+                                          '¿Cómo te pueden ayudar las personas?'),
                                   onSaved: (String value) {
                                     setState(() {
                                       description = value;

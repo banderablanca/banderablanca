@@ -119,7 +119,11 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
   Widget _buildSendIcon(context) {
     return IconButton(
       icon: Provider.of<MessageModel>(context).state == ViewState.Busy
-          ? CircularProgressIndicator()
+          ? Container(
+              width: 29,
+              height: 30,
+              child: CircularProgressIndicator(),
+            )
           : Icon(Icons.send),
       color: Theme.of(context).accentColor,
       onPressed: () async {
