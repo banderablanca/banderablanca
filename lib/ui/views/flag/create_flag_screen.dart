@@ -110,17 +110,8 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
       );
       await Provider.of<FlagModel>(context, listen: false)
           .createflag(newFlag, _mediaPath);
-      Scaffold.of(context)
-          .showSnackBar(
-            (SnackBar(
-              content: Text('Gracias por alzar la bandera'),
-              // duration: Duration(milliseconds: 150),
-            )),
-          )
-          .closed
-          .then((SnackBarClosedReason reason) {
-        Navigator.of(context).pop();
-      });
+      await Future.delayed(Duration(milliseconds: 100));
+      Navigator.of(context).pop();
     }
   }
 
@@ -185,173 +176,169 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
         ),
       ),
       body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 16),
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-            child: IgnorePointer(
-              ignoring: Provider.of<FlagModel>(context).state == ViewState.Busy,
-              child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Stack(
+          IgnorePointer(
+            ignoring: Provider.of<FlagModel>(context).state == ViewState.Busy,
+            child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Stack(
+                          overflow: Overflow.visible,
                           children: <Widget>[
-                            Stack(
-                              overflow: Overflow.visible,
-                              children: <Widget>[
-                                Positioned(
-                                  left: 2,
-                                  top: -2,
-                                  child: ClipPath(
-                                    clipper: TriangleClipper(),
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      color: Theme.of(context)
-                                          .primaryColorLight
-                                          .withOpacity(0.5),
-                                    ),
-                                  ),
+                            Positioned(
+                              left: 2,
+                              top: -2,
+                              child: ClipPath(
+                                clipper: TriangleClipper(),
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  color: Theme.of(context)
+                                      .primaryColorLight
+                                      .withOpacity(0.5),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 4),
-                                  child: Text(
-                                    "Registrar una bandera blanca",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontFamily: "Tajawal Bold"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            isVideo(_mediaPath)
-                                ? _previewVideo()
-                                : _previewImage(),
-                            if (pickResult != null)
-                              StaticMap(
-                                googleMapsApiKey: ApiKeys.googleMapsApiKey,
-                                height: 150,
-                                width: (MediaQuery.of(context).size.width - 30)
-                                    .floor(),
-                                currentLocation: {
-                                  "latitude": pickResult.geometry.location.lat,
-                                  "longitude": pickResult.geometry.location.lng
-                                },
-                                markers: [
-                                  {
-                                    "latitude":
-                                        pickResult.geometry.location.lat,
-                                    "longitude":
-                                        pickResult.geometry.location.lng
-                                  }
-                                ],
-                                zoom: 5,
                               ),
+                            ),
                             Padding(
-                              padding: EdgeInsets.all(16),
-                              child: TextFormField(
-                                // initValue: pickResult?.formattedAddress,
-                                controller: _addressController,
-                                readOnly: true,
-                                onTap: () => _getAddress(context),
-                                decoration: InputDecoration(
-                                    hintText: 'Ingresa la dirección exacta'),
-                                onSaved: (String value) {
-                                  setState(() {
-                                    address = value;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter some text';
-                                  }
-                                  return null;
-                                },
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 4),
+                              child: Text(
+                                "Registrar una bandera blanca",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline
+                                    .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                        fontFamily: "Tajawal Bold"),
                               ),
                             ),
-
-                            Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Container(
-                                height: _inputHeight,
-                                child: TextFormField(
-                                  controller: _desctiprionController,
-                                  textInputAction: TextInputAction.newline,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                      hintText:
-                                          '¿Cómo te pueden ayudar las personas?'),
-                                  onSaved: (String value) {
-                                    setState(() {
-                                      description = value;
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter some text';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ),
-
-                            // InkWell(
-                            //   onTap: () => _optionModalBottomSheet(context),
-                            //   child: Container(
-                            //     height: 150,
-                            //     child:
-
-                            //      _image != null
-                            //         ? Image.file(_image)
-                            //         : Center(
-                            //             child: Text("Tab para agregar una foto"),
-                            //           ),
-                            //   ),
-                            // ),
                           ],
                         ),
-                        if (Provider.of<FlagModel>(context).state ==
-                            ViewState.Busy)
-                          Positioned.fill(
-                            child: Center(
-                              child: CircularProgressIndicator(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        isVideo(_mediaPath) ? _previewVideo() : _previewImage(),
+                        if (pickResult != null)
+                          StaticMap(
+                            googleMapsApiKey: ApiKeys.googleMapsApiKey,
+                            height: 150,
+                            width: (MediaQuery.of(context).size.width - 30)
+                                .floor(),
+                            currentLocation: {
+                              "latitude": pickResult.geometry.location.lat,
+                              "longitude": pickResult.geometry.location.lng
+                            },
+                            markers: [
+                              {
+                                "latitude": pickResult.geometry.location.lat,
+                                "longitude": pickResult.geometry.location.lng
+                              }
+                            ],
+                            zoom: 5,
+                          ),
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: TextFormField(
+                            // initValue: pickResult?.formattedAddress,
+                            controller: _addressController,
+                            readOnly: true,
+                            onTap: () => _getAddress(context),
+                            decoration: InputDecoration(
+                                hintText: 'Ingresa la dirección exacta'),
+                            onSaved: (String value) {
+                              setState(() {
+                                address = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Container(
+                            height: _inputHeight,
+                            child: TextFormField(
+                              controller: _desctiprionController,
+                              textInputAction: TextInputAction.newline,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      '¿Cómo te pueden ayudar las personas?'),
+                              onSaved: (String value) {
+                                setState(() {
+                                  description = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                return null;
+                              },
                             ),
                           ),
+                        ),
+
+                        // InkWell(
+                        //   onTap: () => _optionModalBottomSheet(context),
+                        //   child: Container(
+                        //     height: 150,
+                        //     child:
+
+                        //      _image != null
+                        //         ? Image.file(_image)
+                        //         : Center(
+                        //             child: Text("Tab para agregar una foto"),
+                        //           ),
+                        //   ),
+                        // ),
                       ],
                     ),
-                  )),
-            ),
+                  ),
+                )),
           ),
         ],
       ),
       floatingActionButton: Builder(
         builder: (BuildContext context) {
           return FloatingActionButton.extended(
-            onPressed: () => _submit(context),
+            onPressed: Provider.of<FlagModel>(context).state == ViewState.Busy
+                ? null
+                : () => _submit(context),
             label: Text(
               'Guardar',
               style: TextStyle(fontFamily: "Avenir Black", fontSize: 16),
             ),
-            icon: Padding(
-              padding: EdgeInsets.all(4),
-              child: Icon(
-                FontAwesomeIcons.fontAwesomeFlag,
-                size: 20,
-              ),
-            ),
+            icon: Provider.of<FlagModel>(context).state == ViewState.Busy
+                ? Container(
+                    width: 29,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Icon(
+                      FontAwesomeIcons.fontAwesomeFlag,
+                      size: 20,
+                    ),
+                  ),
           );
         },
       ),

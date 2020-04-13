@@ -138,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return GoogleMap(
                     mapType: MapType.normal,
                     markers: markers,
+                    mapToolbarEnabled: false,
                     initialCameraPosition: _kGooglePlex,
                     onMapCreated: (GoogleMapController controller) {
                       controller.setMapStyle(Utils.mapStyles);
