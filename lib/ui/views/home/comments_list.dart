@@ -72,9 +72,13 @@ class _CommentsListState extends State<CommentsList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18),
-                  child: Text("${flag.description}"),
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      "${flag.description}",
+                    ),
+                  ),
                 ),
                 InkWell(
                   onTap: _previewMedia,
