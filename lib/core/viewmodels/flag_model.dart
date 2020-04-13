@@ -1,14 +1,10 @@
-import 'dart:collection';
-import 'dart:io';
-
-import 'package:banderablanca/core/abstract/abstract.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'base_model.dart';
+import '../abstract/abstract.dart';
 import '../models/models.dart';
 import '../enums/viewstate.dart';
 
-import 'base_model.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class FlagModel extends BaseModel {
   FlagRepositoryAbs _repository;
@@ -26,7 +22,6 @@ class FlagModel extends BaseModel {
         ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/marker.png');
   }
 
-  // Set<Marker> _markers = HashSet<Marker>();
   List<WhiteFlag> _flags = [];
 
   Set<Marker> markers({Function(WhiteFlag) onTap}) => _flags
@@ -46,20 +41,29 @@ class FlagModel extends BaseModel {
     try {
       await _repository.createFlag(newFlag, mediaPath);
     } catch (e) {
-      print("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print(e);
+      debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+      debugPrint(e);
     }
     setState(ViewState.Idle);
   }
-
-  // Stream<List<WhiteFlag>> get streamFlags => _repository.streamFlags();
 
   _listenFlags() {
     _repository.streamFlags().listen((List<WhiteFlag> newFlags) {
       _flags = newFlags;
       notifyListeners();
     }).onError((error) {
-      print(error);
+      debugPrint(error);
     });
+  }
+
+  reportFlag(WhiteFlag flag) async {
+    setState(ViewState.Busy);
+    try {
+      await _repository.reportFlag(flag);
+    } catch (e) {
+      debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+      debugPrint(e);
+    }
+    setState(ViewState.Idle);
   }
 }

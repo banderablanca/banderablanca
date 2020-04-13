@@ -23,6 +23,7 @@ abstract class WhiteFlag with _$WhiteFlag {
     String senderName,
     String displayName,
     String senderPhotoUrl,
+    int reportedCount,
     @JsonKey(fromJson: geoPointFromFirestore, toJson: positionAsIs)
         LatLng position,
     @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs)

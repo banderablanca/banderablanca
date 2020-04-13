@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:banderablanca/core/helpers/helpers.dart';
 import 'package:banderablanca/core/models/media_content.dart';
 import 'package:banderablanca/core/models/thumbnail_info.dart';
-import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -79,5 +78,24 @@ class FlagRepository implements FlagRepositoryAbs {
         return flag.copyWith(id: doc.documentID);
       }).toList();
     });
+  }
+
+  @override
+  Future<bool> reportFlag(WhiteFlag flag) async {
+    final DocumentReference reference =
+        firestore.collection(path).document(flag.id);
+
+    await firestore.runTransaction((Transaction tx) async {
+      DocumentSnapshot doc = await tx.get(reference);
+      if (doc.exists) {
+        await tx.update(reference, <String, dynamic>{
+          'reported_count': (doc.data['reported_count'] ?? 0) + 1
+        });
+      }
+    }).catchError((onError) {
+      print('Error: $onError');
+      throw onError;
+    });
+    return Future.value(true);
   }
 }

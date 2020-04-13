@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
+import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  _showConfirmDialog(WhiteFlag flag) async {
+    bool isConfirm = await showConfirmDialog(context,
+        title: "Reportar bandera falsa",
+        content:
+            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.");
+    if (isConfirm)
+      Provider.of<FlagModel>(context, listen: false).reportFlag(flag);
+  }
+
   _showModalBottom(WhiteFlag flag) {
     showModalBottomSheet(
         context: context,
@@ -110,6 +120,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             }),
                       ),
                       CommentsList(flag: flag),
+                      InkWell(
+                        onTap: () => _showConfirmDialog(flag),
+                        child: Container(
+                          width: double.infinity,
+                          height: 30,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.report,
+                                color: Colors.red,
+                                size: 12,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "Reportar bandera",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SendMessageTextField(
                         flag: flag,
                       ),
@@ -122,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final List<WhiteFlag> flags = Provider.of<FlagModel>(context).flags;
     return Scaffold(
       body: Builder(
         builder: (BuildContext context) {
