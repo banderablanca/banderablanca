@@ -29,12 +29,13 @@ class _CommentsListState extends State<CommentsList> {
     super.initState();
   }
 
-  _previewMedia() {
+  _previewMedia(String url) {
+    if (url == null) return;
     if (!flag.mediaContent.mimeType.startsWith('video/')) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => PhotoViewScreen(
-            photoUrl: flag.photoUrl,
+            photoUrl: url,
           ),
         ),
       );
@@ -42,7 +43,7 @@ class _CommentsListState extends State<CommentsList> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => VideoPlayerScreen(
-            filePath: flag.mediaContent.downloadUrl,
+            filePath: url,
           ),
         ),
       );
@@ -81,8 +82,9 @@ class _CommentsListState extends State<CommentsList> {
                   ),
                 ),
                 InkWell(
-                  onTap: _previewMedia,
-                  child: _previewImage(),
+                  onTap: () => _previewMedia(flag.mediaContent?.downloadUrl),
+                  child: _previewImage(
+                      flag.mediaContent?.thumbnailInfo?.downloadUrl, 100, 100),
                 )
               ],
             ),
@@ -111,6 +113,7 @@ class _CommentsListState extends State<CommentsList> {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 18),
                 child: ListTile(
+                  onTap: () => _previewMedia(message.mediaContent?.downloadUrl),
                   contentPadding: EdgeInsets.symmetric(vertical: 0),
                   leading: Container(
                     width: 40,
@@ -125,6 +128,8 @@ class _CommentsListState extends State<CommentsList> {
                   ),
                   title: Text("${message.senderName ?? 'Anónimo'}"),
                   subtitle: Text("${message.text}"),
+                  trailing: _previewImage(
+                      message.mediaContent?.thumbnailInfo?.downloadUrl, 50, 50),
                 ),
               );
             },
@@ -134,12 +139,13 @@ class _CommentsListState extends State<CommentsList> {
     );
   }
 
-  Widget _previewImage() {
+  Widget _previewImage(String url, double height, double width) {
+    if (url == null) return Container();
     return Stack(
       children: <Widget>[
         Container(
-          height: 100,
-          width: 100,
+          height: height,
+          width: width,
           margin: EdgeInsets.all(14),
           padding: EdgeInsets.all(2),
           decoration: BoxDecoration(
@@ -147,7 +153,7 @@ class _CommentsListState extends State<CommentsList> {
                   Border.all(color: Theme.of(context).primaryColor, width: 2)),
           child: TransitionToImage(
             image: AdvancedNetworkImage(
-              "${flag.mediaContent?.downloadUrl}",
+              "$url",
               loadedCallback: () {
                 print('It works!');
               },

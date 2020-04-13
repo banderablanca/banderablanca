@@ -18,7 +18,6 @@ abstract class WhiteFlag with _$WhiteFlag {
     String addressReference,
     String title,
     String description,
-    String photoUrl,
     MediaContent mediaContent,
     String uid,
     String senderName,
