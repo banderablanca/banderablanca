@@ -36,7 +36,6 @@ dependencies:
   mime: ^0.9.6+3
   video_thumbnail: ^0.2.0
   image: ^2.1.12
-  path_provider: ^1.6.5
   flutter_svg: 0.17.4
 
 dev_dependencies:

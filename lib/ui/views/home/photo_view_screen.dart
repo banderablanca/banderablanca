@@ -11,28 +11,31 @@ class PhotoViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0,
         iconTheme: IconThemeData(
-          color: Colors.black87,
+          color: Colors.white,
         ),
       ),
-      body: ZoomableWidget(
-        panLimit: 1.0,
-        maxScale: 2.0,
-        minScale: 0.9,
-        singleFingerPan: true,
-        multiFingersPan: false,
-        // enableRotate: true,
-        child: Image(
-          image: AdvancedNetworkImage(
-            "$photoUrl",
-            useDiskCache: true,
-            cacheRule: CacheRule(maxAge: const Duration(days: 7)),
+      body: Container(
+        color: Colors.black,
+        child: ZoomableWidget(
+          panLimit: 1.0,
+          maxScale: 2.0,
+          minScale: 0.9,
+          singleFingerPan: true,
+          multiFingersPan: false,
+          // enableRotate: true,
+          child: Image(
+            image: AdvancedNetworkImage(
+              "$photoUrl",
+              useDiskCache: true,
+              cacheRule: CacheRule(maxAge: const Duration(days: 7)),
+            ),
           ),
+          zoomSteps: 3,
+          autoCenter: true,
         ),
-        zoomSteps: 3,
-        autoCenter: true,
       ),
     );
   }

@@ -51,7 +51,6 @@ class FlagRepository implements FlagRepositoryAbs {
       senderName: firebaseUser.displayName,
       senderPhotoUrl: firebaseUser.photoUrl,
       uid: firebaseUser.uid,
-      photoUrl: downloadUrl,
       mediaContent: mediaContent,
     );
 

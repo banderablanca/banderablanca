@@ -4,19 +4,21 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'media_content.dart';
+
 part 'message.freezed.dart';
 part 'message.g.dart';
 
 @freezed
 abstract class Message with _$Message {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Message({
     String id,
     String text,
     String uid,
     String senderName,
     String senderPhotoUrl,
-    String photoUrl,
+    MediaContent mediaContent,
     @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs)
         DateTime timestamp,
   }) = _Message;

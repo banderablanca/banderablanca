@@ -43,15 +43,15 @@ class CardItem extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: flag.photoUrl != null
+                    backgroundImage: flag.mediaContent?.downloadUrl != null
                         ? AdvancedNetworkImage(
-                            "${flag.photoUrl}",
+                            "${flag.mediaContent.downloadUrl}",
                             useDiskCache: true,
                             cacheRule:
                                 CacheRule(maxAge: const Duration(days: 7)),
                           )
                         : null,
-                    child: flag.photoUrl == null
+                    child: flag.mediaContent?.downloadUrl == null
                         ? Icon(FontAwesomeIcons.flag)
                         : Container(),
                   ),
