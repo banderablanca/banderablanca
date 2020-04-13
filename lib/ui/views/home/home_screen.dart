@@ -212,11 +212,11 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-            bearing: 192.8334901395799,
-            target:
-                LatLng(_currentPosition.latitude, _currentPosition.longitude),
-            tilt: 59.440717697143555,
-            zoom: 19.151926040649414),
+          // bearing: 192.8334901395799,
+          target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+          // tilt: 59.440717697143555,
+          zoom: 19.151926040649414,
+        ),
       ),
     );
   }
