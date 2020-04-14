@@ -8,14 +8,17 @@ import 'show_modal_bottom.dart';
 class TabMyFlags extends StatelessWidget {
   const TabMyFlags({Key key, @required this.destination}) : super(key: key);
   final Destination destination;
+
   _showConfirmDialog(context, WhiteFlag flag) async {
     bool isConfirm = await showConfirmDialog(context,
-        title: "Reportar bandera falsa",
+        title: "¿Deseas eliminar bandera?",
         content:
-            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.",
-        confirmText: "REPORTAR");
-    if (isConfirm)
-      Provider.of<FlagModel>(context, listen: false).reportFlag(flag);
+            "Si eliminas la Bandera Blanca, dejará de mostrarse en el mapa.",
+        confirmText: "ELIMINAR");
+    if (isConfirm) {
+      await Provider.of<FlagModel>(context, listen: false).deleteFlag(flag);
+      Navigator.of(context).pop();
+    }
   }
 
   @override

@@ -13,20 +13,20 @@ class Destination {
 const List<Destination> allDestinations = <Destination>[
   Destination(
       index: 0,
-      title: 'Notifications',
+      title: 'Notificaciones',
       icon: Icons.notifications,
-      color: Colors.teal,
+      color: Colors.cyan,
       tab: AppTab.notifications),
   Destination(
       index: 1,
-      title: 'Map',
-      icon: Icons.map,
-      color: Colors.cyan,
+      title: 'Banderas',
+      icon: Icons.flag,
+      color: Colors.red,
       tab: AppTab.map),
   Destination(
       index: 2,
       title: 'Mis Banderas',
-      icon: Icons.flag,
-      color: Colors.orange,
+      icon: Icons.outlined_flag,
+      color: Colors.amber,
       tab: AppTab.myFlags),
 ];
