@@ -13,31 +13,15 @@ class BottomNavigationWidget extends StatelessWidget {
       builder: (BuildContext context, TabModel tabModel, Widget child) {
         var activeTabIndex =
             allDestinations.indexWhere((o) => o.tab == tabModel.activeTab);
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).primaryColorLight,
-                blurRadius: 8,
-                spreadRadius: 2,
-              )
-            ],
-          ),
-          child: BottomNavigationBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            currentIndex: activeTabIndex,
-            onTap: (index) => _onTabSelected(context, index),
-            items: allDestinations.map((Destination destination) {
-              return BottomNavigationBarItem(
-                  icon: Icon(destination.icon),
-                  backgroundColor: destination.color,
-                  title: Text(destination.title));
-            }).toList(),
-          ),
+        return BottomNavigationBar(
+          currentIndex: activeTabIndex,
+          onTap: (index) => _onTabSelected(context, index),
+          items: allDestinations.map((Destination destination) {
+            return BottomNavigationBarItem(
+                icon: Icon(destination.icon),
+                backgroundColor: destination.color,
+                title: Text(destination.title));
+          }).toList(),
         );
       },
     );
