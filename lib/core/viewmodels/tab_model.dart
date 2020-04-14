@@ -4,7 +4,7 @@ import '../enums/tab.dart';
 import 'base_model.dart';
 
 class TabModel extends BaseModel {
-  AppTab _activeTab = AppTab.home;
+  AppTab _activeTab = AppTab.notifications;
 
   AppTab get activeTab => _activeTab;
 

@@ -11,11 +11,9 @@ class AppKeys {
 
   // Tabs
   static final tabs = const Key('__tabs__');
-  static final todoTab = const Key('__todoTab__');
-  static final statsTab = const Key('__statsTab__');
-  static final rankingTab = const Key('__rankingTab__');
-  static final shopTab = const Key('__groupTab__');
-  static final menuTab = const Key('__menuTab__');
+  static final notificationsTab = const Key('__notificationsTab__');
+  static final mapTab = const Key('__mapTab__');
+  static final myFlagsTab = const Key('__myFlagsTab__');
 
   // Extra Actions
   static final extraActionsButton = const Key('__extraActionsButton__');
