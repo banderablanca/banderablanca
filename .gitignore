@@ -1,3 +1,6 @@
+key.jks
+android/key.properties
+
 # auto generate
 **/*.freezed.dart
 **/*.g.dart

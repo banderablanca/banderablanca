@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>banderablanca</string>
+	<string>Bandera Blanca</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -22,6 +22,18 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Toma una foto de un hogar con bandera blanca</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Pide ayuda o brinda ayuda con tu posición exacta.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Podrás recibir alerta de bandera blanca cerca a tu ubicación.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Se usa para marcar la localización exacta del lugar al momento de crear una bandera blanca.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>No necesitamos este permiso.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Se usa para seleccionar una foto de un hogar con bandera blanca</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,19 +53,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Se usa para marcar la localización exacta del lugar al momento de crear una bandera blanca.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Podrás recibir alerta de bandera blanca cerca a tu ubicación.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Pide ayuda o brinda ayuda con tu posición exacta.</string>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Se usa para seleccionar una foto de un hogar con bandera blanca</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Toma una foto de un hogar con bandera blanca</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>No necesitamos este permiso.</string>
 </dict>
 </plist>
