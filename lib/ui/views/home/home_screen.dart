@@ -51,20 +51,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationWidget(),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: _currentIndex,
-      //   onTap: (int index) {
-      //     setState(() {
-      //       _currentIndex = index;
-      //     });
-      //   },
-      //   items: allDestinations.map((Destination destination) {
-      //     return BottomNavigationBarItem(
-      //         icon: Icon(destination.icon),
-      //         backgroundColor: destination.color,
-      //         title: Text(destination.title));
-      //   }).toList(),
-      // ),
     );
   }
 }

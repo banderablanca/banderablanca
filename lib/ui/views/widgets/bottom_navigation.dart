@@ -1,8 +1,5 @@
-import '../../../ui/shared/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/core.dart';
-import 'package:provider/provider.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
   void _onTabSelected(context, int index) {

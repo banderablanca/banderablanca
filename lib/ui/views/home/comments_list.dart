@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'video_player_screen.dart';
 

@@ -88,41 +88,11 @@ class _TabMapState extends State<TabMap> {
                 child: IconButton(
                     icon: Icon(Icons.gps_fixed), onPressed: _goToTheLake),
               ),
-              // Positioned(
-              //   bottom: 80,
-              //   left: 0,
-              //   right: 0,
-              //   child: Container(
-              //     margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              //     height: 170,
-              //     child: Selector<FlagModel, List<WhiteFlag>>(
-              //       selector: (_, model) => model.flags,
-              //       builder: (BuildContext context, List<WhiteFlag> flags,
-              //           Widget child) {
-              //         return PageView.builder(
-              //           controller: ctrl,
-              //           itemCount: flags.length,
-              //           itemBuilder: (context, int currentIdx) {
-              //             bool active = currentIdx == currentPage;
-              //             return CardItem(
-              //               onTap: () {
-              //                 Navigator.of(context).pushNamed(
-              //                     "${RoutePaths.FlagDetail}/${flags[currentIdx].id}");
-              //               },
-              //               flag: flags[currentIdx],
-              //               active: active,
-              //             );
-              //           },
-              //         );
-              //       },
-              //     ),
-              //   ),
-              // ),
             ],
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         elevation: 7,
         onPressed: () => _loadCameraScreen(context),
