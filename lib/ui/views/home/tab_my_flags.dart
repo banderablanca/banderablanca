@@ -1,11 +1,23 @@
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/core/models/models.dart';
+import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 
-class TabMyFlags extends StatelessWidget {
-  final Destination destination;
+import 'show_modal_bottom.dart';
 
-  const TabMyFlags({Key key, this.destination}) : super(key: key);
+class TabMyFlags extends StatelessWidget {
+  const TabMyFlags({Key key, @required this.destination}) : super(key: key);
+  final Destination destination;
+  _showConfirmDialog(context, WhiteFlag flag) async {
+    bool isConfirm = await showConfirmDialog(context,
+        title: "Reportar bandera falsa",
+        content:
+            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.",
+        confirmText: "REPORTAR");
+    if (isConfirm)
+      Provider.of<FlagModel>(context, listen: false).reportFlag(flag);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +28,9 @@ class TabMyFlags extends StatelessWidget {
       backgroundColor: destination.color[50],
       body: Selector<FlagModel, List<WhiteFlag>>(
         selector: (_, FlagModel model) => model.flags
-          ..where((t) =>
-              t.uid ==
-              Provider.of<UserModel>(context, listen: false).currentUser.id),
+            .where(
+                (t) => t.uid == Provider.of<UserModel>(context).currentUser.id)
+            .toList(),
         builder: (BuildContext context, List<WhiteFlag> list, Widget child) {
           if (list.isEmpty)
             return Center(
@@ -35,7 +47,17 @@ class TabMyFlags extends StatelessWidget {
               return ListTile(
                 leading: Icon(Icons.flag),
                 title: Text("${flag.address}"),
-                onTap: () {},
+                onTap: () {
+                  showModalBottomFlagDetail(context, flag);
+                },
+                trailing:
+                    Provider.of<UserModel>(context).currentUser.id != flag.uid
+                        ? SizedBox()
+                        : IconButton(
+                            icon: Icon(Icons.delete_outline, color: Colors.red),
+                            onPressed: () {
+                              _showConfirmDialog(context, flag);
+                            }),
               );
             },
           );

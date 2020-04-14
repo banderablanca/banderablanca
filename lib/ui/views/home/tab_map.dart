@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'camera_screen.dart';
 import 'comments_list.dart';
+import 'show_modal_bottom.dart';
 
 class TabMap extends StatefulWidget {
   const TabMap({Key key, this.destination}) : super(key: key);
@@ -34,7 +35,6 @@ class _TabMapState extends State<TabMap> {
   initState() {
     super.initState();
     _getLocation();
-    print("hola=========================================");
   }
 
   Future<void> _getLocation() async {
@@ -66,7 +66,7 @@ class _TabMapState extends State<TabMap> {
               Selector<FlagModel, Set<Marker>>(
                 selector: (_, FlagModel model) => model.markers(
                   onTap: (WhiteFlag selectedFlag) {
-                    _showModalBottom(selectedFlag);
+                    showModalBottomFlagDetail(context, selectedFlag);
                   },
                 ),
                 builder: (_, Set<Marker> markers, Widget child) {
@@ -124,87 +124,6 @@ class _TabMapState extends State<TabMap> {
         ),
       ),
     );
-  }
-
-  _showConfirmDialog(WhiteFlag flag) async {
-    bool isConfirm = await showConfirmDialog(context,
-        title: "Reportar bandera falsa",
-        content:
-            "Reporta si la bandera blanca es falsa, si obtiene muchos reportes será elimnado del mapa.",
-        confirmText: "REPORTAR");
-    if (isConfirm)
-      Provider.of<FlagModel>(context, listen: false).reportFlag(flag);
-  }
-
-  _showModalBottom(WhiteFlag flag) {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-        ),
-        builder: (context) => Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: FractionallySizedBox(
-                heightFactor: 0.8,
-                child: Container(
-                  // color: Colors.grey[900],
-                  // height: 250,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          "${flag.address}",
-                          style: TextStyle(fontFamily: "Tajawal Bold"),
-                        ),
-                        trailing: IconButton(
-                            icon: Icon(
-                              FontAwesomeIcons.chevronDown,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                      ),
-                      CommentsList(flag: flag),
-                      InkWell(
-                        onTap: () => _showConfirmDialog(flag),
-                        child: Container(
-                          width: double.infinity,
-                          height: 30,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.report,
-                                color: Colors.red,
-                                size: 12,
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                "Reportar bandera",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .copyWith(color: Colors.red),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SendMessageTextField(
-                        flag: flag,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ));
   }
 
   Future _loadCameraScreen(BuildContext context) async {
