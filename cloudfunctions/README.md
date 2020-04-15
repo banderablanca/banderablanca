@@ -1,5 +1,4 @@
-# fsfunctions
-Bandera Blanca - Cloud Functions
+# Bandera Blanca - Cloud Functions
 
 
 ## Requirements
