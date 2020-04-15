@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:flutter/services.dart';
+
 import 'base_model.dart';
 import '../abstract/abstract.dart';
 import '../models/models.dart';
 import '../enums/viewstate.dart';
-
+import 'dart:ui' as ui;
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -17,9 +22,38 @@ class FlagModel extends BaseModel {
     _setCustomMapPin();
   }
 
+  Future<Uint8List> _getBytesFromCanvas(int width, int height, urlAsset) async {
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+
+    final ByteData datai = await rootBundle.load(urlAsset);
+    var imaged = await _loadImage(new Uint8List.view(datai.buffer));
+    canvas.drawImageRect(
+      imaged,
+      Rect.fromLTRB(
+          0.0, 0.0, imaged.width.toDouble(), imaged.height.toDouble()),
+      Rect.fromLTRB(0.0, 0.0, width.toDouble(), height.toDouble()),
+      new Paint(),
+    );
+
+    final img = await pictureRecorder.endRecording().toImage(width, height);
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+    return data.buffer.asUint8List();
+  }
+
+  Future<ui.Image> _loadImage(List<int> img) async {
+    final Completer<ui.Image> completer = new Completer();
+    ui.decodeImageFromList(img, (ui.Image img) {
+      return completer.complete(img);
+    });
+    return completer.future;
+  }
+
   void _setCustomMapPin() async {
-    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/marker.png');
+    pinLocationIcon = BitmapDescriptor.fromBytes(
+        await _getBytesFromCanvas(120, 120, 'assets/icons/marker.png'));
+    // pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+    //     ImageConfiguration(devicePixelRatio: 2.5), 'assets/icons/marker.png');
   }
 
   List<WhiteFlag> _flags = [];

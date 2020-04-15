@@ -22,10 +22,10 @@ class _DestinationViewState extends State<DestinationView> {
         destination: widget.destination,
       );
     if (widget.destination.index == 1)
-      // return Container();
       return TabMap(
         destination: widget.destination,
       );
+    // return Container();
     return TabMyFlags(
       destination: widget.destination,
     );
