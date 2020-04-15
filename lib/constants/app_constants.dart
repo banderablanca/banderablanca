@@ -4,6 +4,7 @@ class RoutePaths {
   static const String RegisterScreen = '/register';
   static const String ForgotPassword = '/forgotpassword';
   static const String Home = '/home';
+  static const String Board = '/board';
   // static const String CreateFlag = '/flag/create';
   // static const String FlagDetail = '/flag';
 }

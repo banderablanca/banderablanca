@@ -22,7 +22,8 @@ class RedirectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserModel>(
-      child: HomeScreen(),
+      // child: HomeScreen(),
+      child: BoardScreen(),
       builder: (BuildContext context, UserModel model, Widget child) {
         if (model.state == ViewState.Busy) return _showLoadIndicator;
 
