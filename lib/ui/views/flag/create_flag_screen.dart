@@ -237,30 +237,28 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                           ),
                         ),
 
-                        Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Container(
-                            height: _inputHeight,
-                            child: TextFormField(
-                              controller: _desctiprionController,
-                              textInputAction: TextInputAction.newline,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                  hintText:
-                                      '¿Cómo te pueden ayudar las personas?'),
-                              onSaved: (String value) {
-                                setState(() {
-                                  description = value;
-                                });
-                              },
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                return null;
-                              },
-                            ),
+                        Container(
+                          // height: _inputHeight,
+                          margin: EdgeInsets.all(16),
+                          child: TextFormField(
+                            controller: _desctiprionController,
+                            textInputAction: TextInputAction.newline,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                                hintText:
+                                    '¿Cómo te pueden ayudar las personas?'),
+                            onSaved: (String value) {
+                              setState(() {
+                                description = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
                           ),
                         ),
 

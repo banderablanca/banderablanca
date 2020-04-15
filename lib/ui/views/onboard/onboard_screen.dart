@@ -86,65 +86,66 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     return Scaffold(
       body: SafeArea(
+          top: false,
           child: Container(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: <Widget>[
-            PageView.builder(
-              physics: ClampingScrollPhysics(),
-              itemCount: introWidgetsList.length,
-              onPageChanged: (int page) {
-                getChangedPageAndMoveBar(page);
-              },
-              controller: controller,
-              itemBuilder: (context, index) {
-                return introWidgetsList[index];
-              },
-            ),
-            Stack(
-              alignment: AlignmentDirectional.topStart,
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 35),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      for (var i in introWidgetsList) slidingBar(),
-                    ],
+                PageView.builder(
+                  physics: ClampingScrollPhysics(),
+                  itemCount: introWidgetsList.length,
+                  onPageChanged: (int page) {
+                    getChangedPageAndMoveBar(page);
+                  },
+                  controller: controller,
+                  itemBuilder: (context, index) {
+                    return introWidgetsList[index];
+                  },
+                ),
+                Stack(
+                  alignment: AlignmentDirectional.topStart,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(bottom: 35),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          for (var i in introWidgetsList) slidingBar(),
+                        ],
+                      ),
+                    ),
+                    AnimatedContainer(
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.fastOutSlowIn,
+                        margin: EdgeInsets.only(
+                            bottom: 35, left: screenWidth * _moveBar),
+                        //left: screenWidth * _moveBar,
+                        child: movingBar()),
+                  ],
+                ),
+                Positioned(
+                  bottom: 50,
+                  right: 10,
+                  child: Visibility(
+                    visible: currentPageValue == introWidgetsList.length - 1
+                        ? true
+                        : false,
+                    child: FloatingActionButton(
+                      onPressed: () async {
+                        Provider.of<UserModel>(context, listen: false)
+                            .onBoardCompleted();
+                        // Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
+                      },
+                      shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(26))),
+                      child: Icon(Icons.arrow_forward),
+                    ),
                   ),
                 ),
-                AnimatedContainer(
-                    duration: Duration(milliseconds: 100),
-                    curve: Curves.fastOutSlowIn,
-                    margin: EdgeInsets.only(
-                        bottom: 35, left: screenWidth * _moveBar),
-                    //left: screenWidth * _moveBar,
-                    child: movingBar()),
               ],
             ),
-            Positioned(
-              bottom: 50,
-              right: 10,
-              child: Visibility(
-                visible: currentPageValue == introWidgetsList.length - 1
-                    ? true
-                    : false,
-                child: FloatingActionButton(
-                  onPressed: () async {
-                    Provider.of<UserModel>(context, listen: false)
-                        .onBoardCompleted();
-                    // Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
-                  },
-                  shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(26))),
-                  child: Icon(Icons.arrow_forward),
-                ),
-              ),
-            ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
@@ -153,7 +154,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8),
       height: 5,
       width: screenWidth * 0.1,
-      decoration: BoxDecoration(color: Color(0XFFd8d8d8)),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
     );
   }
 
@@ -162,7 +163,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8),
       height: 5,
       width: screenWidth * 0.1,
-      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      decoration: BoxDecoration(color: Color(0XFFd8d8d8)),
     );
   }
 }
