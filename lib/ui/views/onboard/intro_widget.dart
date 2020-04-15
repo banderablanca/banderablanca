@@ -41,17 +41,18 @@ class IntroWidget extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Spacer(),
           Center(
             child: Text(
               type.toString(),
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   fontSize: 40,
                   color: Colors.white,
-                  // fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w500,
                   // foreground: Paint()..shader = linearGradient,
                 ),
               ),
@@ -62,37 +63,40 @@ class IntroWidget extends StatelessWidget {
           Center(
             child: Image.asset(
               image,
-              width: screenWidth * 0.3,
-              height: screenheight * 0.3,
+              width: screenWidth / 1.3,
+              // height: screenheight * 0.3,
               fit: BoxFit.contain,
             ),
           ),
           Spacer(),
           Container(
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            alignment: Alignment.center,
             child: Text(
               subText,
-              style: GoogleFonts.montserrat(
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
                 textStyle: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Theme.of(context).primaryColor,
-                  letterSpacing: 2.0,
-                  // shadows: <Shadow>[
-                  //   Shadow(
-                  //     offset: Offset(4, 4),
-                  //     blurRadius: 10,
-                  //     color: startGradientColor,
-                  //   ),
-                  //   Shadow(
-                  //     offset: Offset(4, 4),
-                  //     blurRadius: 10,
-                  //     color: startGradientColor,
-                  //   ),
-                  // ],
-                ),
+                    fontWeight: FontWeight.w300,
+                    color: Theme.of(context).primaryColorDark,
+                    fontSize: 18
+                    // shadows: <Shadow>[
+                    //   Shadow(
+                    //     offset: Offset(4, 4),
+                    //     blurRadius: 10,
+                    //     color: startGradientColor,
+                    //   ),
+                    //   Shadow(
+                    //     offset: Offset(4, 4),
+                    //     blurRadius: 10,
+                    //     color: startGradientColor,
+                    //   ),
+                    // ],
+                    ),
               ),
             ),
           ),
+          Spacer(),
           Spacer(),
         ],
       ),

@@ -6,6 +6,7 @@ class AppTheme {
     return ThemeData(
       primaryColor: Color(0xFF6870FB),
       primaryColorLight: Color(0xFFD2DAFD),
+      primaryColorDark: Color(0xFF202468),
       // secondaryHeaderColor: Color(0xFF06F482),
       accentColor: Color(0xFFFF5D71),
       // fontFamily: "Tajawal",

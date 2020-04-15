@@ -162,7 +162,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8),
       height: 5,
       width: screenWidth * 0.1,
-      decoration: BoxDecoration(color: Color(0XFF313543)),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
     );
   }
 }
