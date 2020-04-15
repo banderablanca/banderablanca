@@ -33,6 +33,7 @@ class MessageRepository implements MessageRepositoryAbs {
         .collection(path)
         .document('$flagId')
         .collection(path)
+        .where("visibility", isEqualTo: "public")
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((snapshot) {
@@ -79,7 +80,7 @@ class MessageRepository implements MessageRepositoryAbs {
 
     Map<String, dynamic> _message = _data.toJson();
     _message['timestamp'] = FieldValue.serverTimestamp();
-    _message['visibility'] = 'public';
+    _message['visibility'] = "public";
     return firestore
         .collection(path)
         .document('$flagId')

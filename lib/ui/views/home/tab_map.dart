@@ -8,6 +8,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'camera_screen.dart';
@@ -98,7 +99,7 @@ class _TabMapState extends State<TabMap> {
         onPressed: () => _loadCameraScreen(context),
         label: Text(
           'Alzar una bandera',
-          style: TextStyle(fontFamily: "Avenir Black", fontSize: 16),
+          style: GoogleFonts.baloo(textStyle: TextStyle(fontSize: 16)),
         ),
         icon: Padding(
           padding: EdgeInsets.all(4),

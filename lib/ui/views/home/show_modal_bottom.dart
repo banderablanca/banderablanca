@@ -3,6 +3,7 @@ import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'comments_list.dart';
 
@@ -26,7 +27,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                     ListTile(
                       title: Text(
                         "${flag.address}",
-                        style: TextStyle(fontFamily: "Tajawal Bold"),
+                        style: GoogleFonts.tajawal(),
                       ),
                       trailing: IconButton(
                           icon: Icon(

@@ -11,7 +11,7 @@ import 'package:mime/mime.dart';
 import '../../../core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../views.dart';
 
 class CreateFlagScreen extends StatefulWidget {
@@ -115,35 +115,6 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     }
   }
 
-  // void _optionModalBottomSheet(context) {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (BuildContext bc) {
-  //         return Container(
-  //           child: Wrap(
-  //             children: <Widget>[
-  //               ListTile(
-  //                 leading: Icon(Icons.photo_camera),
-  //                 title: Text('Tomar foto'),
-  //                 onTap: () {
-  //                   Navigator.of(context).pop();
-  //                   _getImage(ImageSource.camera);
-  //                 },
-  //               ),
-  //               ListTile(
-  //                 leading: Icon(Icons.photo_album),
-  //                 title: Text('Elegir foto de álbum'),
-  //                 onTap: () {
-  //                   Navigator.of(context).pop();
-  //                   _getImage(ImageSource.gallery);
-  //                 },
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
-
   _getAddress(context) async {
     PickResult result = await Navigator.push(
         context,
@@ -209,15 +180,15 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 4),
-                              child: Text(
-                                "Registrar una bandera blanca",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline
-                                    .copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                        fontFamily: "Tajawal Bold"),
-                              ),
+                              child: Text("Registrar una bandera blanca",
+                                  style: GoogleFonts.tajawal(
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .headline
+                                        .copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                  )),
                             ),
                           ],
                         ),
@@ -321,7 +292,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                 : () => _submit(context),
             label: Text(
               'Guardar',
-              style: TextStyle(fontFamily: "Avenir Black", fontSize: 16),
+              style: GoogleFonts.baloo(textStyle: TextStyle(fontSize: 16)),
             ),
             icon: Provider.of<FlagModel>(context).state == ViewState.Busy
                 ? Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static get theme {
@@ -7,7 +8,11 @@ class AppTheme {
       primaryColorLight: Color(0xFFD2DAFD),
       // secondaryHeaderColor: Color(0xFF06F482),
       accentColor: Color(0xFFFF5D71),
-      fontFamily: "Tajawal",
+      // fontFamily: "Tajawal",
+      // fontFamily: GoogleFonts.tajawalTextTheme(),
+      textTheme: GoogleFonts.tajawalTextTheme(
+          // Theme.of(context).textTheme,
+          ),
       iconTheme: IconThemeData(
         color: Colors.grey[700],
       ),
