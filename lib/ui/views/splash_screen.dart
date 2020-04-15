@@ -1,6 +1,7 @@
 import '../../core/core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'onboard/onboard_screen.dart';
 import 'views.dart';
 import 'widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class RedirectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserModel>(
       // child: HomeScreen(),
-      child: BoardScreen(),
+      child: OnBoardingScreen(),
       builder: (BuildContext context, UserModel model, Widget child) {
         if (model.state == ViewState.Busy) return _showLoadIndicator;
 
