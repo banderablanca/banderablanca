@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'package:login_register/utlities/app_colors.dart';
 
 class IntroWidget extends StatelessWidget {
@@ -29,68 +30,72 @@ class IntroWidget extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.only(top: 25),
-      decoration: BoxDecoration(color: Color(0XFF29323c)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            startGradientColor,
+            endGradientColor,
+          ],
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset(
-            image,
-            width: screenWidth * 0.7,
-            height: screenheight * 0.6,
-            fit: BoxFit.cover,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 12),
-            child: Stack(
-              alignment: AlignmentDirectional.bottomStart,
-              children: <Widget>[
-                Opacity(
-                  opacity: 0.15,
-                  child: Container(
-                    height: screenheight * 0.15,
-                    child: Text(
-                      type.toString().toUpperCase(),
-                      style: TextStyle(
-                          fontSize: 100.0,
-                          fontWeight: FontWeight.w900,
-                          foreground: Paint()..shader = linearGradient),
-                    ),
-                  ),
+          Center(
+            child: Text(
+              type.toString(),
+              style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                  fontSize: 40,
+                  color: Colors.white,
+                  // fontWeight: FontWeight.w900,
+                  // foreground: Paint()..shader = linearGradient,
                 ),
-                Positioned(
-                  bottom: -5,
-                  left: 15,
-                  child: Text(
-                    type.toString().toUpperCase(),
-                    style: TextStyle(
-                        fontSize: 62.0,
-                        fontWeight: FontWeight.w900,
-                        foreground: Paint()..shader = linearGradient),
-                  ),
-                )
-              ],
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
+          Spacer(),
+          Center(
+            child: Image.asset(
+              image,
+              width: screenWidth * 0.3,
+              height: screenheight * 0.3,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Spacer(),
           Container(
             padding: EdgeInsets.only(left: 20),
             child: Text(
               subText,
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
                   fontWeight: FontWeight.w300,
-                  color: Colors.grey,
-                  letterSpacing: 2.0),
+                  color: Theme.of(context).primaryColor,
+                  letterSpacing: 2.0,
+                  // shadows: <Shadow>[
+                  //   Shadow(
+                  //     offset: Offset(4, 4),
+                  //     blurRadius: 10,
+                  //     color: startGradientColor,
+                  //   ),
+                  //   Shadow(
+                  //     offset: Offset(4, 4),
+                  //     blurRadius: 10,
+                  //     color: startGradientColor,
+                  //   ),
+                  // ],
+                ),
+              ),
             ),
-          )
+          ),
+          Spacer(),
         ],
       ),
-    );
-  }
-
-  TextStyle buildTextStyle(double size) {
-    return TextStyle(
-      fontSize: size,
-      fontWeight: FontWeight.w900,
-      height: 0.5,
     );
   }
 }

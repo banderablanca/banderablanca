@@ -15,6 +15,7 @@ abstract class UserApp with _$UserApp {
     String email,
     String languageCode,
     bool isEmailVerified,
+    bool onBoardCompleted,
   }) = _UserApp;
 
   factory UserApp.fromJson(Map<String, dynamic> json) =>

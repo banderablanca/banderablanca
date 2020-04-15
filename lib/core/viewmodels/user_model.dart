@@ -107,6 +107,7 @@ class UserModel extends BaseModel {
       // store.dispatch(LoadUserDataSuccessAction(userApp));
       _currentUser = currentUser.copyWith(
         languageCode: userApp.languageCode,
+        onBoardCompleted: userApp.onBoardCompleted,
       );
       setState(ViewState.Idle);
       notifyListeners();
@@ -142,4 +143,6 @@ class UserModel extends BaseModel {
     await _repository.sendEmailVerification();
     setState(ViewState.Idle);
   }
+
+  onBoardCompleted() => _repository.onBoardCompleted();
 }

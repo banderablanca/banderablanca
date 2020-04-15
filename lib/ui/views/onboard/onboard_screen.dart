@@ -1,4 +1,5 @@
 import 'package:banderablanca/constants/app_constants.dart';
+import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:flutter/material.dart';
 // import 'package:login_register/utlities/app_colors.dart';
@@ -57,27 +58,30 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       IntroWidget(
           screenWidth: screenWidth,
           screenheight: screenheight,
-          image: 'assets/icons/marker.png',
-          type: 'Music',
-          startGradientColor: kBlue,
-          endGradientColor: kPruple,
-          subText: 'EXPERIENCE WICKED PLAYLISTS'),
+          image: 'assets/onboard/map.png',
+          type: 'Alzar una bandera',
+          startGradientColor: Color(0xFFFF98A5),
+          endGradientColor: Colors.white,
+          subText:
+              'Registra los datos y direción de la familia que necesita Apoyo'),
       IntroWidget(
           screenWidth: screenWidth,
           screenheight: screenheight,
-          image: 'assets/icons/marker.png',
-          type: 'Spa',
-          startGradientColor: kOrange,
-          endGradientColor: kYellow,
-          subText: 'FEEL THE MAGIC OF WELLNESS'),
+          image: 'assets/onboard/go_help.png',
+          type: '¿Quieres ayudar?',
+          startGradientColor: Color(0xFFADBBFF),
+          endGradientColor: Colors.white,
+          subText:
+              'Visualiza en el mapa que hogares necesitan ayuda por tu zona'),
       IntroWidget(
           screenWidth: screenWidth,
           screenheight: screenheight,
-          image: 'assets/icons/marker.png',
-          type: 'Travel',
-          startGradientColor: kGreen,
-          endGradientColor: kBlue2,
-          subText: "LET'S HIKE IT UP!"),
+          image: 'assets/onboard/family.png',
+          type: 'Es tiempo de ayudarnos',
+          startGradientColor: Color(0xFFFF98A5),
+          endGradientColor: Colors.white,
+          subText:
+              "Si quieres apoyar a algún  caso, deja un comentario o publica una foto del apoyo brindado"),
     ];
 
     return Scaffold(
@@ -127,8 +131,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ? true
                     : false,
                 child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
+                  onPressed: () async {
+                    Provider.of<UserModel>(context, listen: false)
+                        .onBoardCompleted();
+                    // Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
                   },
                   shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(26))),
@@ -147,7 +153,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8),
       height: 5,
       width: screenWidth * 0.1,
-      decoration: BoxDecoration(color: kwhiteGrey),
+      decoration: BoxDecoration(color: Color(0XFFd8d8d8)),
     );
   }
 
@@ -156,19 +162,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       margin: EdgeInsets.symmetric(horizontal: 8),
       height: 5,
       width: screenWidth * 0.1,
-      decoration: BoxDecoration(color: klightGrey),
-    );
-  }
-
-  Widget circleBar(bool isActive) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      height: isActive ? 12 : 8,
-      width: isActive ? 12 : 8,
-      decoration: BoxDecoration(
-          color: isActive ? kOrange : klightGrey,
-          borderRadius: BorderRadius.all(Radius.circular(12))),
+      decoration: BoxDecoration(color: Color(0XFF313543)),
     );
   }
 }

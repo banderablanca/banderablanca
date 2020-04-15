@@ -22,16 +22,30 @@ class RedirectionWidget extends StatelessWidget {
   Widget get _showLoadIndicator => Scaffold(body: SplashLoading());
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserModel>(
-      // child: HomeScreen(),
-      child: OnBoardingScreen(),
-      builder: (BuildContext context, UserModel model, Widget child) {
-        if (model.state == ViewState.Busy) return _showLoadIndicator;
+    return Selector<UserModel, UserApp>(
+      child: HomeScreen(),
+      // builder: (BuildContext context, UserModel model, Widget child) {
+      //   if (model.state == ViewState.Busy) return _showLoadIndicator;
 
-        if (model.currentUser != null) {
+      //   if (model.currentUser != null) {
+      //     if (model.currentUser.onBoardCompleted == null ||
+      //         !model.currentUser.onBoardCompleted) return OnBoardingScreen();
+      //     return child;
+      //   } else {
+      //     return LoginScreen();
+      //   }
+      // },
+      selector: (_, UserModel model) => model.currentUser,
+      builder: (BuildContext context, UserApp currentUser, Widget child) {
+        // if (model.state == ViewState.Busy) return _showLoadIndicator;
+        if (currentUser != null) {
+          debugPrint("=========>${currentUser.onBoardCompleted}");
+          if (currentUser.onBoardCompleted == null ||
+              !currentUser.onBoardCompleted) return OnBoardingScreen();
           return child;
         } else {
-          return LoginScreen();
+          return _showLoadIndicator;
+          // return LoginScreen();
         }
       },
     );

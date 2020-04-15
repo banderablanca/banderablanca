@@ -29,12 +29,15 @@ class AuthenticationService implements AuthenticationServiceAbs {
     }
 
     // IdTokenResult token = await _user.getIdToken();
+    final userData = await _loadUserData(_user.uid);
     final UserApp currentUser = UserApp(
-        id: _user.uid,
-        country: 'PE',
-        email: _user.email,
-        displayName: _user.displayName,
-        photoUrl: _user.photoUrl);
+      id: _user.uid,
+      country: 'PE',
+      email: _user.email,
+      displayName: _user.displayName,
+      photoUrl: _user.photoUrl,
+      onBoardCompleted: userData.onBoardCompleted,
+    );
 
     return currentUser;
   }
@@ -128,6 +131,13 @@ class AuthenticationService implements AuthenticationServiceAbs {
     return await auth.sendPasswordResetEmail(email: authForm.email);
   }
 
+  Future<UserApp> _loadUserData(String uid) async {
+    return firestore.collection(path).document('$uid').get().then((snapshot) {
+      if (snapshot.exists) return UserApp.fromJson(snapshot.data);
+      return null;
+    });
+  }
+
   @override
   Stream<UserApp> loadUserData(UserApp currentUser) {
     return firestore
@@ -193,5 +203,18 @@ class AuthenticationService implements AuthenticationServiceAbs {
     await firebaseUser.reload();
     final FirebaseUser _user = await auth.currentUser();
     return _user.photoUrl;
+  }
+
+  @override
+  Future<bool> onBoardCompleted() async {
+    final FirebaseUser firebaseUser = await auth.currentUser();
+
+    assert(firebaseUser != null);
+    assert(await firebaseUser.getIdToken() != null);
+    await firestore
+        .collection(path)
+        .document('${firebaseUser.uid}')
+        .setData({"on_board_completed": true}, merge: true);
+    return true;
   }
 }

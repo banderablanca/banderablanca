@@ -60,3 +60,6 @@ flutter:
   assets:
     - assets/icons/marker.png
     - assets/img/trama.svg
+    - assets/onboard/go_help.png
+    - assets/onboard/family.png
+    - assets/onboard/map.png

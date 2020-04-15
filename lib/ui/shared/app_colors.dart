@@ -2,20 +2,6 @@ import 'package:flutter/material.dart';
 
 const Color buttonColor = Color(0xFF541A49);
 
-final kPrimaryColor = Color(0XFF29323c);
-final kBlue = Color(0XFF21d4fd);
-final kPruple = Color(0XFFb721ff);
-final klightGrey = Color(0XFF313543);
-final kwhiteGrey = Color(0XFFd8d8d8);
-final kOrange = Color(0XFFfee140);
-final kYellow = Color(0XFFfa709a);
-final kGreen = Color(0XFF00c9ff);
-final kBlue2 = Color(0XFF92fe9d);
-final kLightOrange = Color(0XFFffe29f);
-final kLightRed = Color(0XFFff719a);
-final kLighOrange2 = Color(0XFFfbab66);
-final kPurple = Color(0XFFf7418c);
-
 class Utils {
   static String mapStyles = '''[
   {
