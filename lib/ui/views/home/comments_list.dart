@@ -171,7 +171,7 @@ class _CommentsListState extends State<CommentsList> {
   }
 
   Widget _previewImage(String url, double height, double width) {
-    if (url == null) return Container();
+    if (url == null) return Container(width: 0);
     return Stack(
       children: <Widget>[
         Container(
