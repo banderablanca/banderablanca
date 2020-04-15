@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../shared/keys.dart';
 
 class SplashLoading extends StatelessWidget {
@@ -37,17 +38,20 @@ class SplashLoading extends StatelessWidget {
               ),
               Text(
                 "Bandera",
-                style: Theme.of(context)
-                    .textTheme
-                    .display1
-                    .copyWith(fontFamily: "Tajawal Light", color: Colors.white),
+                style: GoogleFonts.tajawal(
+                    textStyle: Theme.of(context)
+                        .textTheme
+                        .display1
+                        .copyWith(color: Colors.white)),
               ),
               Text(
                 "Blanca",
-                style: Theme.of(context)
-                    .textTheme
-                    .display2
-                    .copyWith(fontFamily: "Tajawal Bold", color: Colors.white),
+                style: GoogleFonts.tajawal(
+                  textStyle: Theme.of(context)
+                      .textTheme
+                      .display2
+                      .copyWith(color: Colors.white),
+                ),
               )
             ],
           )

@@ -1,1 +1,1 @@
-enum AppTab { home, matches, ranking, shop }
+enum AppTab { notifications, map, myFlags }

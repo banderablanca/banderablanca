@@ -4,3 +4,5 @@ export 'message.dart';
 export 'white_flag.dart';
 export 'media_content.dart';
 export 'thumbnail_info.dart';
+export 'destination.dart';
+export 'user_notification.dart';

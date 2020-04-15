@@ -52,7 +52,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void initState() {
     super.initState();
     CameraDescription cameraDescription = widget.cameras.first;
-    onNewCameraSelected(cameraDescription);
+    _onNewCameraSelected(cameraDescription);
     setState(() {
       cameraSelected = 1;
     });
@@ -62,30 +62,34 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: Stack(
-        children: <Widget>[
-          Column(
+      body: Builder(
+        builder: (BuildContext context) {
+          return Stack(
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  child: Center(
-                    child: _cameraPreviewWidget(),
+              Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      child: Center(
+                        child: _cameraPreviewWidget(),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                  ),
-                ),
+                  // _captureControlRowWidget(),
+                ],
               ),
-              // _captureControlRowWidget(),
+              Positioned(
+                right: 0.0,
+                left: 0.0,
+                bottom: 0.0,
+                child: _bottomActions(),
+              ),
             ],
-          ),
-          Positioned(
-            right: 0.0,
-            left: 0.0,
-            bottom: 0.0,
-            child: _bottomActions(),
-          ),
-        ],
+          );
+        },
       ),
       floatingActionButton: _buildFloatinActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -248,7 +252,7 @@ class _CameraScreenState extends State<CameraScreen> {
         onPressed: () {
           if (controller != null && controller.value.isRecordingVideo) {
           } else {
-            onNewCameraSelected(cameraDescription);
+            _onNewCameraSelected(cameraDescription);
             setState(() {
               cameraSelected = cameraSelected == (widget.cameras.length - 1)
                   ? 0
@@ -264,11 +268,11 @@ class _CameraScreenState extends State<CameraScreen> {
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
-  void showInSnackBar(String message) {
+  void _showInSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void onNewCameraSelected(CameraDescription cameraDescription) async {
+  void _onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
@@ -278,7 +282,7 @@ class _CameraScreenState extends State<CameraScreen> {
     controller.addListener(() {
       if (mounted) setState(() {});
       if (controller.value.hasError) {
-        showInSnackBar('Camera error ${controller.value.errorDescription}');
+        _showInSnackBar('Camera error ${controller.value.errorDescription}');
       }
     });
 
@@ -325,7 +329,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<String> startVideoRecording() async {
     if (!controller.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      _showInSnackBar('Error: select a camera first.');
       return null;
     }
 
@@ -364,7 +368,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<String> takePicture() async {
     if (!controller.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      _showInSnackBar('Error: select a camera first.');
       return null;
     }
     final Directory extDir = await getApplicationDocumentsDirectory();
@@ -388,7 +392,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void _showCameraException(CameraException e) {
     logError(e.code, e.description);
-    showInSnackBar('Error: ${e.code}\n${e.description}');
+    _showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 
   void _navigateToPreview() {

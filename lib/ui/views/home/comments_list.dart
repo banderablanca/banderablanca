@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'video_player_screen.dart';
 
@@ -68,17 +66,18 @@ class _CommentsListState extends State<CommentsList> {
       child: Selector<MessageModel, List<Message>>(
         selector: (_, MessageModel model) => model.messages,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Divider(),
             ListTile(
               dense: true,
-              title: Text(
-                "Bandera blanca",
-                style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontFamily: "Tajawal Bold"),
-              ),
+              title: Text("Bandera blanca",
+                  style: GoogleFonts.tajawal(
+                    textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  )),
               trailing: IconButton(
                 icon: Provider.of<UserModel>(context).currentUser.id != flag.uid
                     ? Container()
@@ -126,9 +125,11 @@ class _CommentsListState extends State<CommentsList> {
               dense: true,
               title: Text(
                 "Comentarios",
-                style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontFamily: "Tajawal Bold"),
+                style: GoogleFonts.tajawal(
+                  textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
               ),
             ),
           ],
@@ -170,7 +171,7 @@ class _CommentsListState extends State<CommentsList> {
   }
 
   Widget _previewImage(String url, double height, double width) {
-    if (url == null) return Container();
+    if (url == null) return Container(width: 0);
     return Stack(
       children: <Widget>[
         Container(

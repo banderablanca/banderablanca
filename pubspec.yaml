@@ -37,6 +37,7 @@ dependencies:
   video_thumbnail: ^0.2.0
   image: ^2.1.12
   flutter_svg: 0.17.4
+  google_fonts: ^0.4.3
 
 dev_dependencies:
   flutter_test:
@@ -59,28 +60,6 @@ flutter:
   assets:
     - assets/icons/marker.png
     - assets/img/trama.svg
-
-  fonts:
-    - family: Avenir
-      fonts:
-        - asset: assets/fonts/Avenir/AvenirLTStd-Medium.ttf
-    - family: Avenir Light
-      fonts:
-        - asset: assets/fonts/Avenir/AvenirLTStd-Light.ttf
-    - family: Avenir Heavy
-      fonts:
-        - asset: assets/fonts/Avenir/AvenirLTStd-Heavy.ttf
-    - family: Avenir Black
-      fonts:
-        - asset: assets/fonts/Avenir/AvenirLTStd-Black.ttf
-        - weight: 900
-    - family: Tajawal
-      fonts:
-        - asset: assets/fonts/Tajawal/Tajawal-Regular.ttf
-    - family: Tajawal Light
-      fonts:
-        - asset: assets/fonts/Tajawal/Tajawal-Light.ttf
-    - family: Tajawal Bold
-      fonts:
-        - asset: assets/fonts/Tajawal/Tajawal-Bold.ttf
-        - weight: 900
+    - assets/onboard/go_help.png
+    - assets/onboard/family.png
+    - assets/onboard/map.png
