@@ -24,6 +24,7 @@ func Save(userID string, notification map[string]interface{}) <-chan error {
 			notification["sender_name"] = "Anónimo"
 		}
 		notification["timestamp"] = firestore.ServerTimestamp
+		notification["visibility"] = "public"
 
 		_, err := db.Collection("notifications/"+userID+"/notifications").NewDoc().Set(ctx, notification)
 		r <- err

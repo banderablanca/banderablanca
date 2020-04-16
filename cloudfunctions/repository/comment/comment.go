@@ -3,8 +3,8 @@ package comment
 import (
 	"cloudfunctions/config"
 	"cloudfunctions/models"
+	"cloudfunctions/utils"
 	"context"
-	"sort"
 
 	"google.golang.org/api/iterator"
 )
@@ -19,7 +19,7 @@ func GetUsers(flagID string) <-chan []string {
 	go func() {
 		defer close(users)
 
-		var commenters []string
+		commenters := []string{}
 
 		iter := db.Collection("comments").Doc(flagID).Collection("comments").Documents(ctx)
 
@@ -33,9 +33,10 @@ func GetUsers(flagID string) <-chan []string {
 			comment := &models.Comment{}
 			doc.DataTo(comment)
 
-			if find := sort.SearchStrings(commenters, comment.UID); find < 0 {
+			if find := utils.FindString(commenters, comment.UID); find < 0 {
 				commenters = append(commenters, comment.UID)
 			}
+
 		}
 
 		users <- commenters

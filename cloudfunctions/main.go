@@ -3,11 +3,11 @@ package cloudfunctions
 import (
 	"cloudfunctions/models"
 	"cloudfunctions/repository/comment"
+	"cloudfunctions/repository/flag"
 	"cloudfunctions/repository/notification"
 	"cloudfunctions/utils"
 	"context"
 	"log"
-	"sort"
 )
 
 // CreateNotifications trigger to create a notification to user that created a white flag
@@ -20,23 +20,28 @@ func CreateNotifications(ctx context.Context, e models.EventComment) error {
 		"sender_name":      flagComment.SenderName,
 		"sender_photo_url": flagComment.SenderPhotoURL,
 		"message":          flagComment.Text,
+		"uid":              flagComment.UID,
 		"flag_id":          flagID,
 	}
 
+	flagSelected := <-flag.GetByID(flagID)
 	commenters := <-comment.GetUsers(flagID)
+
 	// Create Notifications
 	for _, userID := range commenters {
-		err := <-notification.Save(userID, flagNotification)
-		if err != nil {
-			log.Fatalf("Error save notification: %v", err)
-			return err
+		if userID != flagComment.UID && userID != flagSelected.UID {
+			err := <-notification.Save(userID, flagNotification)
+			if err != nil {
+				log.Fatalf("Error save notification: %v", err)
+				return err
+			}
 		}
 	}
 
-	if find := sort.SearchStrings(commenters, flagComment.UID); find < 0 {
-		err := <-notification.Save(flagComment.UID, flagNotification)
+	if flagComment.UID != flagSelected.UID {
+		err := <-notification.Save(flagSelected.UID, flagNotification)
 		if err != nil {
-			log.Fatalf("Error send notification to creator flag: %v", err)
+			log.Fatalf("Error send notification to flag creator: %v", err)
 			return err
 		}
 	}
