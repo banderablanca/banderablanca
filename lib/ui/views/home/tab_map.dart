@@ -12,7 +12,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'camera_screen.dart';
-import 'comments_list.dart';
 import 'show_modal_bottom.dart';
 
 class TabMap extends StatefulWidget {

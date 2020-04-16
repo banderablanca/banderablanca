@@ -2,6 +2,8 @@ import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/core/models/models.dart';
 import 'package:flutter/material.dart';
 
+import 'show_modal_bottom.dart';
+
 class TabNotifications extends StatelessWidget {
   const TabNotifications({Key key, this.destination}) : super(key: key);
 
@@ -30,11 +32,15 @@ class TabNotifications extends StatelessWidget {
           return ListView.builder(
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
-              final UserNotification flag = list[index];
+              final UserNotification notification = list[index];
               return ListTile(
                 leading: Icon(Icons.flag),
-                title: Text("${flag.message}"),
-                onTap: () {},
+                title: Text("${notification.message}"),
+                onTap: () {
+                  var flag = Provider.of<FlagModel>(context, listen: false)
+                      .getFlagById(notification.flagId);
+                  if (flag != null) showModalBottomFlagDetail(context, flag);
+                },
               );
             },
           );

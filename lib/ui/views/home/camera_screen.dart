@@ -53,9 +53,10 @@ class _CameraScreenState extends State<CameraScreen> {
     super.initState();
     CameraDescription cameraDescription = widget.cameras.first;
     _onNewCameraSelected(cameraDescription);
-    setState(() {
-      cameraSelected = 1;
-    });
+    if (widget.cameras.length > 0)
+      setState(() {
+        cameraSelected = 1;
+      });
   }
 
   @override
