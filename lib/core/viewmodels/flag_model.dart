@@ -111,4 +111,8 @@ class FlagModel extends BaseModel {
     }
     setState(ViewState.Idle);
   }
+
+  getFlagById(String flagId) {
+    return flags.firstWhere((t) => t.id == flagId, orElse: () => null);
+  }
 }

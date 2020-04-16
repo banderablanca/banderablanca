@@ -53,7 +53,7 @@ dependency_overrides:
 flutter_icons:
   android: "ic_launcher"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/logo_dev.png"
 
 flutter:
   uses-material-design: true
