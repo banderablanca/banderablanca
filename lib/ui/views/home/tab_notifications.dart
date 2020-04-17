@@ -17,23 +17,10 @@ class TabNotifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(destination.title),
-      //   backgroundColor: destination.color,
-      // ),
-      // backgroundColor: destination.color,
       body: Selector<NotificationModel, List<UserNotification>>(
         selector: (_, NotificationModel model) => model.notifications,
         builder:
             (BuildContext context, List<UserNotification> list, Widget child) {
-          if (list.isEmpty)
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    "Te notificaremos si alguien comenta sobre una Bandera Blanca que hayas registrado"),
-              ),
-            );
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -73,39 +60,66 @@ class TabNotifications extends StatelessWidget {
                 ),
               ),
               Divider(),
-              Flexible(
-                child: ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final UserNotification notification = list[index];
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            child: Icon(
-                              FontAwesomeIcons.commentDots,
-                              color: Theme.of(context).cardColor,
+              if (list.isEmpty)
+                Flexible(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            text: "Aún no tienes notificaciones.\n\n",
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.title,
+                            ),
+                            children: [
+                              TextSpan(
+                                text:
+                                    "Aquí podrás ver interacciones sobre un hogar con bandera blanca que reportaste y/o comentaste.",
+                                style: GoogleFonts.lato(
+                                  textStyle:
+                                      Theme.of(context).textTheme.caption,
+                                ),
+                              )
+                            ]),
+                      ),
+                    ),
+                  ),
+                ),
+              if (list.isNotEmpty)
+                Flexible(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final UserNotification notification = list[index];
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: ListTile(
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                              child: Icon(
+                                FontAwesomeIcons.commentDots,
+                                color: Theme.of(context).cardColor,
+                              ),
                             ),
                           ),
+                          title: Text("${notification.message}"),
+                          onTap: () {
+                            var flag =
+                                Provider.of<FlagModel>(context, listen: false)
+                                    .getFlagById(notification.flagId);
+                            if (flag != null)
+                              showModalBottomFlagDetail(context, flag);
+                          },
                         ),
-                        title: Text("${notification.message}"),
-                        onTap: () {
-                          var flag =
-                              Provider.of<FlagModel>(context, listen: false)
-                                  .getFlagById(notification.flagId);
-                          if (flag != null)
-                            showModalBottomFlagDetail(context, flag);
-                        },
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           );
         },

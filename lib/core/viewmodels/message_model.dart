@@ -27,7 +27,7 @@ class MessageModel extends BaseModel {
   Stream<List<Message>> streamMessage(String flagId) =>
       _repository.livechatMessages(flagId);
 
-  fetchMessages(String flagId) async {
+  fetchMessages(String flagId) {
     _repository.livechatMessages(flagId).listen((livechatMessages) {
       _messages = livechatMessages;
       notifyListeners();

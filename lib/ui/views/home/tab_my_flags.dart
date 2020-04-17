@@ -25,25 +25,12 @@ class TabMyFlags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(destination.title),
-      //   backgroundColor: destination.color,
-      // ),
-      // backgroundColor: Colors.white,
       body: Selector<FlagModel, List<WhiteFlag>>(
         selector: (_, FlagModel model) => model.flags
             .where(
                 (t) => t.uid == Provider.of<UserModel>(context).currentUser.id)
             .toList(),
         builder: (BuildContext context, List<WhiteFlag> list, Widget child) {
-          if (list.isEmpty)
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    "Si ves un hogar con Bander blanca por brinda tu apoyo y/o registra una Bandera para que otras personas puedan ir en su apoyo."),
-              ),
-            );
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,61 +70,89 @@ class TabMyFlags extends StatelessWidget {
                 ),
               ),
               Divider(),
-              Flexible(
-                child: ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final WhiteFlag flag = list[index];
-                    return Container(
-                      margin: EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context)
-                                .primaryColorLight
-                                .withOpacity(0.5),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                            offset: Offset(
-                              2.0,
-                              2.0,
+              if (list.isEmpty)
+                Flexible(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            text:
+                                "Aquí podrás ver tus banderas registradas\n\n",
+                            style: GoogleFonts.lato(
+                              textStyle: Theme.of(context).textTheme.title,
                             ),
-                          )
-                        ],
+                            children: [
+                              TextSpan(
+                                text:
+                                    "Si ves un hogar con bandera blanca por favor brinda tu apoyo y/o registra una Bandera para que otras personas puedan ir en su apoyo.",
+                                style: GoogleFonts.lato(
+                                  textStyle:
+                                      Theme.of(context).textTheme.caption,
+                                ),
+                              )
+                            ]),
                       ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            child: Icon(
-                              Icons.flag,
-                              color: Theme.of(context).cardColor,
+                    ),
+                  ),
+                ),
+              if (list.isNotEmpty)
+                Flexible(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final WhiteFlag flag = list[index];
+                      return Container(
+                        margin: EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context)
+                                  .primaryColorLight
+                                  .withOpacity(0.5),
+                              blurRadius: 10,
+                              spreadRadius: 1,
+                              offset: Offset(
+                                2.0,
+                                2.0,
+                              ),
+                            )
+                          ],
+                        ),
+                        child: ListTile(
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            child: CircleAvatar(
+                              backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                              child: Icon(
+                                Icons.flag,
+                                color: Theme.of(context).cardColor,
+                              ),
                             ),
                           ),
+                          title: Text("${flag.address}"),
+                          onTap: () {
+                            showModalBottomFlagDetail(context, flag);
+                          },
+                          trailing:
+                              Provider.of<UserModel>(context).currentUser.id !=
+                                      flag.uid
+                                  ? SizedBox()
+                                  : IconButton(
+                                      icon: Icon(Icons.delete_outline,
+                                          color: Colors.red),
+                                      onPressed: () {
+                                        _showConfirmDialog(context, flag);
+                                      }),
                         ),
-                        title: Text("${flag.address}"),
-                        onTap: () {
-                          showModalBottomFlagDetail(context, flag);
-                        },
-                        trailing:
-                            Provider.of<UserModel>(context).currentUser.id !=
-                                    flag.uid
-                                ? SizedBox()
-                                : IconButton(
-                                    icon: Icon(Icons.delete_outline,
-                                        color: Colors.red),
-                                    onPressed: () {
-                                      _showConfirmDialog(context, flag);
-                                    }),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           );
         },

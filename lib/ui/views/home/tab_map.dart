@@ -73,7 +73,7 @@ class _TabMapState extends State<TabMap> {
                   myLocationButtonEnabled: true,
                   myLocationEnabled: true,
                   rotateGesturesEnabled: true,
-                  zoomGesturesEnabled: false,
+                  zoomGesturesEnabled: true,
                   mapToolbarEnabled: false,
                   initialCameraPosition: _kGooglePlex,
                   onMapCreated: (GoogleMapController controller) {

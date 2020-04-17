@@ -29,14 +29,12 @@ class CreateFlagScreen extends StatefulWidget {
 
 class _CreateFlagScreenState extends State<CreateFlagScreen> {
   final _formKey = GlobalKey<FormState>();
-  double _inputHeight = 50;
   final TextEditingController _desctiprionController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _desctiprionController.addListener(_checkInputHeight);
     // if (widget.isVideo)
     setState(() {
       _mediaPath = widget.mediaPath;
@@ -62,22 +60,6 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     if (image != null) {
       setState(() {
         _mediaPath = image.path;
-      });
-    }
-  }
-
-  void _checkInputHeight() async {
-    int count = _desctiprionController.text.split('\n').length;
-
-    if (count == 0 && _inputHeight == 50.0) {
-      return;
-    }
-    if (count <= 5) {
-      // use a maximum height of 6 rows
-      // height values can be adapted based on the font size
-      var newHeight = count == 0 ? 50.0 : 28.0 + (count * 18.0);
-      setState(() {
-        _inputHeight = newHeight;
       });
     }
   }
@@ -177,18 +159,31 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              child: Text("Registrar una bandera blanca",
-                                  style: GoogleFonts.tajawal(
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .headline
-                                        .copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                  )),
+                            Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 4),
+                                  child: Text("Registrar una bandera blanca",
+                                      style: GoogleFonts.tajawal(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline
+                                            .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                      )),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Center(
+                                    child: Text(
+                                        "El registro se hace de manera anónima. La foto es importante, esto facilitará la llega de voluntarios."),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -230,7 +225,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             },
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'La dirección exacta es importante.';
                               }
                               return null;
                             },
@@ -239,12 +234,14 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
 
                         Container(
                           // height: _inputHeight,
+                          // constraints: BoxConstraints(minHeight: 80),
+                          // color: Colors.green,
                           margin: EdgeInsets.all(16),
                           child: TextFormField(
                             controller: _desctiprionController,
                             textInputAction: TextInputAction.newline,
                             keyboardType: TextInputType.multiline,
-                            maxLines: null,
+                            maxLines: 5,
                             decoration: InputDecoration(
                                 hintText:
                                     '¿Cómo te pueden ayudar las personas?'),
@@ -255,7 +252,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             },
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return 'Es necesario una breve descripción.';
                               }
                               return null;
                             },

@@ -39,7 +39,6 @@ class RedirectionWidget extends StatelessWidget {
       builder: (BuildContext context, UserApp currentUser, Widget child) {
         // if (model.state == ViewState.Busy) return _showLoadIndicator;
         if (currentUser != null) {
-          debugPrint("=========>${currentUser.onBoardCompleted}");
           if (currentUser.onBoardCompleted == null ||
               !currentUser.onBoardCompleted) return OnBoardingScreen();
           return child;
