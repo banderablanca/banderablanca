@@ -8,7 +8,11 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyDzpRQBuwOVH6Cz-4MBqjWvX2udKVlZhgs")
+    var mapsApiKey = ProcessInfo.processInfo.environment["MAPS_API_KEY"]
+    if mapsApiKey!.count == 0 {
+        mapsApiKey = "YOUR KEY HERE"
+    }
+    GMSServices.provideAPIKey(mapsApiKey!)
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }

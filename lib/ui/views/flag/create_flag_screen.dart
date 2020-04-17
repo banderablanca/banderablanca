@@ -120,7 +120,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => PlacePicker(
-            apiKey: ApiKeys.googleMapsApiKey,
+            apiKey: ApiKeys().googleMapsApiKey,
             onPlacePicked: (PickResult result) {
               Navigator.of(context).pop(result);
             },
@@ -198,7 +198,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                         isVideo(_mediaPath) ? _previewVideo() : _previewImage(),
                         if (pickResult != null)
                           StaticMap(
-                            googleMapsApiKey: ApiKeys.googleMapsApiKey,
+                            googleMapsApiKey: ApiKeys().googleMapsApiKey,
                             height: 150,
                             width: (MediaQuery.of(context).size.width - 30)
                                 .floor(),

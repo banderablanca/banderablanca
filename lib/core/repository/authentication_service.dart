@@ -84,8 +84,8 @@ class AuthenticationService implements AuthenticationServiceAbs {
   Future<UserApp> handleSignIn() async {
     FirebaseUser firebaseUser = await auth.currentUser();
     if (firebaseUser == null) await auth.signInAnonymously();
-    await firebaseUser.reload();
     assert(firebaseUser != null);
+    await firebaseUser.reload();
     return Future.value(UserApp(
       id: firebaseUser.uid,
       country: 'PE',
