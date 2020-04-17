@@ -65,3 +65,6 @@ flutter:
     - assets/onboard/go_help.png
     - assets/onboard/family.png
     - assets/onboard/map.png
+    - assets/img/notifications.png
+    - assets/img/geo.png
+    - assets/img/localization.png

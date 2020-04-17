@@ -6,7 +6,7 @@ class Destination {
   final int index;
   final String title;
   final IconData icon;
-  final MaterialColor color;
+  final Color color;
   final AppTab tab;
 }
 
@@ -15,18 +15,18 @@ const List<Destination> allDestinations = <Destination>[
       index: 0,
       title: 'Notificaciones',
       icon: Icons.notifications,
-      color: Colors.cyan,
+      color: Color(0xFF6870FB),
       tab: AppTab.notifications),
   Destination(
       index: 1,
       title: 'Banderas',
       icon: Icons.flag,
-      color: Colors.red,
+      color: Color(0xFFFF5D71),
       tab: AppTab.map),
   Destination(
       index: 2,
       title: 'Mis Banderas',
       icon: Icons.outlined_flag,
-      color: Colors.amber,
+      color: Color(0xFF6870FB),
       tab: AppTab.myFlags),
 ];
