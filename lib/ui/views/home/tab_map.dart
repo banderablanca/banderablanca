@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:banderablanca/core/core.dart';
-import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
-import 'package:banderablanca/ui/views/widgets/widgets.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'camera_screen.dart';
-import 'comments_list.dart';
 import 'show_modal_bottom.dart';
 
 class TabMap extends StatefulWidget {

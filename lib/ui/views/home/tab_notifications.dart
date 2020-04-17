@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/core/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'show_modal_bottom.dart';
 
 class TabNotifications extends StatelessWidget {
   const TabNotifications({Key key, this.destination}) : super(key: key);
@@ -89,7 +94,11 @@ class TabNotifications extends StatelessWidget {
                           ),
                         ),
                         title: Text("${flag.message}"),
-                        onTap: () {},
+                        onTap: () {
+                          var flag = Provider.of<FlagModel>(context, listen: false)
+                              .getFlagById(notification.flagId);
+                          if (flag != null) showModalBottomFlagDetail(context, flag);
+                        },
                       ),
                     );
                   },

@@ -38,6 +38,7 @@ dependencies:
   image: ^2.1.12
   flutter_svg: 0.17.4
   google_fonts: ^0.4.3
+  flutter_dotenv: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -53,11 +54,12 @@ dependency_overrides:
 flutter_icons:
   android: "ic_launcher"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/logo_dev.png"
 
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/icons/marker.png
     - assets/img/trama.svg
     - assets/onboard/go_help.png

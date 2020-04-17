@@ -7,6 +7,29 @@ Es un proyecto sin fines de lucro.
 ```
 flutter pub run build_runner watch --delete-conflicting-outputs
 ```
+Create file `.env`
+```
+GOOGLE_MAPS_WEB_API_KEY=YOUR_API_KEY
+```
+Config `.vscode/launch.json`
+```json
+    "configurations": [
+        {
+            "name": "BB Dev",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ],
+            "env": {
+                "MAPS_API_KEY": "YOUR_API_KEY",
+                "GOOGLE_MAPS_WEB_API_KEY": "YOUR_API_KEY"
+            },
+        },
+        ...
+    ]
+```
 
 
 This project is a starting point for a Flutter application.

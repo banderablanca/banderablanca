@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/app_constants.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
   //   FlutterError.onError = (FlutterErrorDetails details) {
   //     Crashlytics.instance.recordFlutterError(details);
   //   };
+  await DotEnv().load('.env');
   runApp(BanderaBlancaApp());
 }
 

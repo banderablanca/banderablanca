@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class RoutePaths {
   static const String Splash = '/';
   static const String LoginScreen = '/login';
@@ -10,6 +12,5 @@ class RoutePaths {
 }
 
 class ApiKeys {
-  static const String googleMapsApiKey =
-      "AIzaSyC9UTOsK64cTOrumta7YXV17BelmIG9ul0";
+  String get googleMapsApiKey => DotEnv().env['GOOGLE_MAPS_WEB_API_KEY'];
 }
