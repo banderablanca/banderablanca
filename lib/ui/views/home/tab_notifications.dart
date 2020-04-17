@@ -77,7 +77,7 @@ class TabNotifications extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final UserNotification flag = list[index];
+                    final UserNotification notification = list[index];
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: ListTile(
@@ -93,11 +93,13 @@ class TabNotifications extends StatelessWidget {
                             ),
                           ),
                         ),
-                        title: Text("${flag.message}"),
+                        title: Text("${notification.message}"),
                         onTap: () {
-                          var flag = Provider.of<FlagModel>(context, listen: false)
-                              .getFlagById(notification.flagId);
-                          if (flag != null) showModalBottomFlagDetail(context, flag);
+                          var flag =
+                              Provider.of<FlagModel>(context, listen: false)
+                                  .getFlagById(notification.flagId);
+                          if (flag != null)
+                            showModalBottomFlagDetail(context, flag);
                         },
                       ),
                     );
