@@ -33,6 +33,9 @@ List<SingleChildWidget> independentServices = [
   Provider(
     create: (_) => NotificationRepository(auth: _auth, firestore: _firestore),
   ),
+  Provider(
+    create: (_) => DeviceRepository(auth: _auth, firestore: _firestore),
+  ),
 ];
 
 List<SingleChildWidget> dependentServices = [
@@ -62,6 +65,10 @@ List<SingleChildWidget> dependentServices = [
     update: (_, repository, user, model) => model
       ..user = user
       ..repository = repository,
+  ),
+  ChangeNotifierProxyProvider<DeviceRepository, DeviceModel>(
+    create: (_) => DeviceModel(),
+    update: (_, repository, model) => model..repository = repository,
   ),
 ];
 

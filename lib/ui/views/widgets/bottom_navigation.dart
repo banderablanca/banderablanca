@@ -15,6 +15,7 @@ class BottomNavigationWidget extends StatelessWidget {
             allDestinations.indexWhere((o) => o.tab == tabModel.activeTab);
         Destination tab =
             allDestinations.firstWhere((t) => t.tab == tabModel.activeTab);
+
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -27,19 +28,25 @@ class BottomNavigationWidget extends StatelessWidget {
             ],
           ),
           child: BottomNavigationBar(
-            showUnselectedLabels: false,
-            fixedColor: tab.color,
-            type: BottomNavigationBarType.fixed,
-            elevation: 0,
-            currentIndex: activeTabIndex,
-            onTap: (index) => _onTabSelected(context, index),
-            items: allDestinations.map((Destination destination) {
-              return BottomNavigationBarItem(
-                  icon: Icon(destination.icon),
-                  backgroundColor: destination.color,
-                  title: Text(destination.title));
-            }).toList(),
-          ),
+              showUnselectedLabels: false,
+              fixedColor: tab.color,
+              type: BottomNavigationBarType.fixed,
+              elevation: 0,
+              currentIndex: activeTabIndex,
+              onTap: (index) => _onTabSelected(context, index),
+              items: [
+                for (Destination destination in allDestinations)
+                  BottomNavigationBarItem(
+                    icon: (tabModel.haveNotification &&
+                            destination.tab == AppTab.notifications)
+                        ? Icon(Icons.notifications_active)
+                        : Icon(tabModel.activeTab == destination.tab
+                            ? destination.iconActive
+                            : destination.icon),
+                    backgroundColor: destination.color,
+                    title: Text(destination.title),
+                  ),
+              ]),
         );
       },
     );

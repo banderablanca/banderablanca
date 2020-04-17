@@ -59,34 +59,30 @@ class _TabMapState extends State<TabMap> {
     return Scaffold(
       body: Builder(
         builder: (BuildContext context) {
-          return Stack(
-            children: [
-              Selector<FlagModel, Set<Marker>>(
-                selector: (_, FlagModel model) => model.markers(
-                  onTap: (WhiteFlag selectedFlag) {
-                    showModalBottomFlagDetail(context, selectedFlag);
+          return Selector<FlagModel, Set<Marker>>(
+            selector: (_, FlagModel model) => model.markers(
+              onTap: (WhiteFlag selectedFlag) {
+                showModalBottomFlagDetail(context, selectedFlag);
+              },
+            ),
+            builder: (_, Set<Marker> markers, Widget child) {
+              return SafeArea(
+                child: GoogleMap(
+                  mapType: MapType.normal,
+                  markers: markers,
+                  myLocationButtonEnabled: true,
+                  myLocationEnabled: true,
+                  rotateGesturesEnabled: true,
+                  zoomGesturesEnabled: false,
+                  mapToolbarEnabled: false,
+                  initialCameraPosition: _kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    controller.setMapStyle(Utils.mapStyles);
+                    _controller.complete(controller);
                   },
                 ),
-                builder: (_, Set<Marker> markers, Widget child) {
-                  return GoogleMap(
-                    mapType: MapType.normal,
-                    markers: markers,
-                    mapToolbarEnabled: false,
-                    initialCameraPosition: _kGooglePlex,
-                    onMapCreated: (GoogleMapController controller) {
-                      controller.setMapStyle(Utils.mapStyles);
-                      _controller.complete(controller);
-                    },
-                  );
-                },
-              ),
-              Positioned(
-                right: 0,
-                top: 50,
-                child: IconButton(
-                    icon: Icon(Icons.gps_fixed), onPressed: _goToTheLake),
-              ),
-            ],
+              );
+            },
           );
         },
       ),

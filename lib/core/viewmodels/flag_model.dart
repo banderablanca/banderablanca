@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import '../helpers/firebase_notification_handler.dart';
 import 'package:flutter/services.dart';
 
 import 'base_model.dart';
@@ -14,6 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class FlagModel extends BaseModel {
   FlagRepositoryAbs _repository;
   BitmapDescriptor pinLocationIcon;
+  FirebaseNotifications _firebaseNotifications = FirebaseNotifications();
 
   set repository(FlagRepositoryAbs _repo) {
     _repository = _repo;
@@ -74,6 +76,7 @@ class FlagModel extends BaseModel {
     setState(ViewState.Busy);
     try {
       await _repository.createFlag(newFlag, mediaPath);
+      _firebaseNotifications.subscribe(newFlag);
     } catch (e) {
       debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
       debugPrint(e);
