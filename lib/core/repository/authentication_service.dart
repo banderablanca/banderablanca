@@ -36,7 +36,7 @@ class AuthenticationService implements AuthenticationServiceAbs {
       email: _user.email,
       displayName: _user.displayName,
       photoUrl: _user.photoUrl,
-      onBoardCompleted: userData.onBoardCompleted,
+      onBoardCompleted: userData.onBoardCompleted ?? false,
     );
 
     return currentUser;
@@ -83,9 +83,10 @@ class AuthenticationService implements AuthenticationServiceAbs {
   @override
   Future<UserApp> handleSignIn() async {
     FirebaseUser firebaseUser = await auth.currentUser();
-    if (firebaseUser == null) await auth.signInAnonymously();
-    assert(firebaseUser != null);
-    await firebaseUser.reload();
+    if (firebaseUser == null) {
+      AuthResult result = await auth.signInAnonymously();
+      firebaseUser = result.user;
+    }
     return Future.value(UserApp(
       id: firebaseUser.uid,
       country: 'PE',
