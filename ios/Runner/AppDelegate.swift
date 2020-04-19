@@ -9,7 +9,7 @@ import GoogleMaps
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     var mapsApiKey = ProcessInfo.processInfo.environment["MAPS_API_KEY"]
-    if mapsApiKey!.count == 0 {
+    if mapsApiKey == nil {
         mapsApiKey = "YOUR KEY HERE"
     }
     GMSServices.provideAPIKey(mapsApiKey!)

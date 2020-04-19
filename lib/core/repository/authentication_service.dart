@@ -36,7 +36,7 @@ class AuthenticationService implements AuthenticationServiceAbs {
       email: _user.email,
       displayName: _user.displayName,
       photoUrl: _user.photoUrl,
-      onBoardCompleted: userData.onBoardCompleted ?? false,
+      onBoardCompleted: userData?.onBoardCompleted ?? false,
     );
 
     return currentUser;
