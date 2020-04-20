@@ -4,9 +4,7 @@ import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:banderablanca/ui/views/widgets/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
 
 import '../../../core/core.dart';
 import 'package:flutter/material.dart';

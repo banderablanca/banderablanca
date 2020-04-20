@@ -408,15 +408,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.25+3"
-  google_maps_place_picker:
-    dependency: "direct main"
-    description:
-      name: google_maps_place_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.2"
   google_maps_webservice:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: google_maps_webservice
       url: "https://pub.dartlang.org"
@@ -778,7 +771,7 @@ packages:
     source: hosted
     version: "0.1.1+2"
   tuple:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: tuple
       url: "https://pub.dartlang.org"

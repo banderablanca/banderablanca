@@ -6,6 +6,7 @@ import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../shared/shared.dart';
 import 'video_player_screen.dart';
 
 class CommentsList extends StatefulWidget {
@@ -78,6 +79,10 @@ class _CommentsListState extends State<CommentsList> {
                           color: Theme.of(context).primaryColor,
                         ),
                   )),
+              subtitle: Text(
+                timeAgo(flag.timestamp),
+                style: Theme.of(context).textTheme.caption,
+              ),
               trailing: IconButton(
                 icon: Provider.of<UserModel>(context).currentUser.id != flag.uid
                     ? Container()
@@ -157,8 +162,26 @@ class _CommentsListState extends State<CommentsList> {
                       ),
                     ),
                   ),
-                  title: Text("${message.senderName ?? 'Anónimo'}"),
-                  subtitle: Text("${message.text}"),
+                  title: Text(
+                    "${message.senderName ?? 'Anónimo'}",
+                    style: GoogleFonts.tajawal(),
+                  ),
+                  subtitle: RichText(
+                    text: TextSpan(
+                      text: "${message.text}\n",
+                      children: [
+                        TextSpan(
+                          text: "${timeAgo(flag.timestamp)}",
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                                fontSize: 10,
+                              ),
+                        )
+                      ],
+                      style: GoogleFonts.tajawal(
+                        textStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ),
                   trailing: _previewImage(
                       message.mediaContent?.thumbnailInfo?.downloadUrl, 50, 50),
                 ),
