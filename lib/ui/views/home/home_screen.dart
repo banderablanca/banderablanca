@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onResume: _navigateToItemDetail,
       onSaveToken: Provider.of<DeviceModel>(context, listen: false).saveToken,
     );
+    Provider.of<UserModel>(context, listen: false).versionCheck(context);
   }
 
   _onMessageIcon(Map<String, dynamic> message) {}
@@ -73,7 +74,6 @@ class _DestinationViewState extends State<DestinationView> {
       return TabMap(
         destination: widget.destination,
       );
-    // return Container();
     return TabMyFlags(
       destination: widget.destination,
     );

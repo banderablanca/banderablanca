@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'google_map_place_picker.dart';
-import 'pick_result.dart';
 import 'place_provider.dart';
 
 enum PinState { Preparing, Idle, Dragging }
@@ -17,14 +16,13 @@ enum SearchingState { Idle, Searching }
 class PlacePicker extends StatefulWidget {
   PlacePicker({
     Key key,
-    @required this.apiKey,
     this.onPlacePicked,
     @required this.initialPosition,
     this.useCurrentLocation,
     this.desiredLocationAccuracy = LocationAccuracy.high,
     this.onMapCreated,
     this.hintText,
-    this.searchingText,
+    // this.searchingText,
     this.onAutoCompleteFailed,
     this.onGeocodingSearchFailed,
     this.proxyBaseUrl,
@@ -38,7 +36,7 @@ class PlacePicker extends StatefulWidget {
     this.enableMyLocationButton = true,
     this.myLocationButtonCooldown = 10,
     this.usePinPointingSearch = true,
-    this.usePlaceDetailSearch = false,
+    // this.usePlaceDetailSearch = false,
     this.autocompleteOffset,
     this.autocompleteRadius,
     this.autocompleteLanguage,
@@ -55,8 +53,6 @@ class PlacePicker extends StatefulWidget {
     this.automaticallyImplyAppBarLeading = true,
   }) : super(key: key);
 
-  final String apiKey;
-
   final LatLng initialPosition;
   final bool useCurrentLocation;
   final LocationAccuracy desiredLocationAccuracy;
@@ -64,7 +60,7 @@ class PlacePicker extends StatefulWidget {
   final MapCreatedCallback onMapCreated;
 
   final String hintText;
-  final String searchingText;
+  // final String searchingText;
   // final double searchBarHeight;
   // final EdgeInsetsGeometry contentPadding;
 
@@ -79,7 +75,7 @@ class PlacePicker extends StatefulWidget {
   final int myLocationButtonCooldown;
 
   final bool usePinPointingSearch;
-  final bool usePlaceDetailSearch;
+  // final bool usePlaceDetailSearch;
 
   final num autocompleteOffset;
   final num autocompleteRadius;
@@ -106,7 +102,7 @@ class PlacePicker extends StatefulWidget {
   ///
   /// If you managed to use your own [selectedPlaceWidgetBuilder], then this WILL NOT be invoked, and you need use data which is
   /// being sent with [selectedPlaceWidgetBuilder].
-  final ValueChanged<PickResult> onPlacePicked;
+  final ValueChanged<CameraPosition> onPlacePicked;
 
   /// optional - builds selected place's UI
   ///
@@ -162,18 +158,10 @@ class _PlacePickerState extends State<PlacePicker> {
   void initState() {
     super.initState();
 
-    provider =
-        PlaceProvider(widget.apiKey, widget.proxyBaseUrl, widget.httpClient);
+    provider = PlaceProvider();
     provider.sessionToken = Uuid().v4();
     provider.desiredAccuracy = widget.desiredLocationAccuracy;
     provider.setMapType(widget.initialMapType);
-  }
-
-  @override
-  void dispose() {
-    // searchBarController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -255,7 +243,7 @@ class _PlacePickerState extends State<PlacePicker> {
       enableMapTypeButton: widget.enableMapTypeButton,
       enableMyLocationButton: widget.enableMyLocationButton,
       usePinPointingSearch: widget.usePinPointingSearch,
-      usePlaceDetailSearch: widget.usePlaceDetailSearch,
+      // usePlaceDetailSearch: widget.usePlaceDetailSearch,
       onMapCreated: widget.onMapCreated,
       selectInitialPosition: widget.selectInitialPosition,
       language: widget.autocompleteLanguage,

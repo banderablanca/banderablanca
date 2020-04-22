@@ -27,8 +27,6 @@ class CreateFlagScreen extends StatefulWidget {
 
 class _CreateFlagScreenState extends State<CreateFlagScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _desctiprionController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
 
   @override
   void initState() {
@@ -41,12 +39,10 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
 
   @override
   void dispose() {
-    _desctiprionController?.dispose();
-    _addressController?.dispose();
     super.dispose();
   }
 
-  PickResult pickResult;
+  CameraPosition pickResult;
   String title;
   String description;
   String address;
@@ -62,31 +58,30 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     }
   }
 
+  _showSnackbar(context, String text) {
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
   _submit(BuildContext context) async {
     _hideKeyboard();
-    // pickResult.geometry.location.
-    if (_mediaPath == null) {
-      Scaffold.of(context)
-          .showSnackBar(
-            (SnackBar(
-              content: Text('Es necesario adjuntar una foto o video.'),
-              // duration: Duration(milliseconds: 150),
-            )),
-          )
-          .closed
-          .then((SnackBarClosedReason reason) {
-        Navigator.of(context).pop();
-      });
-      return;
-    }
-    if (_formKey.currentState.validate()) {
+
+    // validate
+    _formKey.currentState.validate();
+
+    if (_mediaPath == null)
+      return _showSnackbar(context, "Es necesario adjuntar una foto o video.");
+
+    if (pickResult == null)
+      return _showSnackbar(context, "Debe seleccionar la ubicación");
+
+    if (_formKey.currentState.validate() && pickResult != null) {
       _formKey.currentState.save();
       final WhiteFlag newFlag = WhiteFlag(
         address: address,
         description: description,
         title: title,
-        position: LatLng(
-            pickResult.geometry.location.lat, pickResult.geometry.location.lng),
+        position:
+            LatLng(pickResult.target.latitude, pickResult.target.longitude),
       );
       await Provider.of<FlagModel>(context, listen: false)
           .createflag(newFlag, _mediaPath);
@@ -96,24 +91,26 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   }
 
   _getAddress(context) async {
-    PickResult result = await Navigator.push(
+    LatLng inital = LatLng(-33.8567844, 151.213108);
+    if (pickResult != null)
+      inital = LatLng(pickResult.target.latitude, pickResult.target.longitude);
+
+    CameraPosition result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => PlacePicker(
-            apiKey: ApiKeys().googleMapsApiKey,
-            onPlacePicked: (PickResult result) {
+            onPlacePicked: (CameraPosition result) {
               Navigator.of(context).pop(result);
             },
-            initialPosition: LatLng(-33.8567844, 151.213108),
-            useCurrentLocation: true,
+            initialPosition: inital,
+            useCurrentLocation: pickResult == null,
           ),
           fullscreenDialog: true,
         ));
-
-    setState(() {
-      pickResult = result;
-      _addressController.text = result.formattedAddress;
-    });
+    if (result != null)
+      setState(() {
+        pickResult = result;
+      });
   }
 
   @override
@@ -126,156 +123,220 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
           color: Colors.black87,
         ),
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        children: <Widget>[
-          IgnorePointer(
-            ignoring: Provider.of<FlagModel>(context).state == ViewState.Busy,
-            child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Stack(
-                          overflow: Overflow.visible,
-                          children: <Widget>[
-                            Positioned(
-                              left: 2,
-                              top: -2,
-                              child: ClipPath(
-                                clipper: TriangleClipper(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            IgnorePointer(
+              ignoring: Provider.of<FlagModel>(context).state == ViewState.Busy,
+              child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Stack(
+                            overflow: Overflow.visible,
+                            children: <Widget>[
+                              Positioned(
+                                left: 2,
+                                top: -2,
+                                child: ClipPath(
+                                  clipper: TriangleClipper(),
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Theme.of(context)
+                                        .primaryColorLight
+                                        .withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 4),
+                                    child: Text("Registrar una bandera blanca",
+                                        style: GoogleFonts.tajawal(
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .headline
+                                              .copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                        )),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: Center(
+                                      child: Text(
+                                          "El registro se hace de manera anónima. La foto es importante, esto facilitará la llega de voluntarios."),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          isVideo(_mediaPath)
+                              ? _previewVideo()
+                              : _previewImage(),
+                          if (pickResult == null)
+                            Center(
+                              child: InkWell(
+                                onTap: () => _getAddress(context),
                                 child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Theme.of(context)
-                                      .primaryColorLight
-                                      .withOpacity(0.5),
+                                  height: 150,
+                                  width:
+                                      (MediaQuery.of(context).size.width - 30),
+                                  color: Colors.black12,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.location_on,
+                                          color: Colors.red),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "Tap para seleccionar ubicación",
+                                        style: GoogleFonts.tajawal(
+                                          textStyle: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                            Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 4),
-                                  child: Text("Registrar una bandera blanca",
-                                      style: GoogleFonts.tajawal(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline
-                                            .copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                      )),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Center(
-                                    child: Text(
-                                        "El registro se hace de manera anónima. La foto es importante, esto facilitará la llega de voluntarios."),
-                                  ),
-                                ),
+                          if (pickResult != null)
+                            StaticMap(
+                              onTap: () => _getAddress(context),
+                              googleMapsApiKey: ApiKeys().googleMapsApiKey,
+                              height: 150,
+                              width: (MediaQuery.of(context).size.width - 30)
+                                  .floor(),
+                              currentLocation: {
+                                "latitude": pickResult.target.latitude,
+                                "longitude": pickResult.target.longitude
+                              },
+                              markers: [
+                                {
+                                  "latitude": pickResult.target.latitude,
+                                  "longitude": pickResult.target.longitude
+                                }
                               ],
+                              zoom: 5,
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        isVideo(_mediaPath) ? _previewVideo() : _previewImage(),
-                        if (pickResult != null)
-                          StaticMap(
-                            googleMapsApiKey: ApiKeys().googleMapsApiKey,
-                            height: 150,
-                            width: (MediaQuery.of(context).size.width - 30)
-                                .floor(),
-                            currentLocation: {
-                              "latitude": pickResult.geometry.location.lat,
-                              "longitude": pickResult.geometry.location.lng
-                            },
-                            markers: [
-                              {
-                                "latitude": pickResult.geometry.location.lat,
-                                "longitude": pickResult.geometry.location.lng
-                              }
-                            ],
-                            zoom: 5,
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                  hintText: 'Ingrese referencia de dirección',
+                                  labelText: 'Referencia de dirección'
+                                  ),
+                              onSaved: (String value) {
+                                setState(() {
+                                  address = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'La referencia es importante.';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        Padding(
-                          padding: EdgeInsets.all(16),
-                          child: TextFormField(
-                            // initValue: pickResult?.formattedAddress,
-                            controller: _addressController,
-                            readOnly: true,
-                            onTap: () => _getAddress(context),
-                            decoration: InputDecoration(
-                                hintText: 'Ingresa la dirección exacta'),
-                            onSaved: (String value) {
-                              setState(() {
-                                address = value;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'La dirección exacta es importante.';
-                              }
-                              return null;
-                            },
+
+                          Container(
+                            margin: EdgeInsets.all(16),
+                            child: TextFormField(
+                              textInputAction: TextInputAction.newline,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      'Ejem. alimentos, arroz, azúcas',
+                                      labelText: '¿Cómo te pueden ayudar las personas?'
+                                      ),
+                              onSaved: (String value) {
+                                setState(() {
+                                  description = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Es necesario una breve descripción.';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
 
-                        Container(
-                          // height: _inputHeight,
-                          // constraints: BoxConstraints(minHeight: 80),
-                          // color: Colors.green,
-                          margin: EdgeInsets.all(16),
-                          child: TextFormField(
-                            controller: _desctiprionController,
-                            textInputAction: TextInputAction.newline,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 5,
-                            decoration: InputDecoration(
-                                hintText:
-                                    '¿Cómo te pueden ayudar las personas?'),
-                            onSaved: (String value) {
-                              setState(() {
-                                description = value;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Es necesario una breve descripción.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
+                          // Padding(
+                          //   padding: EdgeInsets.all(16),
+                          //   child: DropdownButton<String>(
+                          //     isExpanded: true,
+                          //     hint: Text("Tipo de documento"),
+                          //     items: <String>['DNI', 'PASAPORTE', 'C', 'D']
+                          //         .map((String value) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: value,
+                          //         child: Text(value),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (_) {},
+                          //   ),
+                          // ),
 
-                        // InkWell(
-                        //   onTap: () => _optionModalBottomSheet(context),
-                        //   child: Container(
-                        //     height: 150,
-                        //     child:
+                          // Padding(
+                          //   padding: EdgeInsets.all(16),
+                          //   child: TextFormField(
+                          //     decoration:
+                          //         InputDecoration(hintText: 'Documento'),
+                          //     onSaved: (String value) {
+                          //       setState(() {
+                          //         address = value;
+                          //       });
+                          //     },
+                          //     validator: (value) {
+                          //       if (value.isEmpty) {
+                          //         return 'El documento es necesario.';
+                          //       }
+                          //       return null;
+                          //     },
+                          //   ),
+                          // ),
 
-                        //      _image != null
-                        //         ? Image.file(_image)
-                        //         : Center(
-                        //             child: Text("Tab para agregar una foto"),
-                        //           ),
-                        //   ),
-                        // ),
-                      ],
+                          // InkWell(
+                          //   onTap: () => _optionModalBottomSheet(context),
+                          //   child: Container(
+                          //     height: 150,
+                          //     child:
+
+                          //      _image != null
+                          //         ? Image.file(_image)
+                          //         : Center(
+                          //             child: Text("Tab para agregar una foto"),
+                          //           ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
-                  ),
-                )),
-          ),
-        ],
+                  )),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: Builder(
         builder: (BuildContext context) {

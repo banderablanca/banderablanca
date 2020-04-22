@@ -10,6 +10,7 @@ class StaticMap extends StatefulWidget {
     this.height,
     this.zoom,
     this.markerUrl,
+    this.onTap,
   }) : super(key: key);
 
   final List markers;
@@ -19,6 +20,7 @@ class StaticMap extends StatefulWidget {
   final int height;
   final int zoom;
   final String markerUrl;
+  final VoidCallback onTap;
 
   @override
   _StaticMapState createState() => _StaticMapState();
@@ -34,17 +36,6 @@ class _StaticMapState extends State<StaticMap> {
     "latitude": '37.0902',
     "longitude": '-95.7192'
   };
-
-  @override
-  initState() {
-    var currentLocation = widget.currentLocation;
-    if (widget.currentLocation == null) {
-      currentLocation = defaultLocation;
-    }
-    _buildUrl(currentLocation, widget.markers, widget.width ?? defaultWidth,
-        widget.height ?? defaultHeight);
-    super.initState();
-  }
 
   _buildUrl(Map currentLocation, List locations, int width, int height) {
     var finalUri;
@@ -93,14 +84,23 @@ class _StaticMapState extends State<StaticMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      constraints: BoxConstraints(maxHeight: 100),
-      child: FadeInImage(
-        placeholder: NetworkImage(startUrl),
-        image: NetworkImage(nextUrl),
-        fit: BoxFit.cover,
-        alignment: Alignment.topCenter,
+    var currentLocation = widget.currentLocation;
+    if (widget.currentLocation == null) {
+      currentLocation = defaultLocation;
+    }
+    _buildUrl(currentLocation, widget.markers, widget.width ?? defaultWidth,
+        widget.height ?? defaultHeight);
+    return InkWell(
+      onTap: widget.onTap,
+      child: Container(
+        alignment: Alignment.center,
+        constraints: BoxConstraints(maxHeight: 100),
+        child: FadeInImage(
+          placeholder: NetworkImage(startUrl),
+          image: NetworkImage(nextUrl),
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        ),
       ),
     );
   }

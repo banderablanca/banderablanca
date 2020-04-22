@@ -30,7 +30,7 @@ dependencies:
   email_validator: ^1.0.4
   google_maps_flutter: ^0.5.25+3
   geolocator: ^5.3.1
-  google_maps_webservice: ^0.0.16
+  # google_maps_webservice: ^0.0.16
   tuple: ^1.0.3
   flutter_advanced_networkimage: ^0.7.0
   video_player: ^0.10.8+1
@@ -40,6 +40,8 @@ dependencies:
   flutter_svg: 0.17.4
   google_fonts: ^0.4.3
   flutter_dotenv: ^2.1.0
+  firebase_remote_config: ^0.3.0+3
+  url_launcher: ^5.4.5
 
 dev_dependencies:
   flutter_test:

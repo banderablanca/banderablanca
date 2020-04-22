@@ -1,8 +1,5 @@
-import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/core/core.dart';
-import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:flutter/material.dart';
-// import 'package:login_register/utlities/app_colors.dart';
 
 import 'intro_widget.dart';
 

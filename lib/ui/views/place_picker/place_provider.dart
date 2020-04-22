@@ -3,34 +3,16 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/geocoding.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-import 'pick_result.dart';
 import 'place_picker.dart';
 
 class PlaceProvider extends ChangeNotifier {
-  PlaceProvider(String apiKey, String proxyBaseUrl, Client httpClient) {
-    places = GoogleMapsPlaces(
-      apiKey: apiKey,
-      baseUrl: proxyBaseUrl,
-      httpClient: httpClient,
-    );
-
-    geocoding = GoogleMapsGeocoding(
-      apiKey: apiKey,
-      baseUrl: proxyBaseUrl,
-      httpClient: httpClient,
-    );
-  }
+  
 
   static PlaceProvider of(BuildContext context, {bool listen = true}) =>
       Provider.of<PlaceProvider>(context, listen: listen);
 
-  GoogleMapsPlaces places;
-  GoogleMapsGeocoding geocoding;
   String sessionToken;
   bool isOnUpdateLocationCooldown = false;
   LocationAccuracy desiredAccuracy;
@@ -77,12 +59,13 @@ class PlaceProvider extends ChangeNotifier {
   CameraPosition _currentCameraPosition;
   CameraPosition get cameraPosition => _currentCameraPosition;
   setCameraPosition(CameraPosition newPosition) {
+    // newPosition.target
     _currentCameraPosition = newPosition;
   }
 
-  PickResult _selectedPlace;
-  PickResult get selectedPlace => _selectedPlace;
-  set selectedPlace(PickResult result) {
+  CameraPosition _selectedPlace;
+  CameraPosition get selectedPlace => _selectedPlace;
+  set selectedPlace(CameraPosition result) {
     _selectedPlace = result;
     notifyListeners();
   }

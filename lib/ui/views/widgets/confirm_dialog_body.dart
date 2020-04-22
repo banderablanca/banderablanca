@@ -29,10 +29,11 @@ class ConfirmDialogBody extends StatelessWidget {
             child: Text('$confirmText'),
             onPressed: () => Navigator.pop(context, true),
           ),
-          CupertinoDialogAction(
-            child: Text('$cancelText'),
-            onPressed: () => Navigator.pop(context, false),
-          ),
+          if (cancelText != null)
+            CupertinoDialogAction(
+              child: Text('$cancelText'),
+              onPressed: () => Navigator.pop(context, false),
+            ),
         ],
       );
 
@@ -46,10 +47,11 @@ class ConfirmDialogBody extends StatelessWidget {
           child: Text("$confirmText"),
           onPressed: () => Navigator.pop(context, true),
         ),
-        FlatButton(
-          child: Text("$cancelText"),
-          onPressed: () => Navigator.pop(context, false),
-        ),
+        if (cancelText != null)
+          FlatButton(
+            child: Text("$cancelText"),
+            onPressed: () => Navigator.pop(context, false),
+          ),
       ],
     );
   }
