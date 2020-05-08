@@ -60,12 +60,32 @@ class FlagModel extends BaseModel {
 
   List<WhiteFlag> _flags = [];
 
+  double _isHelpedflag(WhiteFlag flag) {
+    if (flag.helpedAt == null || flag.helpedDays == null) return 1.0;
+    bool isAfter = flag.helpedAt
+        .add(Duration(days: flag.helpedDays))
+        .isAfter(DateTime.now());
+    if (isAfter) {
+      int diffDays = flag.helpedAt
+          .add(Duration(days: flag.helpedDays))
+          .difference(DateTime.now())
+          .inDays;
+      if (diffDays >= 5) return 0.2;
+      if (diffDays >= 3) return 0.5;
+      return 0.8;
+    } else {
+      return 1.0;
+    }
+  }
+
   Set<Marker> markers({Function(WhiteFlag) onTap}) => _flags
       .map<Marker>(
         (f) => Marker(
             markerId: MarkerId(f.id),
             position: f.position,
             icon: pinLocationIcon,
+            // alpha: _isHelpedflag(f) ? 0.5 : 1.0,
+            alpha: _isHelpedflag(f),
             onTap: () => onTap(f)),
       )
       .toSet();
@@ -113,6 +133,17 @@ class FlagModel extends BaseModel {
       debugPrint(e);
     }
     setState(ViewState.Idle);
+  }
+
+  helpedFlag(WhiteFlag flag, int days) async {
+    // setState(ViewState.DeletingFlag);
+    try {
+      await _repository.helpedFlag(flag, days);
+    } catch (e) {
+      debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+      debugPrint(e);
+    }
+    // setState(ViewState.Idle);
   }
 
   getFlagById(String flagId) {

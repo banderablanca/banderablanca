@@ -175,7 +175,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                         horizontal: 16),
                                     child: Center(
                                       child: Text(
-                                          "El registro se hace de manera anónima. La foto es importante, esto facilitará la llega de voluntarios."),
+                                          "El registro se hace de manera anónima. La foto es importante, esto facilitará la llegará de voluntarios."),
                                     ),
                                   ),
                                 ],

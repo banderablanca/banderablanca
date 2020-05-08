@@ -4,6 +4,7 @@ import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_networkimage/provider.dart';
 import 'package:flutter_advanced_networkimage/transition.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../shared/shared.dart';
@@ -61,6 +62,21 @@ class _CommentsListState extends State<CommentsList> {
     }
   }
 
+  _buildTrailingButton(WhiteFlag flag) {
+    if (Provider.of<UserModel>(context).currentUser.id != flag.uid)
+      return Container(width: 0);
+    return IconButton(
+      icon: Provider.of<FlagModel>(context).state == ViewState.DeletingFlag
+          ? Container(
+              width: 29,
+              height: 30,
+              child: CircularProgressIndicator(),
+            )
+          : Icon(Icons.delete_outline, color: Colors.red),
+      onPressed: () => _showConfirmDialog(flag),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -73,7 +89,7 @@ class _CommentsListState extends State<CommentsList> {
             Divider(),
             ListTile(
               dense: true,
-              title: Text("Bandera blanca",
+              title: Text("${flag.address}",
                   style: GoogleFonts.tajawal(
                     textStyle: Theme.of(context).textTheme.subhead.copyWith(
                           color: Theme.of(context).primaryColor,
@@ -83,19 +99,7 @@ class _CommentsListState extends State<CommentsList> {
                 timeAgo(flag.timestamp),
                 style: Theme.of(context).textTheme.caption,
               ),
-              trailing: IconButton(
-                icon: Provider.of<UserModel>(context).currentUser.id != flag.uid
-                    ? Container()
-                    : Provider.of<FlagModel>(context).state ==
-                            ViewState.DeletingFlag
-                        ? Container(
-                            width: 29,
-                            height: 30,
-                            child: CircularProgressIndicator(),
-                          )
-                        : Icon(Icons.delete_outline, color: Colors.red),
-                onPressed: () => _showConfirmDialog(flag),
-              ),
+              trailing: _buildTrailingButton(flag),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -148,6 +152,8 @@ class _CommentsListState extends State<CommentsList> {
               final Message message = messages[index - 1];
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 18),
+                // color:
+                //     message.type == "help" ? Colors.blueAccent : Colors.transparent,
                 child: ListTile(
                   onTap: () => _previewMedia(message.mediaContent?.downloadUrl),
                   contentPadding: EdgeInsets.symmetric(vertical: 0),
@@ -155,10 +161,10 @@ class _CommentsListState extends State<CommentsList> {
                     width: 40,
                     height: 40,
                     child: CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColorLight,
+                      backgroundColor: Colors.white,
                       child: Icon(
                         Icons.person,
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
@@ -170,6 +176,15 @@ class _CommentsListState extends State<CommentsList> {
                     text: TextSpan(
                       text: "${message.text}\n",
                       children: [
+                        if (message.type == "help")
+                          TextSpan(
+                            text: "Ha donado para ${message.helpedDays} dīas ",
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                          ),
                         TextSpan(
                           text: "${timeAgo(flag.timestamp)}",
                           style: Theme.of(context).textTheme.caption.copyWith(

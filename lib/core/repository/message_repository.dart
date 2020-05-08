@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:banderablanca/core/helpers/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

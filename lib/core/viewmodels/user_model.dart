@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,6 +48,7 @@ class UserModel extends BaseModel {
   }
 
   versionCheck(context) async {
+    if(!kReleaseMode) return;
     try {
       PackageInfo info = await PackageInfo.fromPlatform();
       final RemoteConfig remoteConfig = await RemoteConfig.instance;

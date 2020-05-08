@@ -15,8 +15,10 @@ abstract class Message with _$Message {
   const factory Message({
     String id,
     String text,
+    String type,
     String uid,
     String senderName,
+    int helpedDays,
     String senderPhotoUrl,
     MediaContent mediaContent,
     @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs)

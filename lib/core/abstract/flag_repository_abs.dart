@@ -7,4 +7,5 @@ abstract class FlagRepositoryAbs {
   Future<bool> createFlag(WhiteFlag newFlag, String mediaPath);
   Future<bool> reportFlag(WhiteFlag flag);
   Future<bool> deleteFlag(WhiteFlag flag);
+  Future<bool> helpedFlag(WhiteFlag flag, int days);
 }
