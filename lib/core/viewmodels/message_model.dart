@@ -41,6 +41,7 @@ class MessageModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+
   @override
   void dispose() {
     _messages = [];

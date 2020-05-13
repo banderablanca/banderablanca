@@ -24,6 +24,9 @@ abstract class WhiteFlag with _$WhiteFlag {
     String displayName,
     String senderPhotoUrl,
     int reportedCount,
+    int helpedDays,
+    @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs)
+        DateTime helpedAt,
     @JsonKey(fromJson: geoPointFromFirestore, toJson: positionAsIs)
         LatLng position,
     @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs)

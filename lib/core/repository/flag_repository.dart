@@ -110,4 +110,16 @@ class FlagRepository implements FlagRepositoryAbs {
       return false;
     });
   }
+
+  @override
+  Future<bool> helpedFlag(WhiteFlag flag, int days) {
+    var _doc = firestore.collection(path).document(flag.id);
+    return _doc.setData(
+        {'helped_at': FieldValue.serverTimestamp(), 'helped_days': days},
+        merge: true).then((onValue) {
+      return true;
+    }).catchError((onError) {
+      return false;
+    });
+  }
 }

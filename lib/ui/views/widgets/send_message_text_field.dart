@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:banderablanca/core/core.dart';
+import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'dialog_helped.dart';
 
 class SendMessageTextField extends StatefulWidget {
   const SendMessageTextField({Key key, @required this.flag}) : super(key: key);
@@ -64,14 +68,13 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             _buildAttachMediaGalleryIcon(),
           ],
           if (_image != null)
-            Container(
-              decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                      color: Theme.of(context).primaryColor, width: 2)),
-
-              // backgroundImage: Image.file(),
-              child: Image.file(_image),
+            ClipOval(
+              child: Image.file(
+                _image,
+                fit: BoxFit.cover,
+                width: 40,
+                height: 40,
+              ),
             ),
           Expanded(
             child: Container(
@@ -84,12 +87,31 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
                     focusedBorder: InputBorder.none,
                     contentPadding:
                         EdgeInsets.only(left: 16, bottom: 4, top: 0, right: 15),
-                    hintText: 'Enviar mensaje'),
+                    hintText: 'Enviar comentario'),
               ),
             ),
           ),
-          // IconButton(icon: Icon(Icons.arrow_upward), onPressed: () {})
-          isEmpty ? Container() : _buildSendIcon(context),
+          Visibility(
+            visible: !isEmpty &&
+                Provider.of<MessageModel>(context).state == ViewState.Idle,
+            child: _buildDonateButton(),
+          ),
+          Visibility(
+            visible: !isEmpty &&
+                Provider.of<MessageModel>(context).state == ViewState.Idle,
+            child: _buildSendIcon(context),
+          ),
+          Visibility(
+            visible: Provider.of<MessageModel>(context).state == ViewState.Busy,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -97,6 +119,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
 
   Widget _buildAttachMediaCameraIcon() {
     return IconButton(
+      tooltip: "Tomar foto",
       icon: Icon(
         Icons.add_a_photo,
         color: Colors.grey,
@@ -107,6 +130,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
 
   Widget _buildAttachMediaGalleryIcon() {
     return IconButton(
+      tooltip: "Agregar foto desde galería",
       icon: Icon(
         Icons.image,
         color: Colors.grey,
@@ -117,13 +141,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
 
   Widget _buildSendIcon(context) {
     return IconButton(
-      icon: Provider.of<MessageModel>(context).state == ViewState.Busy
-          ? Container(
-              width: 29,
-              height: 30,
-              child: CircularProgressIndicator(),
-            )
-          : Icon(Icons.send),
+      icon: Icon(Icons.send),
       color: Theme.of(context).accentColor,
       onPressed: () async {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
@@ -131,6 +149,50 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             Message(text: _controller.text.trim()),
             _image?.path);
         _controller.clear();
+        _image = null;
+        _hideKeyboard();
+      },
+    );
+  }
+
+  Widget _buildDonateButton() {
+    if (Provider.of<UserModel>(context).currentUser.id == widget.flag.uid)
+      return Container();
+    return IconButton(
+      icon: Icon(
+        FontAwesomeIcons.handHoldingHeart,
+        color: Theme.of(context).primaryColor,
+      ),
+      tooltip: "He donado",
+      onPressed: () async {
+        if (_image == null) {
+          await showConfirmDialog(
+            context,
+            title: "",
+            content:
+                "Para registrar una donación es necesario adjuntar una foto",
+            cancelText: null,
+            confirmText: "ACEPTAR",
+          );
+          return;
+        }
+
+        int days = await showDialogHelped(context);
+        if (days == 0) return;
+        // add donate
+        await Provider.of<MessageModel>(context, listen: false).sendMessage(
+          widget.flag.id,
+          Message(
+            text: _controller.text.trim(),
+            type: "help",
+            helpedDays: days,
+          ),
+          _image?.path,
+        );
+        await Provider.of<FlagModel>(context, listen: false)
+            .helpedFlag(widget.flag, days);
+        _controller.clear();
+        _image = null;
         _hideKeyboard();
       },
     );
