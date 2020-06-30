@@ -1,16 +1,8 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-String validateEmail(BuildContext context, String email) {
-  if (email.isEmpty || !EmailValidator.validate(email)) {
-    return "pleaseEnterYourEmail";
-  }
-
-  return null;
-}
 
 String validatePassword(BuildContext context, String password) {
   if (password.isEmpty) return "pleaseEnterYourPassword";

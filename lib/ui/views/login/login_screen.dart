@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen>
                 hintText: "enterYourEmail",
                 labelText: "email",
               ),
-              validator: (value) => validateEmail(context, value),
+              // validator: (value) => validateEmail(context, value),
               onSaved: (String value) {
                 email = value;
               }),
