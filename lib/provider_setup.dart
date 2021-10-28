@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -8,7 +9,7 @@ import 'core/core.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseStorage _storage = FirebaseStorage.instance;
-final Firestore _firestore = Firestore.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 List<SingleChildWidget> get providers => [
       ...independentServices,
@@ -41,40 +42,51 @@ List<SingleChildWidget> dependentServices = [
   ChangeNotifierProvider(
     create: (_) => TabModel(),
   ),
-  ChangeNotifierProxyProvider3<AuthenticationService, UserApp,
-      StorageRepository, UserModel>(
-    create: (_) => UserModel(),
-    update: (_, auth, user, storage, model) => model
-      ..authenticationService = auth
-      ..currentUser = user,
+  ChangeNotifierProvider(
+    create: (BuildContext context) =>
+        UserModel(repository: context.read<AuthenticationService>()),
+    // update: (_, user, model) => model
+    // ..authenticationService = auth
+    // ..currentUser = user,
   ),
-  ChangeNotifierProxyProvider2<MessageRepository, UserApp, MessageModel>(
-    create: (_) => MessageModel(),
-    update: (_, repository, user, model) => model
-      ..repository = repository
-      ..currentUser = user,
+  ChangeNotifierProvider(
+    create: (BuildContext context) => MessageModel(
+      repository: context.read<MessageRepository>(),
+    ),
   ),
-  ChangeNotifierProxyProvider<FlagRepository, FlagModel>(
-    create: (_) => FlagModel(),
-    update: (_, repository, model) => model..repository = repository,
+  // ChangeNotifierProxyProvider2<MessageRepository, UserApp, MessageModel>(
+  //   create: (_) => MessageModel(),
+  //   update: (_, repository, user, model) => model
+  //     ..repository = repository
+  //     ..currentUser = user,
+  // ),
+  ChangeNotifierProvider(
+    create: (BuildContext context) => FlagModel(
+      repository: context.read<FlagRepository>(),
+    ),
   ),
-  ChangeNotifierProxyProvider2<NotificationRepository, UserApp,
-      NotificationModel>(
-    create: (_) => NotificationModel(),
-    update: (_, repository, user, model) => model
-      ..user = user
-      ..repository = repository,
+  // ChangeNotifierProxyProvider<FlagRepository, FlagModel>(
+  //   create: (_) => FlagModel(),
+  //   update: (_, repository, model) => model..repository = repository,
+  // ),
+  ChangeNotifierProvider(
+    create: (BuildContext context) =>
+        NotificationModel(context.read<NotificationRepository>()),
+    // update: (_, user, model) => model!..user = user,
   ),
-  ChangeNotifierProxyProvider<DeviceRepository, DeviceModel>(
-    create: (_) => DeviceModel(),
-    update: (_, repository, model) => model..repository = repository,
-  ),
+  ChangeNotifierProvider(
+      create: (BuildContext context) =>
+          DeviceModel(context.read<DeviceRepository>())),
+  // ChangeNotifierProxyProvider<DeviceRepository, DeviceModel>(
+  //   create: (_) => DeviceModel(),
+  //   update: (_, repository, model) => model..repository = repository,
+  // ),
 ];
 
 List<SingleChildWidget> uiConsumableProviders = [
-  StreamProvider<UserApp>(
-    create: (context) =>
-        Provider.of<AuthenticationService>(context, listen: false)
-            .onAuthStateChanged,
+  StreamProvider<UserApp?>(
+    initialData: null,
+    create: (BuildContext context) =>
+        context.read<AuthenticationService>().onAuthStateChanged,
   ),
 ];

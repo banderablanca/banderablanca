@@ -10,12 +10,12 @@ import GoogleMaps
   ) -> Bool {
     var mapsApiKey = ProcessInfo.processInfo.environment["MAPS_API_KEY"]
     if mapsApiKey == nil {
-        mapsApiKey = "YOUR KEY HERE"
+        mapsApiKey = "AIzaSyBh3_H0VFIXposNxR0HZcW4-ee5XPTbtdc"
     }
     GMSServices.provideAPIKey(mapsApiKey!)
-    if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-    }
+    // if #available(iOS 10.0, *) {
+    //   UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    // }
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

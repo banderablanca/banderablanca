@@ -36,7 +36,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                   }),
             ),
             CommentsList(flag: flag),
-            if (Provider.of<UserModel>(context).currentUser.id != flag.uid)
+            if (context.read<UserModel>().currentUser!.id != flag.uid)
               InkWell(
                 onTap: () => _showConfirmDialog(context, flag),
                 child: Container(
@@ -59,7 +59,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                         "Reportar bandera",
                         style: Theme.of(context)
                             .textTheme
-                            .caption
+                            .caption!
                             .copyWith(color: Colors.red),
                       ),
                     ],

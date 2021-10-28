@@ -2,13 +2,14 @@ import 'package:banderablanca/core/enums/tab.dart';
 import 'package:flutter/material.dart';
 
 class Destination {
-  const Destination(
-      {this.index,
-      this.title,
-      this.icon,
-      this.color,
-      this.tab,
-      this.iconActive});
+  const Destination({
+    required this.index,
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.tab,
+    required this.iconActive,
+  });
   final int index;
   final String title;
   final IconData icon;

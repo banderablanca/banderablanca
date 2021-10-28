@@ -1,28 +1,34 @@
 import 'dart:async';
 import 'dart:typed_data';
-
-import '../helpers/firebase_notification_handler.dart';
-import 'package:flutter/services.dart';
-
-import 'base_model.dart';
-import '../abstract/abstract.dart';
-import '../models/models.dart';
-import '../enums/viewstate.dart';
 import 'dart:ui' as ui;
+
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../abstract/abstract.dart';
+import '../enums/viewstate.dart';
+import '../helpers/firebase_notification_handler.dart';
+import '../models/models.dart';
+import 'base_model.dart';
+
 class FlagModel extends BaseModel {
-  FlagRepositoryAbs _repository;
-  BitmapDescriptor pinLocationIcon;
+  FlagModel({
+    required FlagRepositoryAbs repository,
+    // required this.pinLocationIcon,
+  }) : _repository = repository {
+    _setCustomMapPin();
+    _listenFlags();
+  }
+  final FlagRepositoryAbs _repository;
+  late BitmapDescriptor pinLocationIcon;
   FirebaseNotifications _firebaseNotifications = FirebaseNotifications();
 
-  set repository(FlagRepositoryAbs _repo) {
-    _repository = _repo;
-    _listenFlags();
-
-    _setCustomMapPin();
-  }
+  // set repository(FlagRepositoryAbs _repo) {
+  //   _repository = _repo;
+  //   _listenFlags();
+  //   _setCustomMapPin();
+  // }
 
   Future<Uint8List> _getBytesFromCanvas(int width, int height, urlAsset) async {
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
@@ -40,12 +46,12 @@ class FlagModel extends BaseModel {
 
     final img = await pictureRecorder.endRecording().toImage(width, height);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    return data.buffer.asUint8List();
+    return data!.buffer.asUint8List();
   }
 
   Future<ui.Image> _loadImage(List<int> img) async {
     final Completer<ui.Image> completer = new Completer();
-    ui.decodeImageFromList(img, (ui.Image img) {
+    ui.decodeImageFromList(Uint8List.fromList(img), (ui.Image img) {
       return completer.complete(img);
     });
     return completer.future;
@@ -61,12 +67,12 @@ class FlagModel extends BaseModel {
   List<WhiteFlag> _flags = [];
 
   double _isHelpedflag(WhiteFlag flag) {
-    if (flag.helpedAt == null || flag.helpedDays == null) return 1.0;
-    bool isAfter = flag.helpedAt
+    if (flag.helpedAt == null || flag.helpedDays <= 0) return 1.0;
+    bool isAfter = flag.helpedAt!
         .add(Duration(days: flag.helpedDays))
         .isAfter(DateTime.now());
     if (isAfter) {
-      int diffDays = flag.helpedAt
+      int diffDays = flag.helpedAt!
           .add(Duration(days: flag.helpedDays))
           .difference(DateTime.now())
           .inDays;
@@ -78,15 +84,18 @@ class FlagModel extends BaseModel {
     }
   }
 
-  Set<Marker> markers({Function(WhiteFlag) onTap}) => _flags
+  Set<Marker> markers({Function(WhiteFlag)? onTap}) => _flags
       .map<Marker>(
-        (f) => Marker(
-            markerId: MarkerId(f.id),
-            position: f.position,
-            icon: pinLocationIcon,
-            // alpha: _isHelpedflag(f) ? 0.5 : 1.0,
-            alpha: _isHelpedflag(f),
-            onTap: () => onTap(f)),
+        (WhiteFlag f) => Marker(
+          markerId: MarkerId(f.id),
+
+          // position: f.position,
+          position: f.position ?? LatLng(0, 0),
+          icon: pinLocationIcon,
+          // alpha: _isHelpedflag(f) ? 0.5 : 1.0,
+          alpha: _isHelpedflag(f),
+          onTap: () => onTap!(f),
+        ),
       )
       .toSet();
 
@@ -99,7 +108,7 @@ class FlagModel extends BaseModel {
       _firebaseNotifications.subscribe(newFlag);
     } catch (e) {
       debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-      debugPrint(e);
+      debugPrint(e.toString());
     }
     setState(ViewState.Idle);
   }
@@ -119,7 +128,7 @@ class FlagModel extends BaseModel {
       await _repository.reportFlag(flag);
     } catch (e) {
       debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-      debugPrint(e);
+      debugPrint(e.toString());
     }
     setState(ViewState.Idle);
   }
@@ -130,7 +139,7 @@ class FlagModel extends BaseModel {
       await _repository.deleteFlag(flag);
     } catch (e) {
       debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-      debugPrint(e);
+      debugPrint(e.toString());
     }
     setState(ViewState.Idle);
   }
@@ -141,12 +150,12 @@ class FlagModel extends BaseModel {
       await _repository.helpedFlag(flag, days);
     } catch (e) {
       debugPrint("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-      debugPrint(e);
+      debugPrint(e.toString());
     }
     // setState(ViewState.Idle);
   }
 
-  getFlagById(String flagId) {
-    return flags.firstWhere((t) => t.id == flagId, orElse: () => null);
+  WhiteFlag getFlagById(String flagId) {
+    return flags.firstWhere((t) => t.id == flagId);
   }
 }

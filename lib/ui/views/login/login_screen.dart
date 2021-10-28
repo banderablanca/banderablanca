@@ -1,14 +1,14 @@
-import '../../../ui/shared/helpers.dart';
-import '../../../ui/shared/keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../widgets/widgets.dart';
+import 'package:provider/provider.dart';
+
 import '../../../constants/app_constants.dart';
 import '../../../core/core.dart';
-
 import '../../../core/models/models.dart';
-import 'package:provider/provider.dart';
+import '../../../ui/shared/helpers.dart';
+import '../../../ui/shared/keys.dart';
+import '../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,11 +18,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
+  late String email;
+  late String password;
   void _handleSubmitted(context) {
-    final FormState _form = _formKey.currentState;
-    if (_form.validate()) {
+    final FormState? _form = _formKey.currentState;
+    if (_form!.validate()) {
       _form.save();
       Provider.of<UserModel>(context, listen: false).signInWithEmailAndPassword(
           AuthFormData(email: email, password: password));
@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen>
                       color: Theme.of(context).cardColor,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey[100],
+                          color: Colors.grey.shade100,
                           blurRadius: 15,
                         ),
                       ],
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen>
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Bienvenido",
-                    style: theme.textTheme.headline.copyWith(
+                    style: theme.textTheme.headline5!.copyWith(
                         color: Colors.grey, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen>
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "signInToContinue",
-                    style: theme.textTheme.subhead.copyWith(
+                    style: theme.textTheme.subtitle1!.copyWith(
                         color: Colors.grey, fontWeight: FontWeight.w300),
                   ),
                 ),
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen>
                   children: <Widget>[
                     Text(
                       "¿Aún no tienes cuenta?",
-                      style: theme.textTheme.subhead,
+                      style: theme.textTheme.subtitle1,
                     ),
                     SizedBox(
                       width: 8,
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen>
                       },
                       child: Text(
                         "signUp",
-                        style: theme.textTheme.subhead.copyWith(
+                        style: theme.textTheme.subtitle1!.copyWith(
                             color: theme.accentColor,
                             fontWeight: FontWeight.bold),
                       ),
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _formSignIn() {
-    final UserModel userModel = Provider.of<UserModel>(context);
+    final UserModel userModel = context.read<UserModel>();
     return Form(
       key: _formKey,
       child: Column(
@@ -140,8 +140,8 @@ class _LoginScreenState extends State<LoginScreen>
                 labelText: "email",
               ),
               // validator: (value) => validateEmail(context, value),
-              onSaved: (String value) {
-                email = value;
+              onSaved: (String? value) {
+                email = value ?? '';
               }),
           SizedBox(
             height: 16,
@@ -155,9 +155,9 @@ class _LoginScreenState extends State<LoginScreen>
                 hintText: "enterYourPassword",
                 labelText: "password",
               ),
-              validator: (value) => validatePassword(context, value),
-              onSaved: (String value) {
-                password = value;
+              validator: (value) => validatePassword(context, value ?? ''),
+              onSaved: (String? value) {
+                password = value ?? '';
               }),
           _buildErrorMessage(context),
           SizedBox(
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildErrorMessage(context) {
-    final UserModel model = Provider.of<UserModel>(context);
+    final UserModel model = context.read<UserModel>();
     if (model.errorMessage.isEmpty) return Container();
     return Padding(
       padding: EdgeInsets.all(24),

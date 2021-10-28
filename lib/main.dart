@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +11,7 @@ import 'ui/router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   // Firestore.instance.settings(persistenceEnabled: true, sslEnabled: true);
 
   // Set `enableInDevMode` to true to see reports while in debug mode
@@ -26,7 +25,7 @@ Future<void> main() async {
   //   FlutterError.onError = (FlutterErrorDetails details) {
   //     Crashlytics.instance.recordFlutterError(details);
   //   };
-  await DotEnv().load('.env');
+  await DotEnv().load(fileName: '.env');
   runApp(BanderaBlancaApp());
 }
 
@@ -41,8 +40,8 @@ class BanderaBlancaApp extends StatelessWidget {
         title: 'Bandera Blanca',
         theme: AppTheme.theme,
         initialRoute: RoutePaths.Splash,
-        onGenerateRoute: Router.generateRoute,
-        onUnknownRoute: Router.onUnknownRoute,
+        onGenerateRoute: RouterApp.generateRoute,
+        onUnknownRoute: RouterApp.onUnknownRoute,
         // home: TestScreen(),
       ),
     );

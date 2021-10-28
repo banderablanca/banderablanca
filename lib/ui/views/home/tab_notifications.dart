@@ -1,4 +1,3 @@
-
 import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/core/models/models.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'show_modal_bottom.dart';
 
 class TabNotifications extends StatelessWidget {
-  const TabNotifications({Key key, this.destination}) : super(key: key);
+  const TabNotifications({Key? key, required this.destination})
+      : super(key: key);
 
   final Destination destination;
 
@@ -17,8 +17,7 @@ class TabNotifications extends StatelessWidget {
     return Scaffold(
       body: Selector<NotificationModel, List<UserNotification>>(
         selector: (_, NotificationModel model) => model.notifications,
-        builder:
-            (BuildContext context, List<UserNotification> list, Widget child) {
+        builder: (BuildContext context, List<UserNotification> list, _) {
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +46,7 @@ class TabNotifications extends StatelessWidget {
                         style: GoogleFonts.tajawal(
                           textStyle: Theme.of(context)
                               .textTheme
-                              .headline
+                              .headline5!
                               .copyWith(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.w900),
@@ -68,7 +67,7 @@ class TabNotifications extends StatelessWidget {
                         text: TextSpan(
                             text: "Aún no tienes notificaciones.\n\n",
                             style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.title,
+                              textStyle: Theme.of(context).textTheme.headline6,
                             ),
                             children: [
                               TextSpan(

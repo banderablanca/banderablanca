@@ -4,37 +4,47 @@ import 'dart:typed_data';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../repository/authentication_service.dart';
 import '../abstract/abstract.dart';
-import '../models/models.dart';
 import '../core.dart';
+import '../models/models.dart';
 import 'base_model.dart';
-import 'package:flutter/services.dart';
 
 class UserModel extends BaseModel {
-  AuthenticationServiceAbs _repository;
-  StorageRepositoryAbs _storage;
-  UserApp _currentUser;
+  UserModel({
+    required AuthenticationServiceAbs repository,
+    // required StorageRepositoryAbs storage,
+  }) : _repository = repository {
+    _handleSignIn();
+    _repository.onAuthStateChanged.listen((UserApp? user) {
+      currentUser = user;
+    });
+  }
+  // _storage = storage;
+
+  final AuthenticationServiceAbs _repository;
+  // final StorageRepositoryAbs _storage;
+  UserApp? _currentUser;
   String errorMessage = '';
-  AuthenticationService get authenticationService => _repository;
-  UserApp get currentUser => _currentUser;
 
-  set storage(store) {
-    _storage = store;
-  }
+  // AuthenticationService get authenticationService => _repository;
+  UserApp? get currentUser => _currentUser;
 
-  set authenticationService(AuthenticationService authenticationService) {
-    _repository = authenticationService;
-    notifyListeners();
-  }
+  // set storage(store) {
+  //   _storage = store;
+  // }
 
-  set currentUser(user) {
-    if (_currentUser == null) {
+  // set authenticationService(AuthenticationService authenticationService) {
+  //   _repository = authenticationService;
+  //   notifyListeners();
+  // }
+  set currentUser(UserApp? user) {
+    if (_currentUser != null && _currentUser != user) {
       _currentUser = user;
-      _handleSignIn();
+      // _handleSignIn();
       notifyListeners();
     }
   }
@@ -48,10 +58,10 @@ class UserModel extends BaseModel {
   }
 
   versionCheck(context) async {
-    if(!kReleaseMode) return;
+    if (!kReleaseMode) return;
     try {
       PackageInfo info = await PackageInfo.fromPlatform();
-      final RemoteConfig remoteConfig = await RemoteConfig.instance;
+      final RemoteConfig remoteConfig = RemoteConfig.instance;
       final String currentBuildNumber = "${info.version}.${info.buildNumber}";
       final String configName = Platform.isIOS ? 'ios_app' : 'android_app';
       final defaults = <String, dynamic>{
@@ -60,8 +70,8 @@ class UserModel extends BaseModel {
       };
 
       await remoteConfig.setDefaults(defaults);
-      await remoteConfig.fetch(expiration: const Duration(seconds: 1));
-      await remoteConfig.activateFetched();
+      // await remoteConfig.fetch(expiration: const Duration(seconds: 1));
+      // await remoteConfig.activateFetched();
 
       final requiredBuildNumber =
           remoteConfig.getString('${configName}_version');
@@ -71,7 +81,7 @@ class UserModel extends BaseModel {
         await showConfirmDialog(context,
             title: "Hay una versión nueva",
             content: "Las actualizaciones traen novedades",
-            cancelText: null,
+            cancelText: "",
             confirmText: "Actualizar");
         _launchURL(urlStore);
       }
@@ -94,6 +104,7 @@ class UserModel extends BaseModel {
   }
 
   Future _handleSignIn() async {
+    print("_handleSignIn");
     try {
       setState(ViewState.Busy);
       _currentUser = await _repository.handleSignIn();
@@ -151,9 +162,9 @@ class UserModel extends BaseModel {
   }
 
   loadUserData() {
-    _repository.loadUserData(_currentUser).listen((userApp) {
+    _repository.loadUserData(_currentUser!).listen((userApp) {
       // store.dispatch(LoadUserDataSuccessAction(userApp));
-      _currentUser = currentUser.copyWith(
+      _currentUser = currentUser!.copyWith(
         languageCode: userApp.languageCode,
         onBoardCompleted: userApp.onBoardCompleted,
       );
@@ -173,7 +184,7 @@ class UserModel extends BaseModel {
   updateName(String name) async {
     setState(ViewState.Busy);
     _currentUser = await _repository
-        .updateUserProfile(currentUser.copyWith(displayName: name));
+        .updateUserProfile(currentUser!.copyWith(displayName: name));
     setState(ViewState.Idle);
     notifyListeners();
   }
@@ -181,7 +192,7 @@ class UserModel extends BaseModel {
   updatePhoto(String path, Uint8List data) async {
     setState(ViewState.Busy);
     final String photoUrl = await _repository.updatePhoto(path, data);
-    _currentUser = _currentUser.copyWith(photoUrl: photoUrl);
+    _currentUser = _currentUser!.copyWith(photoUrl: photoUrl);
     notifyListeners();
     setState(ViewState.Idle);
   }

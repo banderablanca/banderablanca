@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../ui/views/views.dart';
 
-class Router {
+class RouterApp {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final splash = SplashScreen();
     final home = HomeScreen();
@@ -22,8 +22,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => LoginScreen());
 
       default:
-        final List<String> path = settings.name.split('/');
-        if (path[0] != '') return null;
+        // final List<String> path = settings.name!.split('/');
+        // if (path[0] != '') return ;
 
         // Detail screen
         // if (isPathNameWithRoute(settings, RoutePaths.FlagDetail)) {
@@ -51,7 +51,7 @@ class Router {
   }
 
   static bool isPathNameWithRoute(RouteSettings settings, String pathName) {
-    final List<String> path = settings.name.split('/');
+    final List<String> path = settings.name!.split('/');
     final List<String> pathScreen = pathName.split('/');
     if (path[0] != '' || pathScreen[0] != '') return false;
     if (path[1].startsWith(pathScreen[1])) {
@@ -62,8 +62,8 @@ class Router {
   }
 
   static String getIdByPath(RouteSettings settings) {
-    final List<String> path = settings.name.split('/');
-    if (path[0] != '' || path.length != 3) return null;
+    final List<String> path = settings.name!.split('/');
+    if (path[0] != '' || path.length != 3) return '';
     final List<String> id = path[2].split('#');
     return id[0];
   }
@@ -73,7 +73,7 @@ class Router {
   /// example:
   ///     /screen/ID0001#1
   static int getTabByPath(RouteSettings settings) {
-    final List<String> path = settings.name.split('#');
+    final List<String> path = settings.name!.split('#');
     return path[1] != "null" ? int.parse(path.last) : 0;
   }
 }

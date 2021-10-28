@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dialog_helped.dart';
 
 class SendMessageTextField extends StatefulWidget {
-  const SendMessageTextField({Key key, @required this.flag}) : super(key: key);
+  const SendMessageTextField({Key? key, required this.flag}) : super(key: key);
   final WhiteFlag flag;
 
   @override
@@ -20,16 +20,17 @@ class SendMessageTextField extends StatefulWidget {
 class _SendMessageTextFieltState extends State<SendMessageTextField> {
   final _controller = TextEditingController();
   bool isEmpty = true;
-  String imagePath;
+  late String imagePath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
-  File _image;
+  late File? _image;
 
   Future _getImage(ImageSource source) async {
-    var image = await ImagePicker.pickImage(source: source, imageQuality: 80);
+    final _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: source, imageQuality: 80);
     if (image != null) {
       setState(() {
-        _image = image;
+        _image = File(image.path);
       });
     }
   }
@@ -57,7 +58,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
     return Container(
       height: 45,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]),
+        border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.all(Radius.circular(100)),
       ),
       margin: EdgeInsets.all(8),
@@ -70,7 +71,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
           if (_image != null)
             ClipOval(
               child: Image.file(
-                _image,
+                _image!,
                 fit: BoxFit.cover,
                 width: 40,
                 height: 40,
@@ -147,7 +148,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
             widget.flag.id,
             Message(text: _controller.text.trim()),
-            _image?.path);
+            _image!.path);
         _controller.clear();
         _image = null;
         _hideKeyboard();
@@ -156,7 +157,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
   }
 
   Widget _buildDonateButton() {
-    if (Provider.of<UserModel>(context).currentUser.id == widget.flag.uid)
+    if (context.read<UserModel>().currentUser!.id == widget.flag.uid)
       return Container();
     return IconButton(
       icon: Icon(
@@ -171,7 +172,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             title: "",
             content:
                 "Para registrar una donación es necesario adjuntar una foto",
-            cancelText: null,
+            cancelText: "",
             confirmText: "ACEPTAR",
           );
           return;
@@ -187,7 +188,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
             type: "help",
             helpedDays: days,
           ),
-          _image?.path,
+          _image!.path,
         );
         await Provider.of<FlagModel>(context, listen: false)
             .helpedFlag(widget.flag, days);

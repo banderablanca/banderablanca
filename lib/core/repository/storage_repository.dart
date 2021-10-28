@@ -19,30 +19,37 @@ class StorageRepository implements StorageRepositoryAbs {
   Future<String> uploadFile(String filePath, String flagId, String path) async {
     final String uuid = Uuid().v1();
     // final File file = file;
-    final StorageReference ref = storage
+    final Reference ref = storage
         .ref()
         .child(path)
         .child('$flagId')
         .child('fs$uuid${extension(filePath)}');
-    final StorageUploadTask uploadTask = ref.putFile(File(filePath));
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    final UploadTask uploadTask = ref.putFile(File(filePath));
+
+    // TaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    // await uploadTask.snapshot.ref.getDownloadURL();
+    // String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    String downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
     return Future.value(downloadUrl);
   }
 
   @override
   Future<String> uploadFileData(
-      String filePath, Uint8List fileData, String flagId, String path) async {
+    String? filePath,
+    Uint8List? fileData,
+    String flagId,
+    String path,
+  ) async {
     final String uuid = Uuid().v1();
     // final File file = File(filePath);
-    final StorageReference ref = storage
+    final Reference ref = storage
         .ref()
         .child(path)
         .child('$flagId')
-        .child('fs$uuid${extension(filePath)}');
-    final StorageUploadTask uploadTask = ref.putData(fileData);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        .child('fs$uuid${extension(filePath!)}');
+    final UploadTask uploadTask = ref.putData(fileData!);
+    // StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    String downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
     return Future.value(downloadUrl);
   }
 
@@ -50,14 +57,14 @@ class StorageRepository implements StorageRepositoryAbs {
   Future<String> uploadPhotoProfile(
       String path, Uint8List data, String uid) async {
     lookupMimeType('');
-    final StorageReference ref = storage
+    final Reference ref = storage
         .ref()
         .child('users')
         .child('$uid')
         .child('profile${extension(path)}');
-    final StorageUploadTask uploadTask = ref.putData(data);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    final UploadTask uploadTask = ref.putData(data);
+    // StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    String downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
     return Future.value(downloadUrl);
   }
 }

@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'show_modal_bottom.dart';
 
 class TabMyFlags extends StatelessWidget {
-  const TabMyFlags({Key key, @required this.destination}) : super(key: key);
+  const TabMyFlags({Key? key, required this.destination}) : super(key: key);
   final Destination destination;
 
   _showConfirmDialog(context, WhiteFlag flag) async {
@@ -27,10 +27,9 @@ class TabMyFlags extends StatelessWidget {
     return Scaffold(
       body: Selector<FlagModel, List<WhiteFlag>>(
         selector: (_, FlagModel model) => model.flags
-            .where(
-                (t) => t.uid == Provider.of<UserModel>(context).currentUser.id)
+            .where((t) => t.uid == context.read<UserModel>().currentUser!.id)
             .toList(),
-        builder: (BuildContext context, List<WhiteFlag> list, Widget child) {
+        builder: (BuildContext context, List<WhiteFlag> list, _) {
           return Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +58,7 @@ class TabMyFlags extends StatelessWidget {
                         style: GoogleFonts.tajawal(
                           textStyle: Theme.of(context)
                               .textTheme
-                              .headline
+                              .headline5!
                               .copyWith(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.w900),
@@ -81,7 +80,7 @@ class TabMyFlags extends StatelessWidget {
                             text:
                                 "Aquí podrás ver tus banderas registradas\n\n",
                             style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.title,
+                              textStyle: Theme.of(context).textTheme.headline6,
                             ),
                             children: [
                               TextSpan(
@@ -138,16 +137,15 @@ class TabMyFlags extends StatelessWidget {
                           onTap: () {
                             showModalBottomFlagDetail(context, flag);
                           },
-                          trailing:
-                              Provider.of<UserModel>(context).currentUser.id !=
-                                      flag.uid
-                                  ? SizedBox()
-                                  : IconButton(
-                                      icon: Icon(Icons.delete_outline,
-                                          color: Colors.red),
-                                      onPressed: () {
-                                        _showConfirmDialog(context, flag);
-                                      }),
+                          trailing: context.read<UserModel>().currentUser!.id !=
+                                  flag.uid
+                              ? SizedBox()
+                              : IconButton(
+                                  icon: Icon(Icons.delete_outline,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    _showConfirmDialog(context, flag);
+                                  }),
                         ),
                       );
                     },

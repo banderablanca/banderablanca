@@ -2,16 +2,16 @@ import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
-import 'package:flutter_advanced_networkimage/transition.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../shared/shared.dart';
 import 'video_player_screen.dart';
 
 class CommentsList extends StatefulWidget {
-  const CommentsList({Key key, @required this.flag}) : super(key: key);
+  const CommentsList({
+    Key? key,
+    required this.flag,
+  }) : super(key: key);
 
   final WhiteFlag flag;
 
@@ -31,7 +31,7 @@ class _CommentsListState extends State<CommentsList> {
 
   _previewMedia(String url) {
     if (url == null) return;
-    if (!flag.mediaContent.mimeType.startsWith('video/')) {
+    if (!flag.mediaContent!.mimeType!.startsWith('video/')) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => PhotoViewScreen(
@@ -63,7 +63,7 @@ class _CommentsListState extends State<CommentsList> {
   }
 
   _buildTrailingButton(WhiteFlag flag) {
-    if (Provider.of<UserModel>(context).currentUser.id != flag.uid)
+    if (context.read<UserModel>().currentUser!.id != flag.uid)
       return Container(width: 0);
     return IconButton(
       icon: Provider.of<FlagModel>(context).state == ViewState.DeletingFlag
@@ -91,12 +91,12 @@ class _CommentsListState extends State<CommentsList> {
               dense: true,
               title: Text("${flag.address}",
                   style: GoogleFonts.tajawal(
-                    textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                    textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
                           color: Theme.of(context).primaryColor,
                         ),
                   )),
               subtitle: Text(
-                timeAgo(flag.timestamp),
+                timeAgo(flag.timestamp ?? DateTime.now()),
                 style: Theme.of(context).textTheme.caption,
               ),
               trailing: _buildTrailingButton(flag),
@@ -117,11 +117,9 @@ class _CommentsListState extends State<CommentsList> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => _previewMedia(flag.mediaContent?.downloadUrl),
+                    onTap: () => _previewMedia(flag.mediaContent!.downloadUrl),
                     child: _previewImage(
-                        flag.mediaContent?.thumbnailInfo?.downloadUrl,
-                        100,
-                        100),
+                        flag.mediaContent!.thumbnailInfo.downloadUrl, 100, 100),
                   )
                 ],
               ),
@@ -135,7 +133,7 @@ class _CommentsListState extends State<CommentsList> {
               title: Text(
                 "Comentarios",
                 style: GoogleFonts.tajawal(
-                  textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                  textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
@@ -143,19 +141,19 @@ class _CommentsListState extends State<CommentsList> {
             ),
           ],
         ),
-        builder: (BuildContext context, List<Message> messages, Widget child) {
+        builder: (BuildContext context, List<Message> messages, Widget? child) {
           return ListView.builder(
             shrinkWrap: true,
             itemCount: messages.length + 1,
             itemBuilder: (BuildContext context, int index) {
-              if (index == 0) return child;
+              if (index == 0 && child != null) return child;
               final Message message = messages[index - 1];
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 18),
                 // color:
                 //     message.type == "help" ? Colors.blueAccent : Colors.transparent,
                 child: ListTile(
-                  onTap: () => _previewMedia(message.mediaContent?.downloadUrl),
+                  onTap: () => _previewMedia(message.mediaContent!.downloadUrl),
                   contentPadding: EdgeInsets.symmetric(vertical: 0),
                   leading: Container(
                     width: 40,
@@ -169,7 +167,7 @@ class _CommentsListState extends State<CommentsList> {
                     ),
                   ),
                   title: Text(
-                    "${message.senderName ?? 'Anónimo'}",
+                    "${message.senderName}",
                     style: GoogleFonts.tajawal(),
                   ),
                   subtitle: RichText(
@@ -179,15 +177,16 @@ class _CommentsListState extends State<CommentsList> {
                         if (message.type == "help")
                           TextSpan(
                             text: "Ha donado para ${message.helpedDays} dīas ",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.caption!.copyWith(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                           ),
                         TextSpan(
                           text: "${timeAgo(flag.timestamp)}",
-                          style: Theme.of(context).textTheme.caption.copyWith(
+                          style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 10,
                               ),
                         )
@@ -198,7 +197,7 @@ class _CommentsListState extends State<CommentsList> {
                     ),
                   ),
                   trailing: _previewImage(
-                      message.mediaContent?.thumbnailInfo?.downloadUrl, 50, 50),
+                      message.mediaContent!.thumbnailInfo.downloadUrl, 50, 50),
                 ),
               );
             },
@@ -220,29 +219,11 @@ class _CommentsListState extends State<CommentsList> {
           decoration: BoxDecoration(
               border:
                   Border.all(color: Theme.of(context).primaryColor, width: 2)),
-          child: TransitionToImage(
-            image: AdvancedNetworkImage(
-              "$url",
-              loadedCallback: () {
-                print('It works!');
-              },
-              loadFailedCallback: () {
-                print('Oh, no!');
-              },
-              loadingProgress: (double progress, _) {
-                // print('Now Loading: $progress');
-              },
-            ),
-            loadingWidgetBuilder: (_, double progress, __) => Center(
-              child: CircularProgressIndicator(
-                value: progress,
-              ),
-            ),
+          child: Image.network(
+            url,
             fit: BoxFit.cover,
             width: double.infinity,
             alignment: Alignment.center,
-            placeholder: const Icon(Icons.refresh),
-            enableRefresh: true,
           ),
         ),
         Positioned.fill(
@@ -258,7 +239,7 @@ class _CommentsListState extends State<CommentsList> {
                   "Ver",
                   style: Theme.of(context)
                       .textTheme
-                      .title
+                      .headline6!
                       .copyWith(color: Theme.of(context).accentColor),
                 ),
               ]),

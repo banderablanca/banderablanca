@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class RoundedFrame extends StatelessWidget {
   const RoundedFrame({
-    Key key,
-    this.margin,
-    this.padding,
-    this.width,
-    this.height,
-    this.child,
-    this.color,
+    Key? key,
+    required this.margin,
+    required this.padding,
+    required this.width,
+    required this.height,
+    required this.child,
+    required this.color,
     this.borderRadius = BorderRadius.zero,
     this.borderColor = Colors.transparent,
     this.elevation = 0.0,
-    this.materialType,
+    required this.materialType,
   }) : super(key: key);
 
   final EdgeInsetsGeometry margin;
@@ -34,9 +34,12 @@ class RoundedFrame extends StatelessWidget {
       margin: margin,
       padding: padding,
       child: Material(
-        type: color == Colors.transparent ? MaterialType.transparency : materialType ?? MaterialType.canvas,
+        type: color == Colors.transparent
+            ? MaterialType.transparency
+            : materialType ?? MaterialType.canvas,
         color: color,
-        shape: RoundedRectangleBorder(borderRadius: borderRadius, side: BorderSide(color: borderColor)),
+        shape: RoundedRectangleBorder(
+            borderRadius: borderRadius, side: BorderSide(color: borderColor)),
         elevation: elevation,
         child: ClipRRect(
           borderRadius: borderRadius,

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AnimatedPin extends StatefulWidget {
   AnimatedPin({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
   });
 
   final Widget child;
@@ -14,7 +14,7 @@ class AnimatedPin extends StatefulWidget {
 
 class _AnimatedPinState extends State<AnimatedPin>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -39,17 +39,18 @@ class _AnimatedPinState extends State<AnimatedPin>
 
 class JumpingContainer extends AnimatedWidget {
   const JumpingContainer({
-    Key key,
-    AnimationController controller,
-    this.child,
+    Key? key,
+    required AnimationController controller,
+    required this.child,
   }) : super(key: key, listenable: controller);
 
   final Widget child;
-
-  Animation<double> get _progress => listenable;
+// listenable.
+  Animation<double> get _progress => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
+    // return AnimatedContainer(duration: duration)
     return Transform.translate(
       offset: Offset(0, -10 + _progress.value * 10),
       child: child,

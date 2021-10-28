@@ -10,7 +10,7 @@ class BottomNavigationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<TabModel>(
-      builder: (BuildContext context, TabModel tabModel, Widget child) {
+      builder: (BuildContext context, TabModel tabModel, _) {
         var activeTabIndex =
             allDestinations.indexWhere((o) => o.tab == tabModel.activeTab);
         Destination tab =
