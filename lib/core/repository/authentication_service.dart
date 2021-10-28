@@ -1,141 +1,152 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'storage_repository.dart';
+
 import '../abstract/abstract.dart';
 import '../models/models.dart';
-import 'package:meta/meta.dart';
+import 'storage_repository.dart';
 
 class AuthenticationService implements AuthenticationServiceAbs {
   AuthenticationService({
-    @required this.auth,
-    @required this.firestore,
-    @required this.storage,
+    required this.auth,
+    required this.firestore,
+    required this.storage,
   });
 
   final FirebaseAuth auth;
-  final Firestore firestore;
+  final FirebaseFirestore firestore;
   final FirebaseStorage storage;
 
   static String path = "users";
 
-  Future<UserApp> _userFromFirebase(FirebaseUser _user) async {
+  Future<UserApp?> _userFromFirebase(User? _user) async {
     if (_user == null) {
       return null;
     }
 
     // IdTokenResult token = await _user.getIdToken();
-    final userData = await _loadUserData(_user.uid);
+    bool onBoardCompleted = await _loadUserData(_user.uid);
     final UserApp currentUser = UserApp(
       id: _user.uid,
       country: 'PE',
-      email: _user.email,
-      displayName: _user.displayName,
-      photoUrl: _user.photoUrl,
-      onBoardCompleted: userData?.onBoardCompleted ?? false,
+      email: _user.email ?? '',
+      displayName: _user.displayName ?? '',
+      photoUrl: _user.photoURL ?? '',
+      onBoardCompleted: onBoardCompleted,
+      languageCode: "es_PE",
+      isEmailVerified: false,
     );
 
     return currentUser;
   }
 
   @override
-  Stream<UserApp> get onAuthStateChanged {
-    return auth.onAuthStateChanged.asyncMap(_userFromFirebase);
+  Stream<UserApp?> get onAuthStateChanged {
+    // return auth.authStateChanges.asyncMap(_userFromFirebase);
+    return auth.authStateChanges().asyncMap(_userFromFirebase);
   }
 
   @override
   Future<UserApp> createUserWithEmailAndPassword(AuthFormData authForm) async {
-    final AuthResult authResult = await auth.createUserWithEmailAndPassword(
+    final UserCredential authResult = await auth.createUserWithEmailAndPassword(
       email: authForm.email,
       password: authForm.password,
     );
-    final FirebaseUser firebaseUser = authResult.user;
+    // if (authResult.user == null) return null;
+    final User? firebaseUser = authResult.user;
 
     assert(firebaseUser != null);
-    assert(await firebaseUser.getIdToken() != null);
-    UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = authForm.displayName;
-    userUpdateInfo.photoUrl =
-        'https://futbol-social-avatar.herokuapp.com/avatars/200/${firebaseUser.uid}.png';
-    await firebaseUser.updateProfile(userUpdateInfo);
+    assert(await firebaseUser?.getIdToken() != null);
+    // UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = authForm.displayName;
+    // userUpdateInfo.photoUrl =
+    //     'https://futbol-social-avatar.herokuapp.com/avatars/200/${firebaseUser.uid}.png';
+    await firebaseUser!.updateDisplayName(authForm.displayName);
+    await firebaseUser.updatePhotoURL(
+        'https://futbol-social-avatar.herokuapp.com/avatars/200/${firebaseUser.uid}.png');
     await firebaseUser.reload();
-    final FirebaseUser _user = await auth.currentUser();
+    final User? _user = auth.currentUser;
     // create /users/{UID}
     await firestore
         .collection(path)
-        .document('${_user.uid}')
-        .setData({"language_code": authForm.languageCode}, merge: true);
+        .doc('${_user!.uid}')
+        .set({"language_code": authForm.languageCode}, SetOptions(merge: true));
 
     return UserApp(
       id: _user.uid,
       country: 'PE',
-      email: _user.email,
-      displayName: _user.displayName,
-      photoUrl: _user.photoUrl,
+      email: _user.email ?? '',
+      displayName: _user.displayName ?? '',
+      photoUrl: _user.photoURL ?? '',
       languageCode: authForm.languageCode,
     );
   }
 
   @override
   Future<UserApp> handleSignIn() async {
-    FirebaseUser firebaseUser = await auth.currentUser();
+    User? firebaseUser = auth.currentUser;
     if (firebaseUser == null) {
-      AuthResult result = await auth.signInAnonymously();
+      UserCredential result = await auth.signInAnonymously();
       firebaseUser = result.user;
     }
     return Future.value(UserApp(
-      id: firebaseUser.uid,
+      id: firebaseUser!.uid,
       country: 'PE',
-      email: firebaseUser.email,
-      displayName: firebaseUser.displayName,
-      photoUrl: firebaseUser.photoUrl,
-      isEmailVerified: firebaseUser.isEmailVerified,
+      email: firebaseUser.email ?? '',
+      displayName: firebaseUser.displayName ?? '',
+      photoUrl: firebaseUser.photoURL ?? '',
+      isEmailVerified: false,
+      onBoardCompleted: false,
     ));
   }
 
   @override
   Future<bool> sendEmailVerification() async {
-    FirebaseUser firebaseUser = await auth.currentUser();
+    User? firebaseUser = auth.currentUser;
     assert(firebaseUser != null);
-    assert(!firebaseUser.isAnonymous);
-    firebaseUser.sendEmailVerification();
+    assert(!firebaseUser!.isAnonymous);
+    firebaseUser!.sendEmailVerification();
     return true;
   }
 
   @override
   Future<UserApp> signInWithEmailAndPassword(AuthFormData authForm) async {
-    final AuthResult authResult = await auth.signInWithEmailAndPassword(
+    final UserCredential authResult = await auth.signInWithEmailAndPassword(
         email: authForm.email, password: authForm.password);
-    final FirebaseUser firebaseUser = authResult.user;
+    final User? firebaseUser = authResult.user;
 
     assert(firebaseUser != null);
-    assert(await firebaseUser.getIdToken() != null);
+    // assert(await firebaseUser!.getIdToken() != null);
 
-    final FirebaseUser currentUser = await auth.currentUser();
-    assert(firebaseUser.uid == currentUser.uid);
+    final User? currentUser = auth.currentUser;
+    assert(firebaseUser!.uid == currentUser!.uid);
 
     return UserApp(
-      id: firebaseUser.uid,
+      id: firebaseUser!.uid,
       country: 'PE',
-      email: firebaseUser.email,
-      displayName: firebaseUser.displayName,
-      photoUrl: firebaseUser.photoUrl,
+      email: firebaseUser.email ?? '',
+      displayName: firebaseUser.displayName ?? '',
+      photoUrl: firebaseUser.photoURL ?? '',
     );
   }
 
   @override
   Future<Null> sendPasswordResetEmail(AuthFormData authForm) async {
-    return await auth.sendPasswordResetEmail(email: authForm.email);
+    await auth.sendPasswordResetEmail(email: authForm.email);
+    return;
   }
 
-  Future<UserApp> _loadUserData(String uid) async {
-    return firestore.collection(path).document('$uid').get().then((snapshot) {
-      if (snapshot.exists) return UserApp.fromJson(snapshot.data);
-      return null;
+  Future<bool> _loadUserData(String uid) async {
+    return firestore.collection(path).doc('$uid').get().then((snapshot) {
+      Map<String, dynamic> d = snapshot.data() as Map<String, dynamic>;
+      if (snapshot.exists) {
+        // return UserApp.fromJson(d);
+        return snapshot.get("on_board_completed") ?? false;
+      }
+      return false;
     });
   }
 
@@ -143,33 +154,40 @@ class AuthenticationService implements AuthenticationServiceAbs {
   Stream<UserApp> loadUserData(UserApp currentUser) {
     return firestore
         .collection(path)
-        .document('${currentUser.id}')
+        .doc('${currentUser.id}')
         .snapshots()
         .map((snapshot) {
-      if (snapshot.exists) return UserApp.fromJson(snapshot.data);
-      return UserApp();
+      if (snapshot.exists)
+        return UserApp.fromJson(snapshot.data() as Map<String, dynamic>);
+      return UserApp(
+        id: "",
+        displayName: "",
+        email: "",
+        photoUrl: "",
+        isEmailVerified: false,
+      );
     });
   }
 
   @override
   Future<UserApp> updateUserProfile(UserApp userApp) async {
-    final FirebaseUser firebaseUser = await auth.currentUser();
+    final User? firebaseUser = auth.currentUser;
 
     assert(firebaseUser != null);
-    assert(await firebaseUser.getIdToken() != null);
+    // assert(await firebaseUser.getIdToken() != null);
     // update /users/{uid}
     // _changeLanguage(userApp);
 
-    UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = userApp.displayName;
-
-    await firebaseUser.updateProfile(userUpdateInfo);
+    // UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = userApp.displayName;
+    await firebaseUser!.updateDisplayName(userApp.displayName);
+    // await firebaseUser.updateProfile(userUpdateInfo);
     await firebaseUser.reload();
-    final FirebaseUser _user = await auth.currentUser();
+    final User? _user = auth.currentUser;
     return Future.value(
       userApp.copyWith(
-        displayName: _user.displayName,
-        photoUrl: _user.photoUrl,
+        displayName: _user!.displayName ?? '',
+        photoUrl: _user.photoURL ?? '',
       ),
     );
   }
@@ -177,9 +195,9 @@ class AuthenticationService implements AuthenticationServiceAbs {
   @override
   Future<bool> logout() async {
     try {
-      final FirebaseUser firebaseUser = await auth.currentUser();
+      final User? firebaseUser = auth.currentUser;
       await auth.signOut();
-      await firebaseUser.reload();
+      await firebaseUser!.reload();
       return true;
     } catch (e) {
       return false;
@@ -188,34 +206,35 @@ class AuthenticationService implements AuthenticationServiceAbs {
 
   @override
   Future<String> updatePhoto(String path, Uint8List file) async {
-    final FirebaseUser firebaseUser = await auth.currentUser();
+    final User? firebaseUser = auth.currentUser;
 
     assert(firebaseUser != null);
-    assert(await firebaseUser.getIdToken() != null);
+    // assert(await firebaseUser!.getIdToken() != null);
 
     StorageRepository storageRepository = StorageRepository(storage);
     String uploadUrl = await storageRepository.uploadPhotoProfile(
-        path, file, firebaseUser.uid);
-    UserUpdateInfo userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = firebaseUser.displayName;
-    userUpdateInfo.photoUrl = uploadUrl;
+        path, file, firebaseUser!.uid);
+    // UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+    // userUpdateInfo.displayName = firebaseUser.displayName;
+    // userUpdateInfo.photoUrl = uploadUrl;
 
-    await firebaseUser.updateProfile(userUpdateInfo);
+    await firebaseUser.updateDisplayName(firebaseUser.displayName);
+    await firebaseUser.updatePhotoURL(uploadUrl);
     await firebaseUser.reload();
-    final FirebaseUser _user = await auth.currentUser();
-    return _user.photoUrl;
+    final User? _user = auth.currentUser;
+    return _user!.photoURL ?? '';
   }
 
   @override
   Future<bool> onBoardCompleted() async {
-    final FirebaseUser firebaseUser = await auth.currentUser();
+    final User? firebaseUser = auth.currentUser;
 
     assert(firebaseUser != null);
-    assert(await firebaseUser.getIdToken() != null);
-    await firestore
-        .collection(path)
-        .document('${firebaseUser.uid}')
-        .setData({"on_board_completed": true}, merge: true);
+    // assert(await firebaseUser.getIdToken() != null);
+    await firestore.collection(path).doc('${firebaseUser!.uid}').set(
+      {"on_board_completed": true},
+      SetOptions(merge: true),
+    );
     return true;
   }
 }

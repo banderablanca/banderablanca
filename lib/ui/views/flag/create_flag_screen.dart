@@ -13,13 +13,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../views.dart';
 
 class CreateFlagScreen extends StatefulWidget {
-  const CreateFlagScreen({Key key, this.mediaPath}) : super(key: key);
-  // const CreateFlagScreen({Key key, @required this.pickResult})
-  //     : super(key: key);
+  const CreateFlagScreen({
+    Key? key,
+    required this.mediaPath,
+  }) : super(key: key);
 
-  // final PickResult pickResult;
   final String mediaPath;
-  // final bool isVideo;
 
   @override
   _CreateFlagScreenState createState() => _CreateFlagScreenState();
@@ -42,15 +41,16 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     super.dispose();
   }
 
-  CameraPosition pickResult;
-  String title;
-  String description;
-  String address;
-  String _mediaPath;
+  late CameraPosition? pickResult;
+  late String title;
+  late String description;
+  late String address;
+  late String _mediaPath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
   Future _getImage(ImageSource source) async {
-    var image = await ImagePicker.pickImage(source: source, imageQuality: 80);
+    final ImagePicker _picker = ImagePicker();
+    var image = await _picker.pickImage(source: source, imageQuality: 80);
     if (image != null) {
       setState(() {
         _mediaPath = image.path;
@@ -66,7 +66,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     _hideKeyboard();
 
     // validate
-    _formKey.currentState.validate();
+    _formKey.currentState!.validate();
 
     if (_mediaPath == null)
       return _showSnackbar(context, "Es necesario adjuntar una foto o video.");
@@ -74,14 +74,14 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     if (pickResult == null)
       return _showSnackbar(context, "Debe seleccionar la ubicación");
 
-    if (_formKey.currentState.validate() && pickResult != null) {
-      _formKey.currentState.save();
+    if (_formKey.currentState!.validate() && pickResult != null) {
+      _formKey.currentState!.save();
       final WhiteFlag newFlag = WhiteFlag(
         address: address,
         description: description,
         title: title,
         position:
-            LatLng(pickResult.target.latitude, pickResult.target.longitude),
+            LatLng(pickResult!.target.latitude, pickResult!.target.longitude),
       );
       await Provider.of<FlagModel>(context, listen: false)
           .createflag(newFlag, _mediaPath);
@@ -93,12 +93,14 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   _getAddress(context) async {
     LatLng inital = LatLng(-33.8567844, 151.213108);
     if (pickResult != null)
-      inital = LatLng(pickResult.target.latitude, pickResult.target.longitude);
+      inital =
+          LatLng(pickResult!.target.latitude, pickResult!.target.longitude);
 
     CameraPosition result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => PlacePicker(
+            // pinBuilder: (_, __){},
             onPlacePicked: (CameraPosition result) {
               Navigator.of(context).pop(result);
             },
@@ -163,7 +165,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                         style: GoogleFonts.tajawal(
                                           textStyle: Theme.of(context)
                                               .textTheme
-                                              .headline
+                                              .headline5!
                                               .copyWith(
                                                 color: Theme.of(context)
                                                     .primaryColor,
@@ -225,13 +227,13 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                               width: (MediaQuery.of(context).size.width - 30)
                                   .floor(),
                               currentLocation: {
-                                "latitude": pickResult.target.latitude,
-                                "longitude": pickResult.target.longitude
+                                "latitude": pickResult!.target.latitude,
+                                "longitude": pickResult!.target.longitude
                               },
                               markers: [
                                 {
-                                  "latitude": pickResult.target.latitude,
-                                  "longitude": pickResult.target.longitude
+                                  "latitude": pickResult!.target.latitude,
+                                  "longitude": pickResult!.target.longitude
                                 }
                               ],
                               zoom: 5,
@@ -241,15 +243,14 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                             child: TextFormField(
                               decoration: InputDecoration(
                                   hintText: 'Ingrese referencia de dirección',
-                                  labelText: 'Referencia de dirección'
-                                  ),
-                              onSaved: (String value) {
+                                  labelText: 'Referencia de dirección'),
+                              onSaved: (String? value) {
                                 setState(() {
-                                  address = value;
+                                  address = value ?? '';
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value!.isEmpty) {
                                   return 'La referencia es importante.';
                                 }
                                 return null;
@@ -264,17 +265,16 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                               keyboardType: TextInputType.multiline,
                               maxLines: 3,
                               decoration: InputDecoration(
-                                  hintText:
-                                      'Ejem. alimentos, arroz, azúcas',
-                                      labelText: '¿Cómo te pueden ayudar las personas?'
-                                      ),
-                              onSaved: (String value) {
+                                  hintText: 'Ejem. alimentos, arroz, azúcas',
+                                  labelText:
+                                      '¿Cómo te pueden ayudar las personas?'),
+                              onSaved: (String? value) {
                                 setState(() {
-                                  description = value;
+                                  description = value ?? '';
                                 });
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value!.isEmpty) {
                                   return 'Es necesario una breve descripción.';
                                 }
                                 return null;

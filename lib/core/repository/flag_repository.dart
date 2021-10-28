@@ -15,12 +15,12 @@ import 'package:path/path.dart';
 
 class FlagRepository implements FlagRepositoryAbs {
   FlagRepository({
-    @required this.firestore,
-    @required this.auth,
-    @required this.storage,
+    required this.firestore,
+    required this.auth,
+    required this.storage,
   });
 
-  final Firestore firestore;
+  final FirebaseFirestore firestore;
   final FirebaseAuth auth;
   final FirebaseStorage storage;
 
@@ -28,27 +28,33 @@ class FlagRepository implements FlagRepositoryAbs {
 
   @override
   Future<bool> createFlag(WhiteFlag newFlag, String mediaPath) async {
-    final FirebaseUser firebaseUser = await auth.currentUser();
-    final _doc = firestore.collection(path).document();
+    final User? firebaseUser = auth.currentUser;
+    final _doc = firestore.collection(path).doc();
     final StorageRepository storageRepository = StorageRepository(storage);
     String downloadUrl =
-        await storageRepository.uploadFile(mediaPath, _doc.documentID, path);
+        await storageRepository.uploadFile(mediaPath, _doc.id, path);
     ThumbnailInfo thumbInfo;
     thumbInfo = await genThumbnail(mediaPath);
     String thumbUrl = await storageRepository.uploadFileData(
-        thumbInfo.filePath, thumbInfo.imageData, _doc.documentID, path);
+      thumbInfo.filePath ?? '',
+      thumbInfo.imageData,
+      _doc.id,
+      path,
+    );
     thumbInfo = thumbInfo.copyWith(downloadUrl: thumbUrl);
     final MediaContent mediaContent = MediaContent(
-      mimeType: lookupMimeType(mediaPath),
+      mimeType: lookupMimeType(mediaPath) ?? '',
       downloadUrl: downloadUrl,
       size: File(mediaPath).lengthSync(),
       name: basename(mediaPath),
       thumbnailInfo: thumbInfo,
+      resolve: false,
+      createdAt: DateTime.now(),
     );
 
     WhiteFlag _data = newFlag.copyWith(
-      senderName: firebaseUser.displayName,
-      senderPhotoUrl: firebaseUser.photoUrl,
+      senderName: firebaseUser!.displayName ?? '',
+      senderPhotoUrl: firebaseUser.photoURL ?? '',
       uid: firebaseUser.uid,
       mediaContent: mediaContent,
     );
@@ -58,7 +64,7 @@ class FlagRepository implements FlagRepositoryAbs {
     _message['timestamp'] = FieldValue.serverTimestamp();
     _message['visibility'] = 'public';
 
-    return _doc.setData(_message).then((onValue) {
+    return _doc.set(_message).then((onValue) {
       return true;
     }).catchError((onError) {
       return false;
@@ -75,23 +81,23 @@ class FlagRepository implements FlagRepositoryAbs {
         .handleError((onError) {
       print(onError);
     }).map((snapshot) {
-      return snapshot.documents.map((DocumentSnapshot doc) {
-        final WhiteFlag flag = WhiteFlag.fromJson(doc.data);
-        return flag.copyWith(id: doc.documentID);
+      return snapshot.docs.map((DocumentSnapshot doc) {
+        final WhiteFlag flag =
+            WhiteFlag.fromJson(doc.data() as Map<String, dynamic>);
+        return flag.copyWith(id: doc.id);
       }).toList();
     });
   }
 
   @override
   Future<bool> reportFlag(WhiteFlag flag) async {
-    final DocumentReference reference =
-        firestore.collection(path).document(flag.id);
+    final DocumentReference reference = firestore.collection(path).doc(flag.id);
 
     await firestore.runTransaction((Transaction tx) async {
       DocumentSnapshot doc = await tx.get(reference);
       if (doc.exists) {
-        await tx.update(reference, <String, dynamic>{
-          'reported_count': (doc.data['reported_count'] ?? 0) + 1
+        tx.update(reference, <String, dynamic>{
+          'reported_count': (doc.get('reported_count') ?? 0) + 1
         });
       }
     }).catchError((onError) {
@@ -103,8 +109,9 @@ class FlagRepository implements FlagRepositoryAbs {
 
   @override
   Future<bool> deleteFlag(WhiteFlag flag) {
-    var _doc = firestore.collection(path).document(flag.id);
-    return _doc.setData({"visibility": "delete"}, merge: true).then((onValue) {
+    var _doc = firestore.collection(path).doc(flag.id);
+    return _doc
+        .set({"visibility": "delete"}, SetOptions(merge: true)).then((onValue) {
       return true;
     }).catchError((onError) {
       return false;
@@ -113,10 +120,10 @@ class FlagRepository implements FlagRepositoryAbs {
 
   @override
   Future<bool> helpedFlag(WhiteFlag flag, int days) {
-    var _doc = firestore.collection(path).document(flag.id);
-    return _doc.setData(
+    var _doc = firestore.collection(path).doc(flag.id);
+    return _doc.set(
         {'helped_at': FieldValue.serverTimestamp(), 'helped_days': days},
-        merge: true).then((onValue) {
+        SetOptions(merge: true)).then((onValue) {
       return true;
     }).catchError((onError) {
       return false;

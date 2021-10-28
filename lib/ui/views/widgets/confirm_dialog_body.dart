@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 
 class ConfirmDialogBody extends StatelessWidget {
   const ConfirmDialogBody({
-    Key key,
-    @required this.title,
-    @required this.content,
-    @required this.cancelText,
-    @required this.confirmText,
+    Key? key,
+    required this.title,
+    required this.content,
+    required this.cancelText,
+    required this.confirmText,
   }) : super(key: key);
 
   final String title;
@@ -29,7 +29,7 @@ class ConfirmDialogBody extends StatelessWidget {
             child: Text('$confirmText'),
             onPressed: () => Navigator.pop(context, true),
           ),
-          if (cancelText != null)
+          if (cancelText.isNotEmpty)
             CupertinoDialogAction(
               child: Text('$cancelText'),
               onPressed: () => Navigator.pop(context, false),

@@ -10,7 +10,10 @@ import 'package:video_player/video_player.dart';
 import '../views.dart';
 
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({Key key, @required this.cameras}) : super(key: key);
+  const CameraScreen({
+    Key? key,
+    required this.cameras,
+  }) : super(key: key);
 
   final List<CameraDescription> cameras;
 
@@ -37,11 +40,11 @@ void logError(String code, String message) =>
     print('Error: $code\nError Message: $message');
 
 class _CameraScreenState extends State<CameraScreen> {
-  CameraController controller;
-  String imagePath;
-  String videoPath;
-  VideoPlayerController videoController;
-  VoidCallback videoPlayerListener;
+  late CameraController controller;
+  late String imagePath;
+  late String? videoPath;
+  late VideoPlayerController videoController;
+  late VoidCallback videoPlayerListener;
   bool isLongPressed = false;
   int cameraSelected = 0;
   // bool isPreviewScreen = false;
@@ -192,23 +195,24 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _onImageButtonPressed(ImageSource source, bool isVideo) async {
+    final ImagePicker _picker = ImagePicker();
     if (isVideo) {
-      ImagePicker.pickVideo(source: source).then((File _file) {
-        if (_file != null && mounted) {
-          setState(() {
-            videoController = VideoPlayerController.file(_file);
-            videoPath = _file.path;
-          });
-          if (_file.path != null) _navigateToPreview();
-        }
-      });
+      final XFile? _file = await _picker.pickVideo(source: source);
+      if (_file != null && mounted) {
+        setState(() {
+          videoController = VideoPlayerController.file(File(_file.path));
+          videoPath = _file.path;
+        });
+        _navigateToPreview();
+      }
     } else {
-      File _file = await ImagePicker.pickImage(source: source);
+      XFile? _file = await _picker.pickImage(source: source);
       setState(() {
-        imagePath = _file.path;
+        imagePath = _file!.path;
         videoPath = null;
       });
-      if (_file.path != null) _navigateToPreview();
+      // if (_file.path != null)
+      _navigateToPreview();
     }
   }
 
@@ -270,7 +274,8 @@ class _CameraScreenState extends State<CameraScreen> {
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   void _showInSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _onNewCameraSelected(CameraDescription cameraDescription) async {
@@ -300,35 +305,39 @@ class _CameraScreenState extends State<CameraScreen> {
 
   // camera
   void onTakePictureButtonPressed() {
-    takePicture().then((String filePath) {
+    takePicture().then((String? filePath) {
       if (mounted) {
         setState(() {
-          imagePath = filePath;
-          videoController?.dispose();
-          videoController = null;
+          imagePath = filePath!;
+          videoController.dispose();
+          // videoController = null;
         });
         // if (filePath != null) showInSnackBar('Picture saved to $filePath');
-        if (filePath != null) _navigateToPreview();
+        // if (filePath != null)
+        _navigateToPreview();
       }
     });
   }
 
   void onVideoRecordButtonPressed() {
-    startVideoRecording().then((String filePath) {
+    startVideoRecording().then((dynamic v) {
       if (mounted) setState(() {});
       // if (filePath != null) showInSnackBar('Saving video to $videoPath');
     });
   }
 
   void onStopButtonPressed() {
-    stopVideoRecording().then((_) {
-      if (mounted) setState(() {});
+    stopVideoRecording().then((XFile? file) {
+      if (mounted)
+        setState(() {
+          videoPath = file!.path;
+        });
       // showInSnackBar('Video recorded to: $videoPath');
       _navigateToPreview();
     });
   }
 
-  Future<String> startVideoRecording() async {
+  Future<void> startVideoRecording() async {
     if (!controller.value.isInitialized) {
       _showInSnackBar('Error: select a camera first.');
       return null;
@@ -337,37 +346,51 @@ class _CameraScreenState extends State<CameraScreen> {
     final Directory extDir = await getApplicationDocumentsDirectory();
     final String dirPath = '${extDir.path}/Movies/flutter_test';
     await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.mp4';
+    String? filePath = '$dirPath/${timestamp()}.mp4';
 
     if (controller.value.isRecordingVideo) {
       // A recording is already started, do nothing.
+      return;
+    }
+
+    try {
+      // videoPath = filePath;
+      await controller.startVideoRecording();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return;
+    }
+    // return filePath;
+  }
+
+  // Future<XFile> stopVideoRecording() async {
+  //   if (!controller.value.isRecordingVideo) {
+  //     return null;
+  //   }
+
+  //   try {
+  //     await controller.stopVideoRecording();
+  //   } on CameraException catch (e) {
+  //     _showCameraException(e);
+  //     return null;
+  //   }
+  // }
+  Future<XFile?> stopVideoRecording() async {
+    final CameraController? cameraController = controller;
+
+    if (cameraController == null || !cameraController.value.isRecordingVideo) {
       return null;
     }
 
     try {
-      videoPath = filePath;
-      await controller.startVideoRecording(filePath);
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-    return filePath;
-  }
-
-  Future<void> stopVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.stopVideoRecording();
+      return cameraController.stopVideoRecording();
     } on CameraException catch (e) {
       _showCameraException(e);
       return null;
     }
   }
 
-  Future<String> takePicture() async {
+  Future<String?> takePicture() async {
     if (!controller.value.isInitialized) {
       _showInSnackBar('Error: select a camera first.');
       return null;
@@ -375,7 +398,8 @@ class _CameraScreenState extends State<CameraScreen> {
     final Directory extDir = await getApplicationDocumentsDirectory();
     final String dirPath = '${extDir.path}/Pictures/flutter_test';
     await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpg';
+    //  XFile filePath = '$dirPath/${timestamp()}.jpg';
+    late XFile filePath;
 
     if (controller.value.isTakingPicture) {
       // A capture is already pending, do nothing.
@@ -383,16 +407,16 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
     try {
-      await controller.takePicture(filePath);
+      filePath = await controller.takePicture();
     } on CameraException catch (e) {
       _showCameraException(e);
       return null;
     }
-    return filePath;
+    return filePath.path;
   }
 
   void _showCameraException(CameraException e) {
-    logError(e.code, e.description);
+    logError(e.code, e.description ?? '');
     _showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 

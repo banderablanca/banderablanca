@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   VideoPlayerScreen({
-    Key key,
-    this.filePath,
+    Key? key,
+    required this.filePath,
   }) : super(key: key);
 
   final String filePath;
@@ -18,8 +17,8 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
   double _progress = 0;
 
   bool get isVideoUrl => widget.filePath.startsWith('http');
@@ -37,8 +36,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // Inicializa el controlador y almacena el Future para utilizarlo luego
     _initializeVideoPlayerFuture = _controller.initialize();
     _controller.addListener(() {
-      int dur = _controller.value.duration?.inMilliseconds ?? 0;
-      int pos = _controller.value.position?.inMilliseconds ?? 0;
+      int dur = _controller.value.duration.inMilliseconds;
+      int pos = _controller.value.position.inMilliseconds;
       setState(() {
         if (dur <= pos) {
           _progress = 0;
@@ -79,16 +78,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   // Si el VideoPlayerController ha finalizado la inicialización, usa
                   // los datos que proporciona para limitar la relación de aspecto del VideoPlayer
-                  final num width = _controller.value.size?.width ?? 0;
-                  final num height = _controller.value.size?.height ?? 0;
+                  final double width = _controller.value.size.width;
+                  final double height = _controller.value.size.height;
 
                   return SizedBox.expand(
                     child: FittedBox(
                       fit: width > height ? BoxFit.fitWidth : BoxFit.fitHeight,
                       // fit: BoxFit.fitHeight,
                       child: SizedBox(
-                        width: width ?? 0,
-                        height: height ?? 0,
+                        width: width,
+                        height: height,
                         child: VideoPlayer(_controller),
                       ),
                     ),

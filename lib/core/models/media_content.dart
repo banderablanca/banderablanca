@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
 
 import 'thumbnail_info.dart';
 
@@ -10,13 +9,13 @@ part 'media_content.g.dart';
 abstract class MediaContent with _$MediaContent {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory MediaContent({
-    String mimeType,
-    String name,
-    int size,
-    DateTime createdAt,
-    String downloadUrl,
-    bool resolve,
-    ThumbnailInfo thumbnailInfo,
+    String? mimeType,
+    required String name,
+    required int size,
+    DateTime? createdAt,
+    required String downloadUrl,
+    @Default(false) bool resolve,
+    required ThumbnailInfo thumbnailInfo,
   }) = _MediaContent;
 
   factory MediaContent.fromJson(Map<String, dynamic> json) =>

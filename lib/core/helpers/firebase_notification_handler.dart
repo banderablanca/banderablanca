@@ -3,18 +3,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import '../models/models.dart';
 
 class FirebaseNotifications {
-  FirebaseNotifications({
-    this.onMessage,
-    this.onResume,
-    this.onLaunch,
-    this.onSaveToken,
-  });
+  // FirebaseNotifications({
+  //   this.onMessage,
+  //   this.onResume,
+  //   this.onLaunch,
+  //   this.onSaveToken,
+  // });
 
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final Function(Map<String, dynamic> message) onMessage;
-  final Function(Map<String, dynamic> message) onResume;
-  final Function(Map<String, dynamic> message) onLaunch;
-  final Function(String) onSaveToken;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  late Function(Map<String, dynamic> message) onMessage;
+  late Function(Map<String, dynamic> message) onResume;
+  late Function(Map<String, dynamic> message) onLaunch;
+  late Function(String) onSaveToken;
 
   void setUpFirebase() {
     firebaseCloudMessagingListeners();
@@ -32,31 +32,33 @@ class FirebaseNotifications {
 
   void firebaseCloudMessagingListeners() {
     // _firebaseMessaging.autoInitEnabled();
-    if (Platform.isIOS) iOSPermission();
+    // if (Platform.isIOS) iOSPermission();
     _firebaseMessaging.getToken().then((token) {
-      if (onSaveToken != null) return onSaveToken(token);
+      if (token != null) return onSaveToken(token);
     });
+    // FirebaseMessaging.onMessageOpenedApp();
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) {
-        // disabled for Bug:
-        // https://github.com/FirebaseExtended/flutterfire/issues/1669
-        // return onMessage(message);
-        // print(message);
-      },
-      onResume: (Map<String, dynamic> message) {
-        return onResume(message);
-      },
-      onLaunch: (Map<String, dynamic> message) {
-        return onLaunch(message);
-      },
-    );
+// _firebaseMessaging.onMessageOpenedApp
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) {
+    //     // disabled for Bug:
+    //     // https://github.com/FirebaseExtended/flutterfire/issues/1669
+    //     // return onMessage(message);
+    //     // print(message);
+    //   },
+    //   onResume: (Map<String, dynamic> message) {
+    //     return onResume(message);
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) {
+    //     return onLaunch(message);
+    //   },
+    // );
   }
 
-  void iOSPermission() {
-    _firebaseMessaging.requestNotificationPermissions(
-        IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {});
-  }
+  // void iOSPermission() {
+  //   _firebaseMessaging.requestPermission(
+  //       IosNotificationSettings(sound: true, badge: true, alert: true));
+  //   _firebaseMessaging.onIosSettingsRegistered
+  //       .listen((IosNotificationSettings settings) {});
+  // }
 }

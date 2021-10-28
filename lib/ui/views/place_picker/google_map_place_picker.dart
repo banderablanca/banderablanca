@@ -24,36 +24,36 @@ typedef PinBuilder = Widget Function(
 
 class GoogleMapPlacePicker extends StatelessWidget {
   const GoogleMapPlacePicker({
-    Key key,
-    @required this.initialTarget,
-    @required this.appBarKey,
+    Key? key,
+    required this.initialTarget,
+    required this.appBarKey,
     this.selectedPlaceWidgetBuilder,
     this.pinBuilder,
-    this.onSearchFailed,
-    this.onMoveStart,
-    this.onMapCreated,
-    this.debounceMilliseconds,
-    this.enableMapTypeButton,
-    this.enableMyLocationButton,
-    this.onToggleMapType,
-    this.onMyLocation,
-    this.onPlacePicked,
-    this.usePinPointingSearch,
+    // required this.onSearchFailed,
+    required this.onMoveStart,
+    required this.onMapCreated,
+    required this.debounceMilliseconds,
+    required this.enableMapTypeButton,
+    required this.enableMyLocationButton,
+    required this.onToggleMapType,
+    required this.onMyLocation,
+    required this.onPlacePicked,
+    required this.usePinPointingSearch,
     // this.usePlaceDetailSearch,
-    this.selectInitialPosition,
-    this.language,
-    this.forceSearchOnZoomChanged,
+    required this.selectInitialPosition,
+    // required this.language,
+    required this.forceSearchOnZoomChanged,
   }) : super(key: key);
 
   final LatLng initialTarget;
   final GlobalKey appBarKey;
 
-  final SelectedPlaceWidgetBuilder selectedPlaceWidgetBuilder;
-  final PinBuilder pinBuilder;
+  final SelectedPlaceWidgetBuilder? selectedPlaceWidgetBuilder;
+  final PinBuilder? pinBuilder;
 
-  final ValueChanged<String> onSearchFailed;
+  // final ValueChanged<String> onSearchFailed;
   final VoidCallback onMoveStart;
-  final MapCreatedCallback onMapCreated;
+  final MapCreatedCallback? onMapCreated;
   final VoidCallback onToggleMapType;
   final VoidCallback onMyLocation;
   final ValueChanged<CameraPosition> onPlacePicked;
@@ -67,7 +67,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
 
   final bool selectInitialPosition;
 
-  final String language;
+  // final String language;
 
   final bool forceSearchOnZoomChanged;
 
@@ -134,7 +134,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
               );
             } else {
               return Builder(
-                  builder: (builderContext) => selectedPlaceWidgetBuilder(
+                  builder: (builderContext) => selectedPlaceWidgetBuilder!(
                       builderContext, data.item1, data.item2, data.item3));
             }
           }
@@ -161,7 +161,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
             myLocationEnabled: true,
             onMapCreated: (GoogleMapController controller) {
               provider.mapController = controller;
-              provider.setCameraPosition(null);
+              // provider.setCameraPosition(null);
               provider.pinState = PinState.Idle;
 
               // When select initialPosition set to true.
@@ -183,7 +183,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                 // Search current camera location only if camera has moved (dragged) before.
                 if (provider.pinState == PinState.Dragging) {
                   // Cancel previous timer.
-                  if (provider.debounceTimer?.isActive ?? false) {
+                  if (provider.debounceTimer.isActive) {
                     provider.debounceTimer.cancel();
                   }
                   provider.debounceTimer =
@@ -200,7 +200,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
               provider.setPrevCameraPosition(provider.cameraPosition);
 
               // Cancel any other timer.
-              provider.debounceTimer?.cancel();
+              provider.debounceTimer.cancel();
 
               // Update state, dismiss keyboard and clear text.
               provider.pinState = PinState.Dragging;
@@ -224,7 +224,8 @@ class GoogleMapPlacePicker extends StatelessWidget {
             return _defaultPinBuilder(context, state);
           } else {
             return Builder(
-                builder: (builderContext) => pinBuilder(builderContext, state));
+                builder: (builderContext) =>
+                    pinBuilder!(builderContext, state));
           }
         },
       ),

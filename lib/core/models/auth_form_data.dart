@@ -5,9 +5,10 @@ part 'auth_form_data.freezed.dart';
 
 @freezed
 abstract class AuthFormData with _$AuthFormData {
-  const factory AuthFormData(
-      {String email,
-      String password,
-      String displayName,
-      String languageCode}) = _AuthFormData;
+  const factory AuthFormData({
+    required String email,
+    required String password,
+    @Default("") String displayName,
+    @Default("") String languageCode,
+  }) = _AuthFormData;
 }

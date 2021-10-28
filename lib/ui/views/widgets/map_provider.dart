@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class StaticMap extends StatefulWidget {
   const StaticMap({
-    Key key,
-    this.markers,
-    this.currentLocation,
-    this.googleMapsApiKey,
-    this.width,
-    this.height,
-    this.zoom,
-    this.markerUrl,
-    this.onTap,
+    Key? key,
+    required this.markers,
+    required this.currentLocation,
+    required this.googleMapsApiKey,
+    required this.width,
+    required this.height,
+    required this.zoom,
+    // required this.markerUrl,
+    required this.onTap,
   }) : super(key: key);
 
   final List markers;
@@ -19,7 +19,7 @@ class StaticMap extends StatefulWidget {
   final int width;
   final int height;
   final int zoom;
-  final String markerUrl;
+  // final String markerUrl;
   final VoidCallback onTap;
 
   @override
@@ -29,7 +29,7 @@ class StaticMap extends StatefulWidget {
 class _StaticMapState extends State<StaticMap> {
   String startUrl =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Solid_white.svg/2000px-Solid_white.svg.png';
-  String nextUrl;
+  late String nextUrl;
   static const int defaultWidth = 600;
   static const int defaultHeight = 400;
   Map<String, String> defaultLocation = {
@@ -52,11 +52,11 @@ class _StaticMapState extends State<StaticMap> {
         'center':
             '${currentLocation['latitude']},${currentLocation['longitude']}',
         'zoom': widget.zoom.toString(),
-        'size': '${width ?? defaultWidth}x${height ?? defaultHeight}',
+        'size': '${width}x$height',
         'key': '${widget.googleMapsApiKey}'
       });
     } else {
-      List<String> markers = List();
+      List<String> markers = [];
       // Add a blue marker for the user
       var userLat = currentLocation['latitude'];
       var userLng = currentLocation['longitude'];
@@ -72,12 +72,12 @@ class _StaticMapState extends State<StaticMap> {
       String markersString = markers.join('|');
       finalUri = baseUri.replace(queryParameters: {
         'markers': markersString,
-        'size': '${width ?? defaultWidth}x${height ?? defaultHeight}',
+        'size': '${width}x$height',
         'key': '${widget.googleMapsApiKey}'
       });
     }
     setState(() {
-      startUrl = nextUrl ?? startUrl;
+      startUrl = nextUrl;
       nextUrl = finalUri.toString();
     });
   }
@@ -88,8 +88,7 @@ class _StaticMapState extends State<StaticMap> {
     if (widget.currentLocation == null) {
       currentLocation = defaultLocation;
     }
-    _buildUrl(currentLocation, widget.markers, widget.width ?? defaultWidth,
-        widget.height ?? defaultHeight);
+    _buildUrl(currentLocation, widget.markers, widget.width, widget.height);
     return InkWell(
       onTap: widget.onTap,
       child: Container(

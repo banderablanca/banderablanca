@@ -15,5 +15,5 @@ abstract class AuthenticationServiceAbs {
   Future<String> updatePhoto(String path, Uint8List file);
   Future<bool> logout();
   Future<bool> onBoardCompleted();
-  Stream<UserApp> get onAuthStateChanged;
+  Stream<UserApp?> get onAuthStateChanged;
 }

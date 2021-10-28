@@ -3,16 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 // import 'package:login_register/utlities/app_colors.dart';
 
 class IntroWidget extends StatelessWidget {
-  const IntroWidget(
-      {Key key,
-      @required this.screenWidth,
-      @required this.screenheight,
-      this.image,
-      this.type,
-      this.startGradientColor,
-      this.endGradientColor,
-      this.subText})
-      : super(key: key);
+  const IntroWidget({
+    Key? key,
+    required this.screenWidth,
+    required this.screenheight,
+    this.image,
+    this.type,
+    required this.startGradientColor,
+    required this.endGradientColor,
+    required this.subText,
+  }) : super(key: key);
 
   final double screenWidth;
   final double screenheight;

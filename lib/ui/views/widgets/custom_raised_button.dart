@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 @immutable
 class CustomRaisedButton extends StatelessWidget {
   const CustomRaisedButton({
-    Key key,
-    @required this.child,
-    this.icon,
-    this.color,
-    this.textColor,
+    Key? key,
+    required this.child,
+    required this.icon,
+    required this.color,
+    required this.textColor,
     this.height = 50.0,
     this.borderRadius = 2.0,
     this.loading = false,
-    this.onPressed,
+    required this.onPressed,
   }) : super(key: key);
   final Widget child;
   final Icon icon;

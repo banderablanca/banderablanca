@@ -13,7 +13,7 @@ Future<bool> showConfirmDialog(
   String confirmText = "OK",
   String cancelText = "CANCELAR",
 }) async {
-  bool isConfirm = false;
+  bool? isConfirm = false;
   Widget body = ConfirmDialogBody(
     title: title,
     content: content,

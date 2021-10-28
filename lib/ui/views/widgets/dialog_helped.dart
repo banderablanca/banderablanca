@@ -36,9 +36,9 @@ class __HelpedBodyState extends State<_HelpedBody> {
                 value: index + 1,
               ),
             ).toList(),
-            onChanged: (int value) {
+            onChanged: (int? value) {
               setState(() {
-                days = value;
+                days = value ?? 0;
               });
             },
           ),

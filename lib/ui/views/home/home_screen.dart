@@ -1,11 +1,11 @@
-import '../../../core/helpers/firebase_notification_handler.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/core.dart';
+import '../../../core/helpers/firebase_notification_handler.dart';
+import '../widgets/widgets.dart';
 import 'tab_map.dart';
 import 'tab_my_flags.dart';
 import 'tab_notifications.dart';
-import '../widgets/widgets.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,11 +17,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     FirebaseNotifications fcm = FirebaseNotifications(
-      onMessage: _onMessageIcon,
-      onLaunch: _navigateToItemDetail,
-      onResume: _navigateToItemDetail,
-      onSaveToken: Provider.of<DeviceModel>(context, listen: false).saveToken,
-    );
+        // onMessage: _onMessageIcon,
+        // onLaunch: _navigateToItemDetail,
+        // onResume: _navigateToItemDetail,
+        // onSaveToken: Provider.of<DeviceModel>(context, listen: false).saveToken,
+        );
+    fcm.onMessage = _onMessageIcon;
+    fcm.onLaunch = _navigateToItemDetail;
+    fcm.onResume = _navigateToItemDetail;
+    fcm.onSaveToken =
+        Provider.of<DeviceModel>(context, listen: false).saveToken;
+
     Provider.of<UserModel>(context, listen: false).versionCheck(context);
   }
 
@@ -41,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Selector<TabModel, AppTab>(
           selector: (_, TabModel model) => model.activeTab,
           // shouldRebuild: ,
-          builder: (BuildContext context, AppTab tab, Widget child) {
+          builder: (BuildContext context, AppTab tab, _) {
             return IndexedStack(index: tab.index, children: [
               for (Destination destination in allDestinations)
                 DestinationView(destination: destination),
@@ -55,7 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class DestinationView extends StatefulWidget {
-  const DestinationView({Key key, this.destination}) : super(key: key);
+  const DestinationView({
+    Key? key,
+    required this.destination,
+  }) : super(key: key);
 
   final Destination destination;
 

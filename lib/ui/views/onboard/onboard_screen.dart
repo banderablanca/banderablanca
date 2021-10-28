@@ -14,7 +14,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   int currentPageValue = 0;
   int previousPageValue = 0;
-  PageController controller;
+  late PageController controller;
   double _moveBar = 0.0;
 
   @override
