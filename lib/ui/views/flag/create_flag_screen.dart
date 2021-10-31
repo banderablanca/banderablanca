@@ -18,7 +18,7 @@ class CreateFlagScreen extends StatefulWidget {
     required this.mediaPath,
   }) : super(key: key);
 
-  final String mediaPath;
+  final String? mediaPath;
 
   @override
   _CreateFlagScreenState createState() => _CreateFlagScreenState();
@@ -41,11 +41,11 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
     super.dispose();
   }
 
-  late CameraPosition? pickResult;
+  CameraPosition? pickResult;
   late String title;
   late String description;
   late String address;
-  late String _mediaPath;
+  String? _mediaPath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
   Future _getImage(ImageSource source) async {
@@ -126,6 +126,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
         ),
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 80),
         child: Column(
           children: <Widget>[
             IgnorePointer(
@@ -187,7 +188,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                           SizedBox(
                             height: 8,
                           ),
-                          isVideo(_mediaPath)
+                          isVideo(_mediaPath!)
                               ? _previewVideo()
                               : _previewImage(),
                           if (pickResult == null)
@@ -379,7 +380,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).primaryColor, width: 2)),
       child: Image.file(
-        File(_mediaPath),
+        File(_mediaPath!),
         fit: BoxFit.cover,
         width: double.infinity,
         alignment: Alignment.center,
@@ -392,7 +393,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
       height: 200,
       child: VideoPlayerScreen(
         // message: Message(mediaContent: MediaContent(thumbnailInfo: Thum)),//,filePath,
-        filePath: _mediaPath,
+        filePath: _mediaPath!,
       ),
     );
   }

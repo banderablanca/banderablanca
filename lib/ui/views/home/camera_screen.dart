@@ -32,19 +32,19 @@ IconData getCameraLensIcon(CameraLensDirection direction) {
       return Icons.camera_front;
     case CameraLensDirection.external:
       return Icons.camera;
+    default:
+      throw ArgumentError('Unknown lens direction');
   }
-  throw ArgumentError('Unknown lens direction');
 }
 
 void logError(String code, String message) =>
     print('Error: $code\nError Message: $message');
 
 class _CameraScreenState extends State<CameraScreen> {
-  late CameraController controller;
-  late String imagePath;
-  late String? videoPath;
-  late VideoPlayerController videoController;
-  late VoidCallback videoPlayerListener;
+  CameraController? controller;
+  String? imagePath;
+  String? videoPath;
+  VideoPlayerController? videoController;
   bool isLongPressed = false;
   int cameraSelected = 0;
   // bool isPreviewScreen = false;
@@ -109,15 +109,15 @@ class _CameraScreenState extends State<CameraScreen> {
       },
       onTapUp: (details) {
         if (controller != null &&
-            controller.value.isInitialized &&
-            !controller.value.isRecordingVideo) {
+            controller!.value.isInitialized &&
+            !controller!.value.isRecordingVideo) {
           onTakePictureButtonPressed();
         }
       },
       onLongPress: () {
         if (controller != null &&
-            controller.value.isInitialized &&
-            !controller.value.isRecordingVideo) {
+            controller!.value.isInitialized &&
+            !controller!.value.isRecordingVideo) {
           onVideoRecordButtonPressed();
           setState(() {
             isLongPressed = true;
@@ -126,8 +126,8 @@ class _CameraScreenState extends State<CameraScreen> {
       },
       onLongPressUp: () {
         if (controller != null &&
-            controller.value.isInitialized &&
-            controller.value.isRecordingVideo) {
+            controller!.value.isInitialized &&
+            controller!.value.isRecordingVideo) {
           onStopButtonPressed();
           setState(() {
             isLongPressed = false;
@@ -153,7 +153,10 @@ class _CameraScreenState extends State<CameraScreen> {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
+    // return Text("$controller");
+    if (controller == null
+        // || !controller!.value.isInitialized
+        ) {
       return const Text(
         'Tap a camera',
         style: TextStyle(
@@ -164,10 +167,10 @@ class _CameraScreenState extends State<CameraScreen> {
       );
     } else {
       return Transform.scale(
-        scale: 1 / controller.value.aspectRatio,
+        scale: 1 / controller!.value.aspectRatio,
         child: AspectRatio(
-          aspectRatio: controller.value.aspectRatio,
-          child: CameraPreview(controller),
+          aspectRatio: controller!.value.aspectRatio,
+          child: CameraPreview(controller!),
         ),
       );
     }
@@ -255,7 +258,7 @@ class _CameraScreenState extends State<CameraScreen> {
           color: Colors.white,
         ),
         onPressed: () {
-          if (controller != null && controller.value.isRecordingVideo) {
+          if (controller != null && controller!.value.isRecordingVideo) {
           } else {
             _onNewCameraSelected(cameraDescription);
             setState(() {
@@ -280,20 +283,20 @@ class _CameraScreenState extends State<CameraScreen> {
 
   void _onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
-      await controller.dispose();
+      await controller!.dispose();
     }
     controller = CameraController(cameraDescription, ResolutionPreset.high);
 
     // If the controller is updated then update the UI.
-    controller.addListener(() {
+    controller!.addListener(() {
       if (mounted) setState(() {});
-      if (controller.value.hasError) {
-        _showInSnackBar('Camera error ${controller.value.errorDescription}');
+      if (controller!.value.hasError) {
+        _showInSnackBar('Camera error ${controller!.value.errorDescription}');
       }
     });
 
     try {
-      await controller.initialize();
+      await controller!.initialize();
     } on CameraException catch (e) {
       _showCameraException(e);
     }
@@ -308,8 +311,8 @@ class _CameraScreenState extends State<CameraScreen> {
     takePicture().then((String? filePath) {
       if (mounted) {
         setState(() {
-          imagePath = filePath!;
-          videoController.dispose();
+          imagePath = filePath;
+          videoController?.dispose();
           // videoController = null;
         });
         // if (filePath != null) showInSnackBar('Picture saved to $filePath');
@@ -338,7 +341,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> startVideoRecording() async {
-    if (!controller.value.isInitialized) {
+    if (!controller!.value.isInitialized) {
       _showInSnackBar('Error: select a camera first.');
       return null;
     }
@@ -348,14 +351,14 @@ class _CameraScreenState extends State<CameraScreen> {
     await Directory(dirPath).create(recursive: true);
     String? filePath = '$dirPath/${timestamp()}.mp4';
 
-    if (controller.value.isRecordingVideo) {
+    if (controller!.value.isRecordingVideo) {
       // A recording is already started, do nothing.
       return;
     }
 
     try {
       // videoPath = filePath;
-      await controller.startVideoRecording();
+      await controller!.startVideoRecording();
     } on CameraException catch (e) {
       _showCameraException(e);
       return;
@@ -391,7 +394,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<String?> takePicture() async {
-    if (!controller.value.isInitialized) {
+    if (!controller!.value.isInitialized) {
       _showInSnackBar('Error: select a camera first.');
       return null;
     }
@@ -401,13 +404,13 @@ class _CameraScreenState extends State<CameraScreen> {
     //  XFile filePath = '$dirPath/${timestamp()}.jpg';
     late XFile filePath;
 
-    if (controller.value.isTakingPicture) {
+    if (controller!.value.isTakingPicture) {
       // A capture is already pending, do nothing.
       return null;
     }
 
     try {
-      filePath = await controller.takePicture();
+      filePath = await controller!.takePicture();
     } on CameraException catch (e) {
       _showCameraException(e);
       return null;

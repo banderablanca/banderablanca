@@ -5,7 +5,7 @@ Es un proyecto sin fines de lucro.
 ## Getting Started
 
 ```
-flutter pub run build_runner watch --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 Create file `.env`
 ```

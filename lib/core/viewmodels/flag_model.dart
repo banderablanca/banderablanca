@@ -101,7 +101,8 @@ class FlagModel extends BaseModel {
 
   List<WhiteFlag> get flags => _flags;
 
-  createflag(WhiteFlag newFlag, String mediaPath) async {
+  createflag(WhiteFlag newFlag, String? mediaPath) async {
+    if (mediaPath == null) return;
     setState(ViewState.Busy);
     try {
       await _repository.createFlag(newFlag, mediaPath);
