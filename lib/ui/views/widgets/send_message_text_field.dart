@@ -20,10 +20,10 @@ class SendMessageTextField extends StatefulWidget {
 class _SendMessageTextFieltState extends State<SendMessageTextField> {
   final _controller = TextEditingController();
   bool isEmpty = true;
-  late String imagePath;
+  String? imagePath;
   _hideKeyboard() => FocusScope.of(context).requestFocus(FocusNode());
 
-  late File? _image;
+  File? _image;
 
   Future _getImage(ImageSource source) async {
     final _picker = ImagePicker();
@@ -148,7 +148,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
             widget.flag.id,
             Message(text: _controller.text.trim()),
-            _image!.path);
+            _image?.path);
         _controller.clear();
         _image = null;
         _hideKeyboard();
