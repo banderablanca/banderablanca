@@ -3,6 +3,8 @@ import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../shared/shared.dart';
 import 'video_player_screen.dart';
@@ -79,6 +81,17 @@ class _CommentsListState extends State<CommentsList> {
     );
   }
 
+  _launchMap(LatLng? position) async {
+    if (position == null) return;
+    String url =
+        "https://maps.google.com/?q=${position.latitude},${position.longitude}";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -89,6 +102,11 @@ class _CommentsListState extends State<CommentsList> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Divider(),
+            ListTile(
+              title: Text("Ver en Google Maps"),
+              leading: Icon(Icons.map),
+              onTap: () => _launchMap(flag.position),
+            ),
             ListTile(
               dense: true,
               title: Text("${flag.address}",
