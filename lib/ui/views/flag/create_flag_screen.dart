@@ -140,50 +140,25 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Stack(
-                            overflow: Overflow.visible,
-                            children: <Widget>[
-                              Positioned(
-                                left: 2,
-                                top: -2,
-                                child: ClipPath(
-                                  clipper: TriangleClipper(),
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Theme.of(context)
-                                        .primaryColorLight
-                                        .withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 4),
-                                    child: Text("Registrar una bandera blanca",
-                                        style: GoogleFonts.tajawal(
-                                          textStyle: Theme.of(context)
-                                              .textTheme
-                                              .headline5!
-                                              .copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              ),
-                                        )),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    child: Center(
-                                      child: Text(
-                                          "El registro se hace de manera anónima. La foto es importante, esto facilitará la llegará de voluntarios."),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 16),
+                            child: Text("Registrar una bandera blanca",
+                                style: GoogleFonts.tajawal(
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .headline5!
+                                      .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Center(
+                              child: Text(
+                                  "El registro se hace de manera anónima. La foto es importante, esto facilitará la llegará de voluntarios."),
+                            ),
                           ),
                           SizedBox(
                             height: 8,
