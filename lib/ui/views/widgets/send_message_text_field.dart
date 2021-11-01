@@ -61,7 +61,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.all(Radius.circular(100)),
       ),
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(horizontal: 10,vertical: 14),
       child: Row(
         children: [
           if (_image == null) ...[

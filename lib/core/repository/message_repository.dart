@@ -65,7 +65,7 @@ class MessageRepository implements MessageRepositoryAbs {
           thumbInfo.filePath, thumbInfo.imageData, _doc.id, path);
 
       _data = _data.copyWith(
-        senderName: firebaseUser.displayName ?? '',
+        senderName: firebaseUser.displayName ?? 'Anónimo',
         senderPhotoUrl: firebaseUser.photoURL ?? '',
         uid: firebaseUser.uid,
         mediaContent: MediaContent(
