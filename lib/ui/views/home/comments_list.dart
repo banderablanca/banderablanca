@@ -2,6 +2,7 @@ import 'package:banderablanca/core/core.dart';
 import 'package:banderablanca/ui/helpers/show_confirm_dialog.dart';
 import 'package:banderablanca/ui/views/home/photo_view_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -103,11 +104,6 @@ class _CommentsListState extends State<CommentsList> {
           children: <Widget>[
             Divider(),
             ListTile(
-              title: Text("Ver en Google Maps"),
-              leading: Icon(Icons.map),
-              onTap: () => _launchMap(flag.position),
-            ),
-            ListTile(
               dense: true,
               title: Text("${flag.address}",
                   style: GoogleFonts.tajawal(
@@ -146,6 +142,25 @@ class _CommentsListState extends State<CommentsList> {
             ),
             SizedBox(
               height: 5,
+            ),
+            InkWell(
+              onTap: () => _launchMap(flag.position),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.mapMarkerAlt,
+                      color: Theme.of(context).primaryColor,
+                      size: 16,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 4,top: 4 ),
+                      child: Text("Ver en Google Maps"),
+                    ),
+                  ],
+                ),
+              ),
             ),
             Divider(),
             ListTile(
