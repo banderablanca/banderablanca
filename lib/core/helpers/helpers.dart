@@ -15,7 +15,8 @@ DateTime? dateTimeAsIs(DateTime? dateTime) =>
 // https://stackoverflow.com/questions/56627888/how-to-print-firestore-timestamp-as-formatted-date-and-time-in-flutter
 DateTime? dateTimeFromTimestamp(Timestamp? timestamp) {
   if (timestamp == null) return null;
-  return DateTime.parse(timestamp.toDate().toString());
+  // return DateTime.parse(timestamp.toDate().toString());
+  return timestamp.toDate();
 }
 
 Future<ThumbnailInfo> genThumbnail(String mediaPath) async {

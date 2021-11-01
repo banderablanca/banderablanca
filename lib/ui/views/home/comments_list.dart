@@ -24,12 +24,14 @@ class _CommentsListState extends State<CommentsList> {
 
   @override
   void initState() {
-    Provider.of<MessageModel>(context, listen: false)
-        .fetchMessages(widget.flag.id);
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      Provider.of<MessageModel>(context, listen: false)
+          .fetchMessages(widget.flag.id);
+    });
     super.initState();
   }
 
-  _previewMedia(String url) {
+  _previewMedia(String? url) {
     if (url == null) return;
     if (!flag.mediaContent!.mimeType!.startsWith('video/')) {
       Navigator.of(context).push(
@@ -197,7 +199,9 @@ class _CommentsListState extends State<CommentsList> {
                     ),
                   ),
                   trailing: _previewImage(
-                      message.mediaContent!.thumbnailInfo.downloadUrl, 50, 50),
+                      message.mediaContent?.thumbnailInfo.downloadUrl ?? '',
+                      50,
+                      50),
                 ),
               );
             },
@@ -208,7 +212,7 @@ class _CommentsListState extends State<CommentsList> {
   }
 
   Widget _previewImage(String url, double height, double width) {
-    if (url == null) return Container(width: 0);
+    if (url.isEmpty) return Container(width: 0);
     return Stack(
       children: <Widget>[
         Container(

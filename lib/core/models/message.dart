@@ -20,13 +20,18 @@ abstract class Message with _$Message {
     int? helpedDays,
     String? senderPhotoUrl,
     MediaContent? mediaContent,
-    @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs, nullable: true, defaultValue: null)
+    @JsonKey(fromJson: dateTimeFromTimestamp, toJson: dateTimeAsIs, nullable: true)
         DateTime? timestamp,
   }) = _Message;
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
 
+  // static DateTime dateTimeFromEpochUs(int us) =>
+  //     DateTime.fromMicrosecondsSinceEpoch(us);
+
+  // static int? dateTimeToEpochUs(DateTime? dateTime) =>
+  //     dateTime?.microsecondsSinceEpoch;
   // @late
   // bool get isValid => this.text.trim().isNotEmpty;
   // @late
