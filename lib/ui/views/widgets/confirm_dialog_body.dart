@@ -43,12 +43,12 @@ class ConfirmDialogBody extends StatelessWidget {
       content: Text('$content'),
       actions: <Widget>[
         // usually buttons at the bottom of the dialog
-        FlatButton(
+        TextButton(
           child: Text("$confirmText"),
           onPressed: () => Navigator.pop(context, true),
         ),
-        if (cancelText != null)
-          FlatButton(
+        if (cancelText.isNotEmpty)
+          TextButton(
             child: Text("$cancelText"),
             onPressed: () => Navigator.pop(context, false),
           ),

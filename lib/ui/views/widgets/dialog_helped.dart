@@ -46,12 +46,12 @@ class __HelpedBodyState extends State<_HelpedBody> {
       ),
       actions: <Widget>[
         // usually buttons at the bottom of the dialog
-        FlatButton(
+        TextButton(
           child: Text("HE DONADO"),
           onPressed: () => Navigator.pop(context, days),
         ),
 
-        FlatButton(
+        TextButton(
           child: Text(
             "CANCELAR",
             style: TextStyle(color: Colors.grey),

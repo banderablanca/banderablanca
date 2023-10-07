@@ -64,94 +64,90 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData.dark().copyWith(accentColor: Colors.white),
-      child: Scaffold(
-        // Usa un FutureBuilder para visualizar un spinner de carga mientras espera a que
-        // la inicialización de VideoPlayerController finalice.
-        body: Container(
-          color: Colors.black,
-          child: Stack(children: [
-            FutureBuilder(
-              future: _initializeVideoPlayerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // Si el VideoPlayerController ha finalizado la inicialización, usa
-                  // los datos que proporciona para limitar la relación de aspecto del VideoPlayer
-                  final double width = _controller.value.size.width;
-                  final double height = _controller.value.size.height;
+    return Scaffold(
+      // Usa un FutureBuilder para visualizar un spinner de carga mientras espera a que
+      // la inicialización de VideoPlayerController finalice.
+      body: Container(
+        color: Colors.black,
+        child: Stack(children: [
+          FutureBuilder(
+            future: _initializeVideoPlayerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                // Si el VideoPlayerController ha finalizado la inicialización, usa
+                // los datos que proporciona para limitar la relación de aspecto del VideoPlayer
+                final double width = _controller.value.size.width;
+                final double height = _controller.value.size.height;
 
-                  return SizedBox.expand(
-                    child: FittedBox(
-                      fit: width > height ? BoxFit.fitWidth : BoxFit.fitHeight,
-                      // fit: BoxFit.fitHeight,
-                      child: SizedBox(
-                        width: width,
-                        height: height,
-                        child: VideoPlayer(_controller),
-                      ),
+                return SizedBox.expand(
+                  child: FittedBox(
+                    fit: width > height ? BoxFit.fitWidth : BoxFit.fitHeight,
+                    // fit: BoxFit.fitHeight,
+                    child: SizedBox(
+                      width: width,
+                      height: height,
+                      child: VideoPlayer(_controller),
                     ),
-                  );
-                } else {
-                  // Si el VideoPlayerController todavía se está inicializando, muestra un
-                  // spinner de carga
-                  return Center(
-                      child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                  ));
-                }
+                  ),
+                );
+              } else {
+                // Si el VideoPlayerController todavía se está inicializando, muestra un
+                // spinner de carga
+                return Center(
+                    child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ));
+              }
+            },
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                // Envuelve la reproducción o pausa en una llamada a `setState`. Esto asegura
+                // que se muestra el icono correcto
+                setState(() {
+                  // Si el vídeo se está reproduciendo, pausalo.
+                  if (_controller.value.isPlaying) {
+                    _controller.pause();
+                  } else {
+                    // Si el vídeo está pausado, reprodúcelo
+                    _controller.play();
+                  }
+                });
               },
-            ),
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  // Envuelve la reproducción o pausa en una llamada a `setState`. Esto asegura
-                  // que se muestra el icono correcto
-                  setState(() {
-                    // Si el vídeo se está reproduciendo, pausalo.
-                    if (_controller.value.isPlaying) {
-                      _controller.pause();
-                    } else {
-                      // Si el vídeo está pausado, reprodúcelo
-                      _controller.play();
-                    }
-                  });
-                },
-                // Muestra el icono correcto dependiendo del estado del vídeo.
-                child: Container(
-                  color: Colors.white.withOpacity(0),
-                  child: Center(
-                    child: AnimatedOpacity(
-                      duration: Duration(
-                          milliseconds:
-                              _controller.value.isPlaying ? 200 : 500),
-                      opacity: _controller.value.isPlaying ? 0.0 : 1.0,
-                      child: Icon(
-                        FontAwesomeIcons.play,
-                        // _controller.value.isPlaying
-                        //     ? Icons.pause
-                        //     : Icons.play_arrow,
-                        size: 46,
-                        color: Colors.white30,
-                      ),
+              // Muestra el icono correcto dependiendo del estado del vídeo.
+              child: Container(
+                color: Colors.white.withOpacity(0),
+                child: Center(
+                  child: AnimatedOpacity(
+                    duration: Duration(
+                        milliseconds: _controller.value.isPlaying ? 200 : 500),
+                    opacity: _controller.value.isPlaying ? 0.0 : 1.0,
+                    child: Icon(
+                      FontAwesomeIcons.play,
+                      // _controller.value.isPlaying
+                      //     ? Icons.pause
+                      //     : Icons.play_arrow,
+                      size: 46,
+                      color: Colors.white30,
                     ),
                   ),
                 ),
               ),
             ),
-            // No muestra regresar desde la opcion
+          ),
+          // No muestra regresar desde la opcion
 
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 2,
-                child: LinearProgressIndicator(
-                  value: _progress,
-                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 2,
+              child: LinearProgressIndicator(
+                value: _progress,
               ),
             ),
-          ]),
-        ),
+          ),
+        ]),
       ),
     );
   }

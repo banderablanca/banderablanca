@@ -61,7 +61,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.all(Radius.circular(100)),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 10,vertical: 14),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: Row(
         children: [
           if (_image == null) ...[
@@ -143,7 +143,7 @@ class _SendMessageTextFieltState extends State<SendMessageTextField> {
   Widget _buildSendIcon(context) {
     return IconButton(
       icon: Icon(Icons.send),
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).colorScheme.secondary,
       onPressed: () async {
         await Provider.of<MessageModel>(context, listen: false).sendMessage(
             widget.flag.id,

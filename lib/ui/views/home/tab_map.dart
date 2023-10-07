@@ -105,7 +105,7 @@ class _TabMapState extends State<TabMap> {
     }
     // final geo = Geolocator();
     Position position = await _geolocatorPlatform.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.best));
     setState(() {
       _currentPosition = position;
       _kGooglePlex = CameraPosition(
@@ -160,7 +160,7 @@ class _TabMapState extends State<TabMap> {
         onPressed: () => _loadCameraScreen(context),
         label: Text(
           'Alzar una bandera',
-          style: GoogleFonts.baloo(textStyle: TextStyle(fontSize: 16)),
+          style: GoogleFonts.baloo2(textStyle: TextStyle(fontSize: 16)),
         ),
         icon: Padding(
           padding: EdgeInsets.all(4),
