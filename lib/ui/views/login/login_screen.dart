@@ -1,11 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 import '../../../constants/app_constants.dart';
 import '../../../core/core.dart';
-import '../../../core/models/models.dart';
 import '../../../ui/shared/helpers.dart';
 import '../../../ui/shared/keys.dart';
 import '../widgets/widgets.dart';
@@ -107,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Text(
                         "signUp",
                         style: theme.textTheme.subtitle1!.copyWith(
-                            color: theme.accentColor,
+                            // color: theme.accentColor,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -181,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen>
           Container(
             width: double.infinity,
             child: FormSubmitButton(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               child: Text(
                 "signIn".toUpperCase(),
                 style: TextStyle(color: Colors.white, fontSize: 18),

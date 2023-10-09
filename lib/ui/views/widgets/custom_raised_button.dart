@@ -23,47 +23,44 @@ class CustomRaisedButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   Widget buildSpinner(BuildContext context) {
-    final ThemeData data = Theme.of(context);
-    return Theme(
-      data: data.copyWith(accentColor: Colors.white70),
-      child: SizedBox(
-        width: 28,
-        height: 28,
-        child: CircularProgressIndicator(
-          strokeWidth: 3.0,
-        ),
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: CircularProgressIndicator(
+        strokeWidth: 3.0,
+        color: Colors.white70,
       ),
     );
   }
 
   Widget _makeWithIcon(context) {
-    return RaisedButton.icon(
+    return ElevatedButton.icon(
       icon: icon,
       label: loading ? buildSpinner(context) : child,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(borderRadius),
-        ),
-      ), // height / 2
-      color: color,
-      textColor: textColor,
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.all(
+      //     Radius.circular(borderRadius),
+      //   ),
+      // ), // height / 2
+      // color: color,
+      // textColor: textColor,
       onPressed: onPressed,
-      elevation: 0,
+      // elevation: 0,
     );
   }
 
   Widget _makeWithoutIcon(context) {
-    return RaisedButton(
+    return ElevatedButton(
       child: loading ? buildSpinner(context) : child,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(borderRadius),
-        ),
-      ), // height / 2
-      color: color,
-      textColor: textColor,
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.all(
+      //     Radius.circular(borderRadius),
+      //   ),
+      // ), // height / 2
+      // color: color,
+      // textColor: textColor,
       onPressed: onPressed,
-      elevation: 0,
+      // elevation: 0,
     );
   }
 

@@ -61,7 +61,9 @@ class UserModel extends BaseModel {
     if (!kReleaseMode) return;
     try {
       PackageInfo info = await PackageInfo.fromPlatform();
-      final RemoteConfig remoteConfig = RemoteConfig.instance;
+      final remoteConfig = FirebaseRemoteConfig.instance;
+
+      // final RemoteConfig remoteConfig = RemoteConfig.instance;
       final String currentBuildNumber = "${info.version}.${info.buildNumber}";
       final String configName = Platform.isIOS ? 'ios_app' : 'android_app';
       final defaults = <String, dynamic>{

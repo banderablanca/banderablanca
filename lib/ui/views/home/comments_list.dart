@@ -155,7 +155,7 @@ class _CommentsListState extends State<CommentsList> {
                       size: 16,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 4,top: 4 ),
+                      padding: EdgeInsets.only(left: 4, top: 4),
                       child: Text("Ver en Google Maps"),
                     ),
                   ],
@@ -270,14 +270,15 @@ class _CommentsListState extends State<CommentsList> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.zoom_in, color: Theme.of(context).accentColor),
+                Icon(Icons.zoom_in,
+                    color: Theme.of(context).colorScheme.secondary),
                 SizedBox(width: 8),
                 Text(
                   "Ver",
                   style: Theme.of(context)
                       .textTheme
                       .headline6!
-                      .copyWith(color: Theme.of(context).accentColor),
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ),
               ]),
         )),

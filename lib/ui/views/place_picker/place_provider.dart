@@ -22,8 +22,7 @@ class PlaceProvider extends ChangeNotifier {
       // Geolocator geolocator = Geolocator()
       //   ..forceAndroidLocationManager = forceAndroidLocationManager;
       if (await _geolocatorPlatform.isLocationServiceEnabled()) {
-        currentPosition = await _geolocatorPlatform.getCurrentPosition(
-            desiredAccuracy: desiredAccuracy);
+        currentPosition = await _geolocatorPlatform.getCurrentPosition();
       } else {
         currentPosition = null;
       }

@@ -113,7 +113,7 @@ class GoogleMapPlacePicker extends StatelessWidget {
                 },
                 label: Text(
                   'Alzar una bandera aquí',
-                  style: GoogleFonts.baloo(textStyle: TextStyle(fontSize: 16)),
+                  style: GoogleFonts.baloo2(textStyle: TextStyle(fontSize: 16)),
                 ),
                 icon: data.item2 == SearchingState.Searching
                     ? SizedBox(

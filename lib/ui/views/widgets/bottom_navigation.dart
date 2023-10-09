@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/core.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
@@ -44,7 +45,7 @@ class BottomNavigationWidget extends StatelessWidget {
                             ? destination.iconActive
                             : destination.icon),
                     backgroundColor: destination.color,
-                    title: Text(destination.title),
+                    label: destination.title,
                   ),
               ]),
         );

@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:banderablanca/constants/app_constants.dart';
 import 'package:banderablanca/ui/shared/shared.dart';
 import 'package:banderablanca/ui/views/widgets/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/core.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../views.dart';
 
 class CreateFlagScreen extends StatefulWidget {
@@ -59,7 +59,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
   }
 
   _showSnackbar(context, String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
   _submit(BuildContext context) async {
@@ -322,7 +322,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                 : () => _submit(context),
             label: Text(
               'Guardar',
-              style: GoogleFonts.baloo(textStyle: TextStyle(fontSize: 16)),
+              style: GoogleFonts.baloo2(textStyle: TextStyle(fontSize: 16)),
             ),
             icon: Provider.of<FlagModel>(context).state == ViewState.Busy
                 ? Container(

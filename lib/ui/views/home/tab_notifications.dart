@@ -26,7 +26,6 @@ class TabNotifications extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(top: 64, bottom: 16),
                 child: Stack(
-                  overflow: Overflow.visible,
                   alignment: Alignment.centerLeft,
                   children: <Widget>[
                     Positioned(
