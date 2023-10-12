@@ -190,15 +190,11 @@ class _TabMapState extends State<TabMap> {
 
   Future _loadCameraScreen(BuildContext context) async {
     // _onImageButtonPressed(ImageSource.gallery);
-    List<CameraDescription> cameras;
     try {
-      cameras = await availableCameras();
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CameraScreen(
-            cameras: cameras,
-          ),
+          builder: (context) => CameraScreen(),
         ),
       );
     } on CameraException catch (e) {
