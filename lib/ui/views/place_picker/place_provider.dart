@@ -8,12 +8,18 @@ import 'package:provider/provider.dart';
 import 'place_picker.dart';
 
 class PlaceProvider extends ChangeNotifier {
+  PlaceProvider({
+    required this.sessionToken,
+    required this.desiredAccuracy,
+  });
+
   static PlaceProvider of(BuildContext context, {bool listen = true}) =>
       Provider.of<PlaceProvider>(context, listen: listen);
 
-  late String sessionToken;
+  final String sessionToken;
+  final LocationAccuracy desiredAccuracy;
+
   bool isOnUpdateLocationCooldown = false;
-  late LocationAccuracy desiredAccuracy;
   bool isAutoCompleteSearching = false;
   final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
 
@@ -41,7 +47,7 @@ class PlaceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  late Timer _debounceTimer;
+  Timer _debounceTimer = Timer(Duration(seconds: 1), () {});
   Timer get debounceTimer => _debounceTimer;
   set debounceTimer(Timer timer) {
     _debounceTimer = timer;
@@ -54,14 +60,14 @@ class PlaceProvider extends ChangeNotifier {
     _previousCameraPosition = prePosition;
   }
 
-  late CameraPosition _currentCameraPosition;
+  CameraPosition _currentCameraPosition = CameraPosition(target: LatLng(0, 0));
   CameraPosition get cameraPosition => _currentCameraPosition;
   setCameraPosition(CameraPosition newPosition) {
     // newPosition.target
     _currentCameraPosition = newPosition;
   }
 
-  late CameraPosition _selectedPlace;
+  CameraPosition _selectedPlace = CameraPosition(target: LatLng(0, 0));
   CameraPosition get selectedPlace => _selectedPlace;
   set selectedPlace(CameraPosition result) {
     _selectedPlace = result;
