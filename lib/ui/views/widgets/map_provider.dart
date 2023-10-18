@@ -29,7 +29,7 @@ class StaticMap extends StatefulWidget {
 class _StaticMapState extends State<StaticMap> {
   String startUrl =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Solid_white.svg/2000px-Solid_white.svg.png';
-  late String nextUrl;
+  String nextUrl = '';
   static const int defaultWidth = 600;
   static const int defaultHeight = 400;
   Map<String, String> defaultLocation = {
@@ -83,12 +83,23 @@ class _StaticMapState extends State<StaticMap> {
   }
 
   @override
+  void initState() {
+    // var currentLocation = widget.currentLocation;
+    // if (widget.currentLocation == null) {
+    //   currentLocation = defaultLocation;
+    // }
+    _buildUrl(
+        widget.currentLocation, widget.markers, widget.width, widget.height);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var currentLocation = widget.currentLocation;
-    if (widget.currentLocation == null) {
-      currentLocation = defaultLocation;
-    }
-    _buildUrl(currentLocation, widget.markers, widget.width, widget.height);
+    // // var currentLocation = widget.currentLocation;
+    // if (widget.currentLocation == null) {
+    //   currentLocation = defaultLocation;
+    // }
+    // _buildUrl(currentLocation, widget.markers, widget.width, widget.height);
     return InkWell(
       onTap: widget.onTap,
       child: Container(

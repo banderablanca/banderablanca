@@ -12,5 +12,5 @@ class RoutePaths {
 }
 
 class ApiKeys {
-  String get googleMapsApiKey => DotEnv().env['GOOGLE_MAPS_WEB_API_KEY']!;
+  String get googleMapsApiKey => dotenv.env['GOOGLE_MAPS_WEB_API_KEY']!;
 }

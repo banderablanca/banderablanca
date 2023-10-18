@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,6 +10,7 @@ import 'google_map_place_picker.dart';
 import 'place_provider.dart';
 
 enum PinState { Preparing, Idle, Dragging }
+
 enum SearchingState { Idle, Searching }
 
 class PlacePicker extends StatefulWidget {
@@ -157,9 +157,11 @@ class _PlacePickerState extends State<PlacePicker> {
   void initState() {
     super.initState();
 
-    provider = PlaceProvider();
-    provider.sessionToken = Uuid().v4();
-    provider.desiredAccuracy = widget.desiredLocationAccuracy;
+    provider = PlaceProvider(
+        sessionToken: Uuid().v4(),
+        desiredAccuracy: widget.desiredLocationAccuracy);
+    // provider.sessionToken = Uuid().v4();
+    // provider.desiredAccuracy = widget.desiredLocationAccuracy;
     provider.setMapType(widget.initialMapType);
   }
 
