@@ -49,7 +49,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                     children: <Widget>[
                       Icon(
                         Icons.report,
-                        color: Colors.red,
+                        color: Colors.redAccent,
                         size: 12,
                       ),
                       SizedBox(
@@ -60,7 +60,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall!
-                            .copyWith(color: Colors.red),
+                            .copyWith(color: Colors.redAccent),
                       ),
                     ],
                   ),

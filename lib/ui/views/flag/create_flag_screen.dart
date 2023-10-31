@@ -147,7 +147,7 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                 style: GoogleFonts.tajawal(
                                   textStyle: Theme.of(context)
                                       .textTheme
-                                      .headline5!
+                                      .headlineSmall!
                                       .copyWith(
                                         color: Theme.of(context).primaryColor,
                                       ),
@@ -179,14 +179,14 @@ class _CreateFlagScreenState extends State<CreateFlagScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Icon(Icons.location_on,
-                                          color: Colors.red),
+                                          color: Colors.redAccent),
                                       SizedBox(width: 8),
                                       Text(
                                         "Tap para seleccionar ubicación",
                                         style: GoogleFonts.tajawal(
                                           textStyle: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.red,
+                                              color: Colors.redAccent,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),

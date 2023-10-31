@@ -77,7 +77,7 @@ class _CommentsListState extends State<CommentsList> {
               height: 30,
               child: CircularProgressIndicator(),
             )
-          : Icon(Icons.delete_outline, color: Colors.red),
+          : Icon(Icons.delete_outline, color: Colors.redAccent),
       onPressed: () => _showConfirmDialog(flag),
     );
   }
