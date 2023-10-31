@@ -107,13 +107,13 @@ class _CommentsListState extends State<CommentsList> {
               dense: true,
               title: Text("${flag.address}",
                   style: GoogleFonts.tajawal(
-                    textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Theme.of(context).primaryColor,
                         ),
                   )),
               subtitle: Text(
                 timeAgo(flag.timestamp ?? DateTime.now()),
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               trailing: _buildTrailingButton(flag),
             ),
@@ -150,6 +150,7 @@ class _CommentsListState extends State<CommentsList> {
                 child: Row(
                   children: [
                     Icon(
+                      // ignore: deprecated_member_use
                       FontAwesomeIcons.mapMarkerAlt,
                       color: Theme.of(context).primaryColor,
                       size: 16,
@@ -168,7 +169,7 @@ class _CommentsListState extends State<CommentsList> {
               title: Text(
                 "Comentarios",
                 style: GoogleFonts.tajawal(
-                  textStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
@@ -213,7 +214,7 @@ class _CommentsListState extends State<CommentsList> {
                           TextSpan(
                             text: "Ha donado para ${message.helpedDays} dīas ",
                             style:
-                                Theme.of(context).textTheme.caption!.copyWith(
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context).primaryColor,
@@ -221,7 +222,7 @@ class _CommentsListState extends State<CommentsList> {
                           ),
                         TextSpan(
                           text: "${timeAgo(flag.timestamp)}",
-                          style: Theme.of(context).textTheme.caption!.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 fontSize: 10,
                               ),
                         )
@@ -277,7 +278,7 @@ class _CommentsListState extends State<CommentsList> {
                   "Ver",
                   style: Theme.of(context)
                       .textTheme
-                      .headline6!
+                      .titleLarge!
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ),
               ]),
