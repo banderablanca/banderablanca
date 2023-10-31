@@ -7,19 +7,16 @@ class AppTheme {
       primaryColor: Color(0xFF6870FB),
       primaryColorLight: Color(0xFFD2DAFD),
       primaryColorDark: Color(0xFF202468),
-      // secondaryHeaderColor: Color(0xFF06F482),
-      // accentColor: Color(0xFFFF5D71),
-
-      // fontFamily: "Tajawal",
-      // fontFamily: GoogleFonts.tajawalTextTheme(),
-      textTheme: GoogleFonts.tajawalTextTheme(
-          // Theme.of(context).textTheme,
-          ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: Color(0xFF6870FB),
+      ),
+      tabBarTheme: TabBarTheme(indicatorColor: Color(0xFFFF5D71),),
+      textTheme: GoogleFonts.tajawalTextTheme(),
       iconTheme: IconThemeData(
         color: Colors.grey[700],
       ),
-      backgroundColor: Color(0xFFF3F6FF),
-      bottomAppBarColor: Colors.grey[800],
+      // backgroundColor: Color(0xFFF3F6FF),
+      // bottomAppBarColor: Colors.grey[800],
       scaffoldBackgroundColor: Colors.white,
       buttonTheme: ButtonThemeData(
         shape: RoundedRectangleBorder(
