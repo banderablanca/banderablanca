@@ -59,7 +59,7 @@ showModalBottomFlagDetail(context, WhiteFlag flag) {
                         "Reportar bandera",
                         style: Theme.of(context)
                             .textTheme
-                            .caption!
+                            .bodySmall!
                             .copyWith(color: Colors.red),
                       ),
                     ],

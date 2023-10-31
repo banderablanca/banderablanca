@@ -79,7 +79,7 @@ class TabMyFlags extends StatelessWidget {
                             text:
                                 "Aquí podrás ver tus banderas registradas\n\n",
                             style: GoogleFonts.lato(
-                              textStyle: Theme.of(context).textTheme.headline6,
+                              textStyle: Theme.of(context).textTheme.titleLarge,
                             ),
                             children: [
                               TextSpan(
@@ -87,7 +87,7 @@ class TabMyFlags extends StatelessWidget {
                                     "Si ves un hogar con bandera blanca por favor brinda tu apoyo y/o registra una Bandera para que otras personas puedan ir en su apoyo.",
                                 style: GoogleFonts.lato(
                                   textStyle:
-                                      Theme.of(context).textTheme.caption,
+                                      Theme.of(context).textTheme.bodySmall,
                                 ),
                               )
                             ]),
