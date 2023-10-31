@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen>
       child: Container(
         child: Text(model.errorMessage,
             style: TextStyle(
-              color: Colors.red,
+              color: Colors.redAccent,
             )),
       ),
     );

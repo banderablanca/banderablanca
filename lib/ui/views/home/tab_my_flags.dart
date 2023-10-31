@@ -141,7 +141,7 @@ class TabMyFlags extends StatelessWidget {
                               ? SizedBox()
                               : IconButton(
                                   icon: Icon(Icons.delete_outline,
-                                      color: Colors.red),
+                                      color: Colors.redAccent),
                                   onPressed: () {
                                     _showConfirmDialog(context, flag);
                                   }),
