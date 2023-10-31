@@ -41,7 +41,7 @@ class SplashLoading extends StatelessWidget {
                 style: GoogleFonts.tajawal(
                     textStyle: Theme.of(context)
                         .textTheme
-                        .headline4!
+                        .headlineMedium!
                         .copyWith(color: Colors.white)),
               ),
               Text(
@@ -49,7 +49,7 @@ class SplashLoading extends StatelessWidget {
                 style: GoogleFonts.tajawal(
                   textStyle: Theme.of(context)
                       .textTheme
-                      .headline3!
+                      .displaySmall!
                       .copyWith(color: Colors.white),
                 ),
               )
